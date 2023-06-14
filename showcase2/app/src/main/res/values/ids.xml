@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="constrainMenu1" type="id" />
+    <item name="iconMenu1" type="id" />
+    <item name="menu1txt" type="id" />
+    <item name="circleButtonefect1" type="id" />
+    <item name="constrainMenu2" type="id" />
+    <item name="guidelinemenu2" type="id" />
+    <item name="guidelinemenu1" type="id" />
+    <item name="viewDivider" type="id" />
+    <item name="circleButtonefect2" type="id" />
+    <item name="iconMenu2" type="id" />
+    <item name="menu2txt" type="id" />
+    <item name="constrainMenu3" type="id" />
+    <item name="guidelinemenu3" type="id" />
+    <item name="circleButtonefect3" type="id" />
+    <item name="iconMenu3" type="id" />
+    <item name="menu3txt" type="id" />
+    <item name="constrainMenu4" type="id" />
+    <item name="guidelinemenu4" type="id" />
+    <item name="menu4txt" type="id" />
+    <item name="circleButtonefect4" type="id" />
+    <item name="iconMenu4" type="id" />
+    <item name="constrainMenu5" type="id" />
+    <item name="guidelinemenu5" type="id" />
+    <item name="menu5txt" type="id" />
+    <item name="circleButtonefect5" type="id" />
+    <item name="iconMenu5" type="id" />
+</resources>

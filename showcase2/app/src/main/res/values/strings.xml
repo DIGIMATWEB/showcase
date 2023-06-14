@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">showcase</string>
+    <string name="keyGoogleMaps">AIzaSyB-zSevaCIjy5FOMfP9Z2GhpPYbt1CYsvo</string>
+
+    <!--Erores de retrofit-->
+    <string name="wrongSyntax">Error, la solicitud contiene sintaxis errónea</string>
+    <string name="unauthorizedRequest">Error, solicitud no autorizada</string>
+    <string name="resourceNotFound">Error, recurso no encontrado</string>
+    <string name="serverError">Error, se ha producido un error en la conexión con el servidor, intente más tarde</string>
+    <string name="unknownError">Error desconocido</string>
+    <string name="internetConection">Error, verifica tu conexión a internet</string>
+    <string name="invalidateFormatResponse">Error, la respuesta contiene un formato que no se puede leer</string>
+    <string name="unknownError1">Ocurrió un error desconocido</string>
+
+</resources>
