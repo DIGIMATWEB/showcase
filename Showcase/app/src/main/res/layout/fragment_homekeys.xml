@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <TextView
+            android:id="@+id/headerHome"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="Catalogo"
+            android:gravity="center"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvKeys"
+        android:layout_width="70dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/keyImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/keyImage" />
+
+    <ImageView
+        android:id="@+id/keyImage"
+        android:layout_width="290dp"
+        android:layout_height="290dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+        app:srcCompat="@drawable/key_cero" />
+
+    <ImageView
+        android:id="@+id/keyLike"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        app:srcCompat="@drawable/logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/keyImage" />
+
+    <TextView
+        android:id="@+id/keyName"
+        android:layout_width="164dp"
+        android:layout_height="98dp"
+        android:text="Nombre detecla"
+        android:textStyle="bold"
+        android:textSize="40dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="@+id/keyImage"
+        app:layout_constraintTop_toBottomOf="@+id/keyImage" />
+
+    <TextView
+        android:id="@+id/keyCategory"
+        android:layout_width="164dp"
+        android:layout_height="wrap_content"
+        android:text="Nombre detecla"
+        android:textSize="22dp"
+        app:layout_constraintStart_toStartOf="@+id/keyImage"
+        app:layout_constraintTop_toBottomOf="@+id/keyName" />
+
+    <TextView
+        android:id="@+id/keyPrice"
+        android:layout_width="164dp"
+        android:layout_height="wrap_content"
+        android:text="$ 9.99"
+        android:textSize="35dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/keyImage"
+        app:layout_constraintTop_toBottomOf="@+id/keyCategory" />
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/keyPrice"
+        app:layout_constraintEnd_toEndOf="@+id/keyDescription"
+        app:layout_constraintStart_toEndOf="@+id/keyPrice"
+        app:layout_constraintTop_toBottomOf="@+id/keyCategory"
+        tools:text="Comprar" />
+    <TextView
+        android:id="@+id/keyDescription"
+        android:fillViewport="true"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+        android:textSize="22dp"
+        android:scrollbars = "vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/keyLike"
+        app:layout_constraintStart_toStartOf="@+id/keyImage"
+        app:layout_constraintTop_toBottomOf="@+id/keyPrice" />
+</androidx.constraintlayout.widget.ConstraintLayout>
