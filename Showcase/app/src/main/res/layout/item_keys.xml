@@ -8,7 +8,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="5dp"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/key_cero"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -16,7 +16,8 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".Splash.view.Splash"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,11 +27,13 @@
 
         <activity
             android:name=".Login.view.LoginContainerActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".Menu.view.menuViewImpl"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
