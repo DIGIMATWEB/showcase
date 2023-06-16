@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.DIGIMAT.Showcase.KEYS.Home.View.Home;
+import com.DIGIMAT.Showcase.KEYS.Inventario.view.inventario;
 import com.DIGIMAT.Showcase.KEYS.Profile.View.profileKeys;
 import com.DIGIMAT.Showcase.R;
 
@@ -45,6 +46,11 @@ public class menuKeys extends Fragment implements View.OnClickListener {
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
     }
     private void goInventary() {
+        manager = getActivity().getSupportFragmentManager();
+        transaction = manager.beginTransaction();
+        inventario minventario = new inventario();//transaction.addToBackStack(UnitsViewImpl.TAG);
+        transaction.replace(R.id.conteinerMainFragments, minventario, inventario.TAG).commit();
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
     }
     private void goProfile() {
         manager = getActivity().getSupportFragmentManager();
