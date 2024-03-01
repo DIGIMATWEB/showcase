@@ -6,6 +6,8 @@ import com.digimat.showcase.Menu.interactor.interactorMenus;
 import com.digimat.showcase.Menu.interactor.interactorMenusImpl;
 import com.digimat.showcase.Menu.view.menuView;
 
+import java.util.List;
+
 public class presenterMenusImpl implements presenterMenus {
 
     private Context context;
@@ -20,6 +22,15 @@ public class presenterMenusImpl implements presenterMenus {
     }
     @Override
     public void requestMenus() {
+        if(view!=null){
+            interactor.requestMenus();
+        }
+    }
 
+    @Override
+    public void setMenus(List<Integer> data) {
+        if(view!=null){
+            view.listItems(data);
+        }
     }
 }

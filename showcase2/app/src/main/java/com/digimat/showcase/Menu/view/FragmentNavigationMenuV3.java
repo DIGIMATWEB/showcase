@@ -27,6 +27,9 @@ import com.digimat.showcase.Menu.models.MenuData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.digimat.showcase.Menu.presenter.presenterMenus;
+import com.digimat.showcase.Menu.presenter.presenterMenusImpl;
 import com.digimat.showcase.R;
 
 public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickListener , menuView {
@@ -39,7 +42,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
     private List<Integer> cveobjects=new ArrayList<>();
     public static List<Integer> orderList=new ArrayList<>();
     private Guideline guideline1,guideline2,guideline3,guideline4,guideline5;
-   // private menuPresenter presenter;
+    private presenterMenus presenter;
     private List<MenuData> myemenuItems=new ArrayList<>();
 
     private float a,b,c,d,e;     //guidelines value from mainActivity
@@ -51,7 +54,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         View view = inflater.inflate(R.layout.dinamic_menu_v3, container, false);
         checkShared();
         initView(view);
-      //  presenter.itemsMenu();
+        presenter.requestMenus();
         return view;
     }
 
@@ -131,7 +134,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
 
 
         menuconfig();
-      //  presenter= new menuPresenterImpl(this,getContext());
+       presenter= new presenterMenusImpl(this,getContext());
     }
 
     private void constrainGuidelideParamsInit() {
@@ -341,8 +344,59 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
     }
 
     @Override
-    public void listItems(List<String> items) {
+    public void listItems(List<Integer> items) {
+        for(int menu:items){
+            setIconandName(menu);
+        }
+    }
 
+    public void setIconandName(int clave)//, int position, List<MenuData> myemenuItemsf)
+    {
+        switch (clave){
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+//                Log.e("casemenuoption","case 10."+ myemenuItemsf.get(position).getObj_name());
+                setViewIcons( clave,String.valueOf( clave),getResources().getDrawable(R.drawable.ic_backgroundrocket));
+                break;
+            default: {
+                Log.e("itemsMenu","Opcion incorrecta");
+            }
+        }
+    }
+    public void setViewIcons(int position, String obj_name, Drawable icono) {
+        switch (position) {
+            case 0:/** aqui solo van las animaiones*/
+                iconMenu1.setImageDrawable(icono);
+                menu1txt.setText(obj_name);
+                break;
+            case 1:
+                iconMenu2.setImageDrawable(icono);
+                menu2txt.setText(obj_name);
+                break;
+            case 2:
+                iconMenu3.setImageDrawable(icono);
+                menu3txt.setText(obj_name);
+                break;
+            case 3:
+                iconMenu4.setImageDrawable(icono);
+                menu4txt.setText(obj_name);
+                break;
+            case 4:
+                iconMenu5.setImageDrawable(icono);
+                menu5txt.setText(obj_name);
+                break;
+
+        }
     }
 /*
     @Override
@@ -619,30 +673,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
            // profileFragment();
         }
     }
-    public void setViewIcons(int position, String obj_name, Drawable icono) {
-        switch (position) {
-            case 0:/** aqui solo van las animaiones*/
-                iconMenu1.setImageDrawable(icono);
-                menu1txt.setText(obj_name);
-                break;
-            case 1:
-                iconMenu2.setImageDrawable(icono);
-                menu2txt.setText(obj_name);
-                break;
-            case 2:
-                iconMenu3.setImageDrawable(icono);
-                menu3txt.setText(obj_name);
-                break;
-            case 3:
-                iconMenu4.setImageDrawable(icono);
-                menu4txt.setText(obj_name);
-                break;
-            case 4:
-                iconMenu5.setImageDrawable(icono);
-                menu5txt.setText(obj_name);
-                break;
-        }
-    }
+
 
     public void setHamburger()
     {
@@ -653,74 +684,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
      //   setViewIcons( 4,"Perfil",getResources().getDrawable(R.drawable.profile_selector));
     }
 
-   /* public void setIconandName(int clave, int position, List<MenuData> myemenuItemsf)
-    {
-        switch (clave){
-            case 1147:{//Unidades clave 1147
-            //    Log.e("casemenuoption","case 0."+ myemenuItemsf.get(position).getObj_name());
-            //    setViewIcons( position,myemenuItemsf.get(position).getObj_name(),getResources().getDrawable(R.drawable.ic_units_off));
-                break;
-            }
-            case 1146:{//Rastreo clave 1146
-               // Log.e("casemenuoption","case 1."+ myemenuItemsf.get(position).getObj_name());
-              //  setViewIcons( position, myemenuItemsf.get(position).getObj_name(),getResources().getDrawable(R.drawable.tracking_selector));
-                break;
-            }
-
-            case 1148:{//Notificaciones clave 1148
-              //  Log.e("casemenuoption","case 2."+ myemenuItemsf.get(position).getObj_name());
-              //  setViewIcons( position, myemenuItemsf.get(position).getObj_name(),getResources().getDrawable(R.drawable.notifications_selector));
-                break;
-
-            }
-            case 1149:{//Geozonas clave 1149
-                Log.e("casemenuoption","case 3."+ myemenuItemsf.get(position).getObj_name());
-                setViewIcons( position, myemenuItemsf.get(position).getObj_name(),getResources().getDrawable(R.drawable.ic_icono_zonas__1_));
-                break;
-            }
-            case 2107:{//Checklist clave 2107
-             //   Log.e("casemenuoption","case 4."+ myemenuItemsf.get(position).getObj_name());
-              //  setViewIcons( position, myemenuItemsf.get(position).getObj_name(),getResources().getDrawable(R.drawable.ic_checklist_off2));
-                break;
-            }
-
-            case 1145:{//Perfil clave 1145
-           //     Log.e("casemenuoption","case 5."+ myemenuItemsf.get(position).getObj_name());
-             //   setViewIcons( position, myemenuItemsf.get(position).getObj_name(),getResources().getDrawable(R.drawable.profile_selector));
-                break;
-
-            }
-            case 1150:{//Contacto clave 1150
-                Log.e("casemenuoption","case 6."+ myemenuItemsf.get(position).getObj_name());
-                setViewIcons( position, myemenuItemsf.get(position).getObj_name(),getResources().getDrawable(R.drawable.ic_contact_off));
-                break;
-            }
-            case 2123:{//topDriver clave 2123
-                Log.e("casemenuoption","case 7."+ myemenuItemsf.get(position).getObj_name());
-                setViewIcons( position, myemenuItemsf.get(position).getObj_name(),getResources().getDrawable(R.drawable.ic_units_off));
-                break;
-            }
-            case 2124:{//Scanner clave 2124
-                Log.e("casemenuoption","case 8."+ myemenuItemsf.get(position).getObj_name());
-                setViewIcons( position, myemenuItemsf.get(position).getObj_name(),getResources().getDrawable(R.drawable.ic_units_off));
-                break;
-            }
-            case 2125:{//enProgreso clave 2125
-                Log.e("casemenuoption","case 9."+ myemenuItemsf.get(position).getObj_name());
-                setViewIcons( position, myemenuItemsf.get(position).getObj_name(),getResources().getDrawable(R.drawable.ic_units_off));
-                break;
-            }
-            case 2126:{//completado O clave 2126
-                Log.e("casemenuoption","case 10."+ myemenuItemsf.get(position).getObj_name());
-                setViewIcons( position, myemenuItemsf.get(position).getObj_name(),getResources().getDrawable(R.drawable.ic_units_off));
-                break;
-            }
-
-            default: {
-                Log.e("casemenuoption","Opcion incorrecta");
-            }
-        }
-    }*/
   /*  private void UnitsFragment() {
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

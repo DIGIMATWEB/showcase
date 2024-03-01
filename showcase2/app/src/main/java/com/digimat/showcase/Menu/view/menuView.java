@@ -7,7 +7,7 @@ import java.util.List;
 public interface menuView {
     void showError(String error);
     void closeAppSessionExpired();
-    void listItems(List<String> items);
+    void listItems(List<Integer> items);
 
     //void listItems2(List<MenuData> menudata);
 }
