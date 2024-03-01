@@ -51,7 +51,8 @@ public class interactorSplashImpl  implements  interactorSplash{
 
             @Override
             public void onFailure(Call<responseSplash> call, Throwable t) {
-                Toast.makeText(context, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                presenter.setSplashData(null);
+                //Toast.makeText(context, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -63,6 +64,7 @@ public class interactorSplashImpl  implements  interactorSplash{
             if (RetrofitValidationsV2.checkSuccessCode(response.code())) {
                 getSplashData(response, context);
             } else {
+                presenter.setSplashData(null);
                 Toast.makeText(context, "" + RetrofitValidationsV2.getErrorByStatus(response.code(), context), Toast.LENGTH_SHORT).show();
             }
         }
@@ -81,10 +83,14 @@ public class interactorSplashImpl  implements  interactorSplash{
                         {
                             presenter.setSplashData(data);
                             Log.e("itemsMenu",""+data);
+                        }else {
+                            presenter.setSplashData(null);
                         }
+                    }else {
+                        presenter.setSplashData(null);
                     }
                 }else{
-                    Toast.makeText(context, "sin datos de vehiculos", Toast.LENGTH_SHORT).show();
+                    presenter.setSplashData(null);
                 }
     }
 }

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.bumptech.glide.Glide;
 import com.digimat.showcase.Login.view.LoginContainerActivity;
 import com.digimat.showcase.R;
 import com.digimat.showcase.Splash.model.dataSplash;
@@ -56,9 +57,14 @@ public class Splash extends AppCompatActivity implements viewSplash {
 
     @Override
     public void setSplash(dataSplash data) {
-        int color = Color.parseColor(data.getBackgroundColor());
-        splashbackground.setBackgroundColor(color);
+        if(data!=null) {
+            int color = Color.parseColor(data.getBackgroundColor());
+            splashbackground.setBackgroundColor(color);
 
+            Glide.with(this)
+                    .load(data.getBackgroundImage())
+                    .into(logo);
+        }
         initSplashScreenActivity();
     }
 }
