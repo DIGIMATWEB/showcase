@@ -27,35 +27,12 @@ public class Splash extends AppCompatActivity {
         setContentView(R.layout.splash_activity);
         initSplashScreenActivity();
     }
-
-
     private void initSplashScreenActivity() {
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, +WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
-        //Log.e("checkinguser","splash"+UserDataDB.getUserData().getEmployee_name());
-       // RealmConfig.initRealm(getApplicationContext());
-        //Log.e("checkinguser","splash              "+UnitDB.getUnitList());
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-               // if (UserDataDB.isEmpty()){
-              //      Log.e("checkinguser","go to login  ");
                     goToLoginContainer();
-                /*}else {
-                    SharedPreferences preferences = getApplicationContext().getSharedPreferences(GeneralConstantsV2.CREDENTIALS_PREFERENCES, Context.MODE_PRIVATE);
-                    String status = preferences.getString(GeneralConstantsV2.CLOSE_SESSION_PREFERENCES, null);
-                    
-                    if(status.equals("YES"))
-                    {
-                        goToLoginContainer();
-                    }else
-                    {
-                        goToMenu();
-                    }
-
-                }*/
             }
         }, 2500);
     }
@@ -69,16 +46,4 @@ public class Splash extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-    /*private void goToMenu(){
-        Bundle bundle = new Bundle();
-        bundle.putString("nav","UNITS");
-        Intent intent = new Intent(SplashScreenActivity.this,  menuViewImpl.class);// menuViewImpl.class);//MainMenuContainerActivity
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtras(bundle);
-        startActivity(intent);
-        finish();
-    }*/
-
-
 }
