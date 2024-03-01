@@ -1,32 +1,39 @@
 package com.digimat.showcase.Splash.view;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.digimat.showcase.GeneralUtils.GeneralConstantsV2;
 import com.digimat.showcase.Login.view.LoginContainerActivity;
-import com.digimat.showcase.Menu.view.FragmentNavigationMenuV3;
 import com.digimat.showcase.R;
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.digimat.showcase.Splash.model.dataSplash;
+import com.digimat.showcase.Splash.presenter.presenterSplash;
+import com.digimat.showcase.Splash.presenter.presenterSplashImpl;
 
-public class Splash extends AppCompatActivity {
-
+public class Splash extends AppCompatActivity implements viewSplash {
+    private presenterSplash presenter;
+    private ImageView logo;
+    private ConstraintLayout splashbackground;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
-        initSplashScreenActivity();
+        initView();
+        presenter.getSplashData();
     }
+
+    private void initView() {
+        logo=findViewById(R.id.logo);
+        splashbackground=findViewById(R.id.splashbackground);
+        presenter= new presenterSplashImpl(this,getApplicationContext());
+    }
+
     private void initSplashScreenActivity() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         new Handler().postDelayed(new Runnable() {
@@ -45,5 +52,13 @@ public class Splash extends AppCompatActivity {
         intent.putExtras(bndl);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void setSplash(dataSplash data) {
+        int color = Color.parseColor(data.getBackgroundColor());
+        splashbackground.setBackgroundColor(color);
+
+        initSplashScreenActivity();
     }
 }
