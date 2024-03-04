@@ -32,7 +32,6 @@ public class LoginViewImpl extends Fragment implements View.OnClickListener ,log
 
     private void initLoginViewImpl(View view) {
         buttonLogin =view.findViewById(R.id.buttonLogin);
-
         editTextUsername = view.findViewById(R.id.editTextUsername);
         editTextPassword = view.findViewById(R.id.editTextPassword);
         buttonLogin.setOnClickListener(this);

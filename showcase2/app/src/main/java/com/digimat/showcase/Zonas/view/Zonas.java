@@ -27,7 +27,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.data.kml.KmlLayer;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.List;
 
 public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
@@ -37,6 +41,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
     private List<dataFullVehicles> vehicles;
     private presenterVehicles presenter;
     private Marker vehicle;
+    private KmlLayer mKmlLayer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +75,14 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
+        /*try {
+            // Load KML file from resources (replace R.raw.kml_file with your KML file name)
+            mKmlLayer = new KmlLayer(mMap, R.raw.morelos_kml, getContext());
+            mKmlLayer.addLayerToMap();
+        } catch (IOException | XmlPullParserException e) {
+            e.printStackTrace();
+        }*/
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.9567483, -98.9836352), 13.5f));
 
         uiSettingsMap(mMap);

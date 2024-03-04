@@ -190,6 +190,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                     checkItem(menu1txt.getText().toString());//todo cambiar esto por claves
 
                 }
+                Log.e("menu",""+menu1txt.getText());
                 break;
             case R.id.iconMenu2:
                 if(menu2txt.getVisibility()==View.VISIBLE){
@@ -213,6 +214,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                     circleButtonefect5.setVisibility(View.GONE);
                     checkItem(menu2txt.getText().toString());
                 }
+                Log.e("menu",""+menu2txt.getText());
                 break;
             case R.id.iconMenu3:
                 if(menu3txt.getVisibility()==View.VISIBLE){
@@ -235,6 +237,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                     circleButtonefect5.setVisibility(View.GONE);
                     checkItem(menu3txt.getText().toString());
                 }
+                Log.e("menu",""+menu3txt.getText());
                 break;
             case R.id.iconMenu4:
                 if(menu4txt.getVisibility()==View.VISIBLE){
@@ -258,6 +261,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                     checkItem(menu4txt.getText().toString());
 
                 }
+                Log.e("menu",""+menu4txt.getText());
                 break;
             case R.id.iconMenu5:
                 if(menu5txt.getVisibility()==View.VISIBLE){
@@ -280,7 +284,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                     circleButtonefect4.setVisibility(View.GONE);
                     checkItem(menu5txt.getText().toString());
                 }
-                Log.e("myemenuItemssize",""+menu5txt.getText());
+                Log.e("menu",""+menu5txt.getText());
                 break;
         }
     }
@@ -300,7 +304,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                // ZonesFragment();
                 break;
             case "Checklist":
-                Toast.makeText(getContext(), "Modulo aun no implementado", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Modulo aun no implementado", Toast.LENGTH_SHORT).show();
                 break;
             case "Perfil":
               //  profileFragment();
