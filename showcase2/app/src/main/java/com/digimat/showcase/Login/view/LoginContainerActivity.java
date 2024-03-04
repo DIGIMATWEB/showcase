@@ -6,33 +6,29 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.digimat.showcase.Menu.view.menuViewImpl;
 import com.digimat.showcase.R;
 
-public class LoginContainerActivity extends AppCompatActivity implements View.OnClickListener {
-    private CardView buttonLogin;
+public class LoginContainerActivity extends AppCompatActivity  {
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_activity);
-        buttonLogin=findViewById(R.id.buttonLogin);
-        buttonLogin.setOnClickListener(this);
+        setContentView(R.layout.activity_container);
+      initLoginContainerView();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId())
-        {
-            case R.id.buttonLogin:
-                Intent intent = new Intent(this, menuViewImpl.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_CLEAR_TOP);//
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-
-                break;
+    public void initLoginContainerView() {
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.addToBackStack(LoginViewImpl.TAG);
+        transaction.add(R.id.login_containerF, new LoginViewImpl()).commit();
 
 
-        }
     }
+
 }

@@ -5,8 +5,10 @@ public class RetrofitEndPointsV2 {
     public static final String URL_SERVER = "http://digimat-interactive.com/";
     public static final String URL_MAP_API="http://newlandapps.com/";
     public static final String SPLASH= "f0Splash.php";
+    public static final String LOGIN ="f3login.php";
     public static final String GET_MENUS = "f14menuItems.php";
     public static final String URL_MAP_API_ROUTE="route";
     public static final String GET_VEHICLES = "f8getVehicles.php";
+
 
 }
