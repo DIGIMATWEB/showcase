@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.data.kml.KmlLayer;
+import com.google.maps.android.data.kml.KmlPlacemark;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -75,13 +76,16 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
-        /*try {
+        mMap.setTrafficEnabled(true);
+
+        try {
             // Load KML file from resources (replace R.raw.kml_file with your KML file name)
-            mKmlLayer = new KmlLayer(mMap, R.raw.morelos_kml, getContext());
+            mKmlLayer = new KmlLayer(mMap, R.raw.morkml, getContext());
             mKmlLayer.addLayerToMap();
+
         } catch (IOException | XmlPullParserException e) {
             e.printStackTrace();
-        }*/
+        }
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.9567483, -98.9836352), 13.5f));
 
@@ -92,14 +96,15 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.9567483, -98.9836352), 15.64f));
             }
         }, 4000);
-
     }
+
+
     private void uiSettingsMap(GoogleMap googleMap) {
         UiSettings uiSettings = googleMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(true);
         uiSettings.setRotateGesturesEnabled(false);
     }
-
+        //region lifecycle
     @Override
     public void onStart() {
         super.onStart();
@@ -138,7 +143,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
         super.onDestroy();
         mView.onDestroy();
     }
-
+    //endregion
     @Override
     public void setVehicles(List<dataFullVehicles> data) {
     this.vehicles=data;

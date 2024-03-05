@@ -49,7 +49,7 @@ public class Splash extends AppCompatActivity implements viewSplash {
         Bundle bndl = new Bundle();
         bndl.putBoolean("HelpStatus", false);
         Intent intent = new Intent(Splash.this, LoginContainerActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtras(bndl);
         startActivity(intent);
         finish();
