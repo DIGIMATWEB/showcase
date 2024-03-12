@@ -11,7 +11,6 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 public interface serviceSplash {
-
     @POST(RetrofitEndPointsV2.SPLASH)/** pinta las zonas en el mapa*/
     Call<responseSplash> getSplash(@Body requestSplash request);
 }

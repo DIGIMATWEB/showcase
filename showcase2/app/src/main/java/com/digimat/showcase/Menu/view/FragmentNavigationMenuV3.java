@@ -30,7 +30,10 @@ import java.util.List;
 
 import com.digimat.showcase.Menu.presenter.presenterMenus;
 import com.digimat.showcase.Menu.presenter.presenterMenusImpl;
+import com.digimat.showcase.Profile.view.profileViewImplements;
 import com.digimat.showcase.R;
+import com.digimat.showcase.Zonas.view.Zonas;
+import com.digimat.showcase.availableApps.view.appsViewImpl;
 
 public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickListener , menuView {
     public static final String TAG = FragmentNavigationMenuV3.class.getSimpleName();
@@ -167,7 +170,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iconMenu1:/** aqui solo van las animaiones*/
-
+                showProfile();
                 if(menu1txt.getVisibility()==View.VISIBLE){
                     menu1txt.setVisibility(View.GONE);
                     iconMenu1.startAnimation(zoomIcon2);
@@ -193,6 +196,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 Log.e("menu",""+menu1txt.getText());
                 break;
             case R.id.iconMenu2:
+                fragmentZones();
                 if(menu2txt.getVisibility()==View.VISIBLE){
                     menu2txt.setVisibility(View.GONE);
                     iconMenu2.startAnimation(zoomIcon2);
@@ -217,6 +221,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 Log.e("menu",""+menu2txt.getText());
                 break;
             case R.id.iconMenu3:
+                fragmentApps();
                 if(menu3txt.getVisibility()==View.VISIBLE){
                     menu3txt.setVisibility(View.GONE);
                     iconMenu3.startAnimation(zoomIcon2);
@@ -292,10 +297,8 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
     private void checkItem(String menu) {
         switch (menu) {
             case "Unidades":
-                //UnitsFragment();
                 break;
             case "Rastreo":
-               // TrackingFragment();
                 break;
             case "Notificaciones":
                // NotificationsFragment();
@@ -749,8 +752,24 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         /**iLLuiminateProfile();
          }*/
     //}
-
-
+        private void showProfile() {
+            FragmentManager manager = getActivity().getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            profileViewImplements profile = new profileViewImplements();
+            transaction.replace(R.id.conteinerMainFragments, profile, profileViewImplements.TAG).commit();
+        }
+        private void fragmentZones() {
+            FragmentManager manager = getActivity().getSupportFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            Zonas zonesFragment = new Zonas();
+            transaction.replace(R.id.conteinerMainFragments, zonesFragment, Zonas.TAG).commit();
+        }
+    private void fragmentApps() {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        appsViewImpl apps = new appsViewImpl();
+        transaction.replace(R.id.conteinerMainFragments, apps, appsViewImpl.TAG).commit();
+    }
    /* private void moreOptionsFragment() {
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

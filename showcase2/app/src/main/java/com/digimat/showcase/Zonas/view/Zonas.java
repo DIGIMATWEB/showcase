@@ -98,6 +98,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
         UiSettings uiSettings = googleMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(true);
         uiSettings.setRotateGesturesEnabled(false);
+        mMap.setPadding(0, 0, 0, 200);
     }
 
     @Override

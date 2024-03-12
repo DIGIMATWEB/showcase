@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.digimat.showcase.Profile.view.profileViewImplements;
 import com.digimat.showcase.Zonas.view.Zonas;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -41,8 +42,8 @@ public class menuViewImpl extends AppCompatActivity {
     private void showFragmentDashboard() {
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
-        Zonas zonesFragment = new Zonas();
-        transaction.add(R.id.conteinerMainFragments, zonesFragment, Zonas.TAG).commit();
+        profileViewImplements profile = new profileViewImplements();
+        transaction.add(R.id.conteinerMainFragments, profile, profileViewImplements.TAG).commit();
     }
     private void showFragmentNavigationButtons() {
         manager = getSupportFragmentManager();
