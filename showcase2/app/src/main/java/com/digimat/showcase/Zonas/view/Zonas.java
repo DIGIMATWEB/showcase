@@ -78,14 +78,14 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
         mMap.clear();
         mMap.setTrafficEnabled(true);
 
-        try {
-            // Load KML file from resources (replace R.raw.kml_file with your KML file name)
-            mKmlLayer = new KmlLayer(mMap, R.raw.morkml, getContext());
-            mKmlLayer.addLayerToMap();
-
-        } catch (IOException | XmlPullParserException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            // Load KML file from resources (replace R.raw.kml_file with your KML file name)
+////            mKmlLayer = new KmlLayer(mMap, R.raw.morkml, getContext());
+////            mKmlLayer.addLayerToMap();
+//
+//        } catch (IOException | XmlPullParserException e) {
+//            e.printStackTrace();
+//        }
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.9567483, -98.9836352), 13.5f));
 
