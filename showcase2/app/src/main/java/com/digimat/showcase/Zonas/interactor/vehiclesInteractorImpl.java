@@ -40,10 +40,10 @@ public class vehiclesInteractorImpl implements  requestFullVehicles{
     public void requestVehicles() {
        // SharedPreferences preferences = context.getSharedPreferences(GeneralConstantsV2.CREDENTIALS_PREFERENCES, Context.MODE_PRIVATE);
         //String token = preferences.getString(GeneralConstantsV2.TOKEN_PREFERENCES, null);
-        String token="af599b21642927b27963b1d66694896a";
-        if (token != null) {
-           // getVehiclesdata(token);/** aqui solo obtendremos los siguientes datos   cve_layer & tab_layer_color      */
-        }
+       String token="af599b21642927b27963b1d66694896a";
+       // if (token != null) {
+        getVehiclesdata(token);/** aqui solo obtendremos los siguientes datos   cve_layer & tab_layer_color      */
+        //}
     }
 
     private void getVehiclesdata(String token) {

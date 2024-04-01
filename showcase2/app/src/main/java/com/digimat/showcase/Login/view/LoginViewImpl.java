@@ -43,8 +43,8 @@ public class LoginViewImpl extends Fragment implements View.OnClickListener ,log
         switch (v.getId())
         {
             case R.id.buttonLogin:
-               presenter.requestLogin();
-
+               //presenter.requestLogin();
+                succesLogin();
                 break;
 
 

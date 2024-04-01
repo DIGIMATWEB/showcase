@@ -4,95 +4,142 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class dataFullVehicles {
+    @SerializedName("id")
+    @Expose
+    private String id;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("lastname")
+    @Expose
+    private String lastname;
+    @SerializedName("email")
+    @Expose
+    private String email;
+    @SerializedName("country")
+    @Expose
+    private String country;
+    @SerializedName("terms")
+    @Expose
+    private String terms;
+    @SerializedName("score")
+    @Expose
+    private String score;
+    @SerializedName("game")
+    @Expose
+    private String game;
+    @SerializedName("lat_user")
+    @Expose
+    private String latUser;
+    @SerializedName("longUser")
+    @Expose
+    private String longUser;
+    @SerializedName("fecha")
+    @Expose
+    private String fecha;
 
-
-    @SerializedName("mVehicleId")
-    @Expose
-    private String mVehicleId;
-    @SerializedName("mVehicleLat")
-    @Expose
-    private String mVehicleLat;
-    @SerializedName("mVehiclelong")
-    @Expose
-    private String mVehiclelong;
-    @SerializedName("mVehicleType")
-    @Expose
-    private String mVehicleType;
-    @SerializedName("mVehiclegForce")
-    @Expose
-    private String mVehiclegForce;
-    @SerializedName("mVehicleStatus")
-    @Expose
-    private String mVehicleStatus;
-    @SerializedName("mVehicleTrayectory")
-    @Expose
-    private String mVehicleTrayectory;
-
-    public dataFullVehicles(String mVehicleId, String mVehicleLat, String mVehiclelong, String mVehicleType, String mVehiclegForce, String mVehicleStatus, String mVehicleTrayectory) {
+    public dataFullVehicles(String id, String name, String lastname, String email, String country, String terms, String score, String game, String latUser, String longUser, String fecha) {
         super();
-        this.mVehicleId = mVehicleId;
-        this.mVehicleLat = mVehicleLat;
-        this.mVehiclelong = mVehiclelong;
-        this.mVehicleType = mVehicleType;
-        this.mVehiclegForce = mVehiclegForce;
-        this.mVehicleStatus = mVehicleStatus;
-        this.mVehicleTrayectory = mVehicleTrayectory;
+        this.id = id;
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.country = country;
+        this.terms = terms;
+        this.score = score;
+        this.game = game;
+        this.latUser = latUser;
+        this.longUser = longUser;
+        this.fecha = fecha;
     }
 
-    public String getmVehicleId() {
-        return mVehicleId;
+    public String getId() {
+        return id;
     }
 
-    public void setmVehicleId(String mVehicleId) {
-        this.mVehicleId = mVehicleId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getmVehicleLat() {
-        return mVehicleLat;
+    public String getName() {
+        return name;
     }
 
-    public void setmVehicleLat(String mVehicleLat) {
-        this.mVehicleLat = mVehicleLat;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getmVehiclelong() {
-        return mVehiclelong;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setmVehiclelong(String mVehiclelong) {
-        this.mVehiclelong = mVehiclelong;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
-    public String getmVehicleType() {
-        return mVehicleType;
+    public String getEmail() {
+        return email;
     }
 
-    public void setmVehicleType(String mVehicleType) {
-        this.mVehicleType = mVehicleType;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getmVehiclegForce() {
-        return mVehiclegForce;
+    public String getCountry() {
+        return country;
     }
 
-    public void setmVehiclegForce(String mVehiclegForce) {
-        this.mVehiclegForce = mVehiclegForce;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    public String getmVehicleStatus() {
-        return mVehicleStatus;
+    public String getTerms() {
+        return terms;
     }
 
-    public void setmVehicleStatus(String mVehicleStatus) {
-        this.mVehicleStatus = mVehicleStatus;
+    public void setTerms(String terms) {
+        this.terms = terms;
     }
 
-    public String getmVehicleTrayectory() {
-        return mVehicleTrayectory;
+    public String getScore() {
+        return score;
     }
 
-    public void setmVehicleTrayectory(String mVehicleTrayectory) {
-        this.mVehicleTrayectory = mVehicleTrayectory;
+    public void setScore(String score) {
+        this.score = score;
     }
+
+    public String getGame() {
+        return game;
+    }
+
+    public void setGame(String game) {
+        this.game = game;
+    }
+
+    public String getLatUser() {
+        return latUser;
+    }
+
+    public void setLatUser(String latUser) {
+        this.latUser = latUser;
+    }
+
+    public String getLongUser() {
+        return longUser;
+    }
+
+    public void setLongUser(String longUser) {
+        this.longUser = longUser;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
+    }
+
 
 }

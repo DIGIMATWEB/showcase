@@ -54,7 +54,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
     private void initTrackingMapFragment(View view, Bundle savedInstanceState) {
         bindViews(view);
         onCreateViewMap(savedInstanceState);
-
+        presenter.requestVehicles();
     }
 
     private void onCreateViewMap(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
     private void bindViews(View view) {
         mView = view.findViewById(R.id.map_view_tracking);
         presenter= new presenterVehiclesImpl(this,getContext());
-        presenter.requestVehicles();
+
     }
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -148,20 +148,17 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
     @Override
     public void setVehicles(List<dataFullVehicles> data) {
     this.vehicles=data;
-        setMarkers();
+        setMarkers(vehicles);
     }
 
-    private void setMarkers() {
-        for(int i =0;i<vehicles.size();i++)
-        {
-            //vehicle=vehicles.get(i).;
-            Log.e("Vehiculos",""+vehicles.get(i).getmVehicleLat());
-            LatLng ubicacion = new LatLng(Double.parseDouble( vehicles.get(i).getmVehicleLat()),Double.parseDouble(  vehicles.get(i).getmVehiclelong()));
+    private void setMarkers(List<dataFullVehicles> mvehicles) {
+        for (int i = 0; i < mvehicles.size(); i++) {
+            double lat = Double.parseDouble(mvehicles.get(i).getLatUser());
+            double lng = Double.parseDouble(mvehicles.get(i).getLongUser());
+            LatLng ubicacion = new LatLng(lat, lng);
             mMap.addMarker(new MarkerOptions()
                     .position(ubicacion)
-                    .title("Marker in Sydney"));
-           // googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                    .title("Marker " + i));
         }
-
     }
 }
