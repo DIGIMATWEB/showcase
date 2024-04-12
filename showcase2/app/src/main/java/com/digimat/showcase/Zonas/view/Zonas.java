@@ -72,11 +72,12 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
         presenter= new presenterVehiclesImpl(this,getContext());
 
     }
+    //region map config
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         mMap.clear();
-        mMap.setTrafficEnabled(true);
+       // mMap.setTrafficEnabled(true);
 
 //        try {
 //            // Load KML file from resources (replace R.raw.kml_file with your KML file name)
@@ -105,7 +106,8 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
         uiSettings.setRotateGesturesEnabled(false);
         mMap.setPadding(0, 0, 0, 200);
     }
-        //region lifecycle
+    //endregion
+    //region lifecycle
     @Override
     public void onStart() {
         super.onStart();
@@ -119,24 +121,17 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
     public void onResume() {
         super.onResume();
         mView.onResume();
-
-
-
     }
-
     @Override
     public void onPause() {
         super.onPause();
         mView.onPause();
         Log.e("onPause", "OK");
-
     }
-
     @Override
     public void onStop() {
         super.onStop();
         mView.onStop();
-
     }
 
     @Override
