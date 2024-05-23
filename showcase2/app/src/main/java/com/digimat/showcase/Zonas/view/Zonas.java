@@ -99,7 +99,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
         }, 4000);
     }
 
-
+//
     private void uiSettingsMap(GoogleMap googleMap) {
         UiSettings uiSettings = googleMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(true);
