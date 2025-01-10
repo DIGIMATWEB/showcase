@@ -11,4 +11,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/buttonServicios"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="160dp"
+        app:layout_constraintBottom_toBottomOf="@+id/map_view_tracking"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/moremenus" />
+    <!-- este boton debe desplegar un bottom sheet para ver la lista de servicios disponibles-->
 </androidx.constraintlayout.widget.ConstraintLayout>

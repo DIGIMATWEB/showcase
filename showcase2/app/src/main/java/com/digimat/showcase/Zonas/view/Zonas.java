@@ -8,12 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.digimat.showcase.R;
+import com.digimat.showcase.Zonas.Dialogs.bootmSheetsServicios;
 import com.digimat.showcase.Zonas.model.dataFullVehicles;
 import com.digimat.showcase.Zonas.presenter.presenterVehicles;
 import com.digimat.showcase.Zonas.presenter.presenterVehiclesImpl;
@@ -35,7 +37,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.List;
 
-public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
+public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,View.OnClickListener{
     public static final String TAG = Zonas.class.getSimpleName();
     private MapView mView;
     private GoogleMap mMap;
@@ -43,6 +45,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
     private presenterVehicles presenter;
     private Marker vehicle;
     private KmlLayer mKmlLayer;
+    private ImageView buttonServicios;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +72,8 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
 
     private void bindViews(View view) {
         mView = view.findViewById(R.id.map_view_tracking);
+        buttonServicios= view.findViewById(R.id. buttonServicios);
+        buttonServicios.setOnClickListener(this);
         presenter= new presenterVehiclesImpl(this,getContext());
 
     }
@@ -104,7 +109,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
         UiSettings uiSettings = googleMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(true);
         uiSettings.setRotateGesturesEnabled(false);
-        mMap.setPadding(0, 0, 0, 200);
+        mMap.setPadding(0, 0, 0, 100);
     }
     //endregion
     //region lifecycle
@@ -154,6 +159,16 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView{
             mMap.addMarker(new MarkerOptions()
                     .position(ubicacion)
                     .title("Marker " + i));
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.buttonServicios:
+                bootmSheetsServicios bottomSheetDialog = new bootmSheetsServicios();
+                bottomSheetDialog.show(getChildFragmentManager(), "bootmSheetsServicios");
+                break;
         }
     }
 }
