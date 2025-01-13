@@ -21,5 +21,45 @@
         app:layout_constraintBottom_toBottomOf="@+id/map_view_tracking"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/moremenus" />
+
+    <ImageView
+        android:id="@+id/colonias"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonServicios"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/colonias" />
+
+    <ImageView
+        android:id="@+id/vehiculos"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/colonias"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/vehiculos" />
+
+    <ImageView
+        android:id="@+id/zonesButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="250dp"
+        app:layout_constraintBottom_toTopOf="@+id/vehiculos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/colonias" />
+
+    <ImageView
+        android:id="@+id/vehiculosSimulados"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/zonesButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/vehiculos" />
     <!-- este boton debe desplegar un bottom sheet para ver la lista de servicios disponibles-->
 </androidx.constraintlayout.widget.ConstraintLayout>

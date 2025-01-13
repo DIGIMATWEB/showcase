@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.digimat.showcase.R;
 import com.digimat.showcase.Zonas.Dialogs.bootmSheetsServicios;
+import com.digimat.showcase.Zonas.Dialogs.zonesConfiguratuon;
 import com.digimat.showcase.Zonas.model.dataFullVehicles;
 import com.digimat.showcase.Zonas.presenter.presenterVehicles;
 import com.digimat.showcase.Zonas.presenter.presenterVehiclesImpl;
@@ -45,7 +46,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private presenterVehicles presenter;
     private Marker vehicle;
     private KmlLayer mKmlLayer;
-    private ImageView buttonServicios;
+    private ImageView buttonServicios,colonias,zonesButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +74,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private void bindViews(View view) {
         mView = view.findViewById(R.id.map_view_tracking);
         buttonServicios= view.findViewById(R.id. buttonServicios);
+        colonias = view.findViewById(R.id. colonias);
+        zonesButton =view.findViewById(R.id.zonesButton);
+        zonesButton.setOnClickListener(this);
         buttonServicios.setOnClickListener(this);
         presenter= new presenterVehiclesImpl(this,getContext());
 
@@ -99,7 +103,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.9567483, -98.9836352), 15.64f));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.9567483, -98.9836352), 14f));
             }
         }, 4000);
     }
@@ -166,9 +170,15 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonServicios:
+                //este bottom sheeet es para desplkegar una lista de servicios disponibles
                 bootmSheetsServicios bottomSheetDialog = new bootmSheetsServicios();
                 bottomSheetDialog.show(getChildFragmentManager(), "bootmSheetsServicios");
                 break;
+            case R.id.zonesButton:
+                zonesConfiguratuon zoneconfig = new zonesConfiguratuon();
+                zoneconfig.show(getChildFragmentManager(), "zonesConfiguratuon");
+                break;
+            }
         }
-    }
 }
+
