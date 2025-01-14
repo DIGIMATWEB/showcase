@@ -1,7 +1,6 @@
 package com.digimat.showcase.Zonas.view;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -10,16 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.digimat.showcase.R;
 import com.digimat.showcase.Zonas.Dialogs.bootmSheetsServicios;
+import com.digimat.showcase.Zonas.Dialogs.model.dotZones;
 import com.digimat.showcase.Zonas.Dialogs.zonesConfiguratuon;
+import com.digimat.showcase.Zonas.adapter.adapterCrudZones;
 import com.digimat.showcase.Zonas.model.dataFullVehicles;
 import com.digimat.showcase.Zonas.presenter.presenterVehicles;
 import com.digimat.showcase.Zonas.presenter.presenterVehiclesImpl;
@@ -32,13 +36,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.data.kml.KmlLayer;
-import com.google.maps.android.data.kml.KmlPlacemark;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,View.OnClickListener{
@@ -52,6 +52,13 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private ImageView buttonServicios,colonias,zonesButton;
     private ConstraintLayout xpand_crud;
     private ImageButton closeCrud;
+
+    private RecyclerView rvDetailZones;
+
+    private adapterCrudZones adapterCrud;
+    private List<dotZones> dotZones;
+    private TextView addtextDot;
+    private Marker dotZonenew;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,6 +90,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         xpand_crud=view.findViewById(R.id.xpand_crud);
         zonesButton =view.findViewById(R.id.zonesButton);
         closeCrud =view.findViewById(R.id.closeCrud);
+        rvDetailZones =view.findViewById(R.id.rvDetailZones);
+        addtextDot=view.findViewById(R.id. addtextDot);
+        addtextDot.setOnClickListener(this);
         closeCrud.setOnClickListener(this);
         zonesButton.setOnClickListener(this);
         buttonServicios.setOnClickListener(this);
@@ -173,7 +183,54 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     .title("Marker " + i));
         }
     }
+    private void fillAdapterCrud(List<dotZones> dotZoness) {
+        // Configura el LayoutManager para que sea horizontal
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        rvDetailZones.setLayoutManager(layoutManager);
+        // Crea y configura el Adapter (aquí asumes que ya tienes el Adapter implementado)
+        adapterCrud = new adapterCrudZones(dotZoness,getContext());
+        rvDetailZones.setAdapter(adapterCrud);
+    }
+    public void setDots(List<dotZones> dotZoness) {
+        this.dotZones=dotZoness;
 
+    }
+    public void ZoneCrud(Integer type) {
+        if(type==1){
+            //Toast.makeText(getContext(), "crear", Toast.LENGTH_SHORT).show();
+            xpand_crud.setVisibility(View.VISIBLE);
+            List<dotZones> dotZoness=new ArrayList<>();
+            fillAdapterCrud(dotZoness);
+        }else if(type==2){
+           // Toast.makeText(getContext(), "editar", Toast.LENGTH_SHORT).show();
+            xpand_crud.setVisibility(View.VISIBLE);
+            fillAdapterCrud(dotZones);
+        }else if(type==3){
+            //Toast.makeText(getContext(), "eliminar", Toast.LENGTH_SHORT).show();
+           // xpand_crud.setVisibility(View.VISIBLE);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomAlertDialogTheme);
+            builder.setTitle("Zona") // Set the title
+                    .setMessage("Deseas eliminar esta zona") // Set the message
+                    .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Action for "OK" button
+                            Toast.makeText(getContext(), "Pendiente eliminar", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Action for "Cancel" button
+                            dialog.dismiss(); // Close the dialog
+                        }
+                    });
+
+// Create and show the dialog
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -189,20 +246,16 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             case R.id.closeCrud:
                 xpand_crud.setVisibility(View.GONE);
                 break;
+            case R.id.addtextDot:
+                if(dotZonenew==null) {
+                    dotZonenew = mMap.addMarker(new MarkerOptions().position(mMap.getCameraPosition().target).title("Nuevo"));
+                }else{
+                    Toast.makeText(getContext(), "ya haz creado el marcador", Toast.LENGTH_SHORT).show();
+                }
+
+                adapterCrud.addDot(dotZonenew.getPosition());
+                break;
             }
         }
-
-    public void ZoneCrud(Integer type) {
-        if(type==1){
-            Toast.makeText(getContext(), "crear", Toast.LENGTH_SHORT).show();
-            xpand_crud.setVisibility(View.VISIBLE);
-        }else if(type==2){
-            Toast.makeText(getContext(), "editar", Toast.LENGTH_SHORT).show();
-            xpand_crud.setVisibility(View.VISIBLE);
-        }else if(type==3){
-            Toast.makeText(getContext(), "eliminar", Toast.LENGTH_SHORT).show();
-            xpand_crud.setVisibility(View.VISIBLE);
-        }
-    }
 }
 

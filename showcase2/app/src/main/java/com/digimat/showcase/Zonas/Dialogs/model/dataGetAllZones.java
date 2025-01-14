@@ -22,7 +22,6 @@ public class dataGetAllZones {
     
     private List<dotZones> dotZoness;
 
-
     public dataGetAllZones(String zoneId, String zoneName,String descZone, String ratio, List<dotZones> dotZoness) {
         super();
         this.zoneId = zoneId;
@@ -70,14 +69,6 @@ public class dataGetAllZones {
 
     public void setRatio(String ratio) {
         this.ratio = ratio;
-    }
-
-    public List<dotZones> getdotZoness() {
-        return dotZoness;
-    }
-
-    public void setdotZoness(List<dotZones> dotZoness) {
-        this.dotZoness = dotZoness;
     }
 
 }

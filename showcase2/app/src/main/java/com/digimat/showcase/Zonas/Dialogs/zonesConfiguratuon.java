@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.digimat.showcase.R;
 import com.digimat.showcase.Zonas.Dialogs.model.dataGetAllZones;
+import com.digimat.showcase.Zonas.Dialogs.model.dotZones;
 import com.digimat.showcase.Zonas.Dialogs.presenter.presenterZones;
 import com.digimat.showcase.Zonas.adapter.adapterCrudZones;
 import com.digimat.showcase.Zonas.adapter.adapterZones;
@@ -27,7 +28,7 @@ import java.util.List;
 public class zonesConfiguratuon extends BottomSheetDialogFragment implements View.OnClickListener ,interfaceZones.View{
     public static final String TAG = zonesConfiguratuon.class.getSimpleName();
     private RecyclerView rvListZones,rvDetailZones;
-    private ConstraintLayout constrainRvcrud;
+
     private adapterZones adapter;
     private adapterCrudZones adapterCrud;
     private ImageView addZones;
@@ -61,8 +62,7 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
 
     private void initView(View view) {
         rvListZones = view.findViewById(R.id.rvListZones);
-        constrainRvcrud = view.findViewById(R.id.constrainRvcrud);
-        rvDetailZones= view.findViewById(R.id.rvDetailZones);
+
         addZones = view.findViewById(R.id.addZones);
         addZones.setOnClickListener(this);
         buttonCancel = view.findViewById(R.id.buttonCancel);
@@ -87,15 +87,10 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
         adapter = new adapterZones(this,data,getContext());
         rvListZones.setAdapter(adapter);
     }
-    private void fillAdapterCrud() {
-        // Configura el LayoutManager para que sea horizontal
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        rvDetailZones.setLayoutManager(layoutManager);
-        // Crea y configura el Adapter (aquí asumes que ya tienes el Adapter implementado)
-        adapterCrud = new adapterCrudZones(getContext());
-        rvDetailZones.setAdapter(adapterCrud);
-}
 
+    public void senDotsEditor(List<dotZones> dotZoness) {
+        fragment.setDots(dotZoness);
+    }
     public void sendToEditorZone(Integer type){
         fragment.ZoneCrud(type);
         dismiss();
@@ -109,22 +104,16 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
                 break;
             case R.id.addZones:
                 sendToEditorZone(1);
-//                rvListZones.setVisibility(View.GONE);
-//                constrainRvcrud.setVisibility(View.VISIBLE);
-//                buttonAcept.setVisibility(View.VISIBLE);
-//                buttonCancel.setVisibility(View.VISIBLE);
-//                searchZones.setVisibility(View.GONE);
-                fillAdapterCrud();
                 break;
             case R.id.buttonCancel:
                 rvListZones.setVisibility(View.VISIBLE);
-                constrainRvcrud.setVisibility(View.GONE);
                 buttonAcept.setVisibility(View.GONE);
                 buttonCancel.setVisibility(View.GONE);
                 searchZones.setVisibility(View.VISIBLE);
                 break;
         }
     }
+
 
 
 }

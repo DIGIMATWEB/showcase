@@ -1,5 +1,6 @@
 package com.digimat.showcase.Zonas.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -38,10 +39,10 @@ public class adapterZones extends RecyclerView.Adapter<adapterZones.ItemViewHold
 
     // Este método enlaza los datos con el ViewHolder
     @Override
-    public void onBindViewHolder(adapterZones.ItemViewHolder holder, int position) {
+    public void onBindViewHolder(adapterZones.ItemViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.nameZone.setText(data.get(position).getZoneName());
         holder.descZone.setText(data.get(position).getDescZone());
-        if (data.get(position).getdotZoness().size()>1&&data.get(position).getRatio()!="1"){
+        if (data.get(position).getDotZoness().size()>1&&data.get(position).getRatio()!="1"){
             Glide.with(context).load(R.drawable.poligons).into(holder.typeZone);
             holder.ratio.setVisibility(View.GONE);
         }else{
@@ -65,7 +66,9 @@ public class adapterZones extends RecyclerView.Adapter<adapterZones.ItemViewHold
         holder.editTextB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mview.senDotsEditor(data.get(position).getDotZoness());
                 mview.sendToEditorZone(2);
+
             }
         });
         holder.eraseTextB.setOnClickListener(new View.OnClickListener() {
