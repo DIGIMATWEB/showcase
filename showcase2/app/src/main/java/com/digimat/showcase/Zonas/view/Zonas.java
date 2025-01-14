@@ -198,8 +198,10 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             xpand_crud.setVisibility(View.VISIBLE);
         }else if(type==2){
             Toast.makeText(getContext(), "editar", Toast.LENGTH_SHORT).show();
+            xpand_crud.setVisibility(View.VISIBLE);
         }else if(type==3){
             Toast.makeText(getContext(), "eliminar", Toast.LENGTH_SHORT).show();
+            xpand_crud.setVisibility(View.VISIBLE);
         }
     }
 }
