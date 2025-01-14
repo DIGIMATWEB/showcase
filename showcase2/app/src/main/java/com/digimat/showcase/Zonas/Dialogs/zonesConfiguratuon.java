@@ -19,6 +19,7 @@ import com.digimat.showcase.Zonas.Dialogs.model.dataGetAllZones;
 import com.digimat.showcase.Zonas.Dialogs.presenter.presenterZones;
 import com.digimat.showcase.Zonas.adapter.adapterCrudZones;
 import com.digimat.showcase.Zonas.adapter.adapterZones;
+import com.digimat.showcase.Zonas.view.Zonas;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
     private Button buttonCancel, buttonAcept;
     private SearchView searchZones;
     private interfaceZones.Presenter presenter;
+    private Zonas fragment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        fragment= (Zonas) getParentFragment();
         initView(view);
         // Configurar el botón de cerrar
 
@@ -81,7 +84,7 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvListZones.setLayoutManager(layoutManager);
         // Crea y configura el Adapter (aquí asumes que ya tienes el Adapter implementado)
-        adapter = new adapterZones(data,getContext());
+        adapter = new adapterZones(this,data,getContext());
         rvListZones.setAdapter(adapter);
     }
     private void fillAdapterCrud() {
@@ -93,6 +96,10 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
         rvDetailZones.setAdapter(adapterCrud);
 }
 
+    public void sendToEditorZone(Integer type){
+        fragment.ZoneCrud(type);
+        dismiss();
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId())
@@ -101,11 +108,12 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
                 dismiss();
                 break;
             case R.id.addZones:
-                rvListZones.setVisibility(View.GONE);
-                constrainRvcrud.setVisibility(View.VISIBLE);
-                buttonAcept.setVisibility(View.VISIBLE);
-                buttonCancel.setVisibility(View.VISIBLE);
-                searchZones.setVisibility(View.GONE);
+                sendToEditorZone(1);
+//                rvListZones.setVisibility(View.GONE);
+//                constrainRvcrud.setVisibility(View.VISIBLE);
+//                buttonAcept.setVisibility(View.VISIBLE);
+//                buttonCancel.setVisibility(View.VISIBLE);
+//                searchZones.setVisibility(View.GONE);
                 fillAdapterCrud();
                 break;
             case R.id.buttonCancel:

@@ -8,9 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -47,6 +50,8 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private Marker vehicle;
     private KmlLayer mKmlLayer;
     private ImageView buttonServicios,colonias,zonesButton;
+    private ConstraintLayout xpand_crud;
+    private ImageButton closeCrud;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,7 +80,10 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         mView = view.findViewById(R.id.map_view_tracking);
         buttonServicios= view.findViewById(R.id. buttonServicios);
         colonias = view.findViewById(R.id. colonias);
+        xpand_crud=view.findViewById(R.id.xpand_crud);
         zonesButton =view.findViewById(R.id.zonesButton);
+        closeCrud =view.findViewById(R.id.closeCrud);
+        closeCrud.setOnClickListener(this);
         zonesButton.setOnClickListener(this);
         buttonServicios.setOnClickListener(this);
         presenter= new presenterVehiclesImpl(this,getContext());
@@ -178,7 +186,21 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 zonesConfiguratuon zoneconfig = new zonesConfiguratuon();
                 zoneconfig.show(getChildFragmentManager(), "zonesConfiguratuon");
                 break;
+            case R.id.closeCrud:
+                xpand_crud.setVisibility(View.GONE);
+                break;
             }
         }
+
+    public void ZoneCrud(Integer type) {
+        if(type==1){
+            Toast.makeText(getContext(), "crear", Toast.LENGTH_SHORT).show();
+            xpand_crud.setVisibility(View.VISIBLE);
+        }else if(type==2){
+            Toast.makeText(getContext(), "editar", Toast.LENGTH_SHORT).show();
+        }else if(type==3){
+            Toast.makeText(getContext(), "eliminar", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
 
