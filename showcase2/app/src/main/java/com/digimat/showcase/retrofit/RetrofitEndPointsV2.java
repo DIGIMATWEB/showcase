@@ -13,4 +13,6 @@ public class RetrofitEndPointsV2 {
 
 
     public static final String SET_APPS = "f19setAppsAvailable.php";
+    public static final String GET_ZONES = "zonas/getZones.php";
+
 }
