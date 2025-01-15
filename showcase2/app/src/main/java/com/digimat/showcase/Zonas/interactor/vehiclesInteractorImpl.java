@@ -1,19 +1,21 @@
 package com.digimat.showcase.Zonas.interactor;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.digimat.showcase.GeneralUtils.GeneralConstantsV2;
-import com.digimat.showcase.Zonas.model.dataFullVehicles;
-import com.digimat.showcase.Zonas.model.vehiclesRequest;
-import com.digimat.showcase.Zonas.model.vehiclesResponse;
+import com.digimat.showcase.Zonas.Dialogs.model.dotZonesm;
+import com.digimat.showcase.Zonas.model.getVehicles.dataFullVehicles;
+import com.digimat.showcase.Zonas.model.getVehicles.vehiclesRequest;
+import com.digimat.showcase.Zonas.model.getVehicles.vehiclesResponse;
+import com.digimat.showcase.Zonas.model.updateZones.requestUpdateZones;
+import com.digimat.showcase.Zonas.model.updateZones.responseUpdateZone;
 import com.digimat.showcase.Zonas.presenter.presenterVehicles;
 import com.digimat.showcase.Zonas.presenter.presenterVehiclesImpl;
 import com.digimat.showcase.Zonas.util.vehicles;
 import com.digimat.showcase.retrofit.RetrofitClientV2;
 import com.digimat.showcase.retrofit.RetrofitValidationsV2;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -90,5 +92,52 @@ public class vehiclesInteractorImpl implements  requestFullVehicles{
         }else{
             Toast.makeText(context, "sin datos de vehiculos", Toast.LENGTH_SHORT).show();
         }
+    }  @Override
+    public void updateZone(String zoneId, String descZone, String ratio, List<dotZonesm> dotZones) {
+        requestUpdateZones request =new requestUpdateZones(Integer.valueOf(zoneId),descZone,Integer.valueOf(ratio),dotZones);
+        Call<responseUpdateZone> call = service.setUpdatedZone(request);
+        call.enqueue(new Callback<responseUpdateZone>() {
+            @Override
+            public void onResponse(Call<responseUpdateZone> call, Response<responseUpdateZone> response) {
+                validateCodeCreateZone(response, context);
+            }
+
+            @Override
+            public void onFailure(Call<responseUpdateZone> call, Throwable t) {
+                Toast.makeText(context, "onFailure  updateZone cause :" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
+    private void validateCodeCreateZone(Response<responseUpdateZone> response, Context context) {
+        if (response != null) {
+
+            if (RetrofitValidationsV2.checkSuccessCode(response.code())) {
+                getZonedata(response, context);
+            } else {
+                Toast.makeText(context, "" + RetrofitValidationsV2.getErrorByStatus(response.code(), context), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void getZonedata(Response<responseUpdateZone> response, Context context) {
+        responseUpdateZone resp=response.body();
+        if (resp != null) {
+            String message = resp.getMessage();
+            int responseCode = resp.getResponseCode();
+            if (responseCode == GeneralConstantsV2.RESPONSE_CODE_OK) {
+                List<dotZonesm> data = resp.getdotZonesms();
+
+                if (data != null)//data
+                {
+                    Gson gson=new Gson();
+                    String json=gson.toJson(data);
+                    Toast.makeText(context, "Datos actualizados " +json, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }else{
+            Toast.makeText(context, "sin puntos de la Zona", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

@@ -66,6 +66,11 @@ public class adapterZones extends RecyclerView.Adapter<adapterZones.ItemViewHold
         holder.editTextB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mview.editZonesValues(data.get(position).getZoneId(),data.get(position).getDescZone(),data.get(position).getRatio());
+                        //Integer idzone,
+                //    String descripcion,
+                //    Integer radio,
+                //    List<dotZonesm> dotZonesms
                 mview.senDotsEditor(data.get(position).getDotZoness());
                 mview.sendToEditorZone(2);
 

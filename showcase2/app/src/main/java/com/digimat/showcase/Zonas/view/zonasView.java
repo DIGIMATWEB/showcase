@@ -1,6 +1,6 @@
 package com.digimat.showcase.Zonas.view;
 
-import com.digimat.showcase.Zonas.model.dataFullVehicles;
+import com.digimat.showcase.Zonas.model.getVehicles.dataFullVehicles;
 
 import java.util.List;
 

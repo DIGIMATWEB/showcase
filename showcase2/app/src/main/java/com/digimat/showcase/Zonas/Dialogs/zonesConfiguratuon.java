@@ -35,6 +35,7 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
     private SearchView searchZones;
     private interfaceZones.Presenter presenter;
     private Zonas fragment;
+    private List<dataGetAllZones> dataZones;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,6 +76,7 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
     }
     @Override
     public void setZones(List<dataGetAllZones> data) {
+        this.dataZones=data;
         fillAdapter(data);
     }
 
@@ -90,6 +92,9 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
     public void senDotsEditor(List<dotZonesm> dotZoness) {
         fragment.setDots(dotZoness);
     }
+    public void editZonesValues(String zoneId, String descZone, String ratio) {
+        fragment.editZonesValues(zoneId,descZone,ratio);
+    }
     public void sendToEditorZone(Integer type){
         fragment.ZoneCrud(type);
         dismiss();
@@ -102,6 +107,7 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
                 dismiss();
                 break;
             case R.id.addZones:
+
                 sendToEditorZone(1);
                 break;
             case R.id.buttonCancel:

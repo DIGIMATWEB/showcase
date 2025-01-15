@@ -9,7 +9,6 @@ import com.digimat.showcase.Menu.models.requestMenus;
 import com.digimat.showcase.Menu.models.responseMenus;
 import com.digimat.showcase.Menu.presenter.presenterMenus;
 import com.digimat.showcase.Menu.util.serviceMenus;
-import com.digimat.showcase.Zonas.model.dataFullVehicles;
 import com.digimat.showcase.retrofit.RetrofitClientV2;
 import com.digimat.showcase.retrofit.RetrofitValidationsV2;
 

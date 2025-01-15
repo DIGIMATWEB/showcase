@@ -65,7 +65,7 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
                 mview.removeNewDot(dotZoness,position);
             }
         });
-
+        mview.drawTemoZone(dotZoness);
     }
     // Este método retorna la cantidad de items en la lista
     @Override
@@ -85,6 +85,7 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
         }else{
             dotZoness.add( new dotZonesm(String.valueOf(finalPosition.latitude), String.valueOf(finalPosition.longitude)));
         }
+        mview.updateAfterScrollMarker(dotZoness);
         notifyDataSetChanged();
     }
     public  void UpdateView(List<dotZonesm> newDots) {
@@ -99,6 +100,15 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
         notifyItemRemoved(position);
         // Notify the adapter to update the positions of the remaining items
         notifyItemRangeChanged(position, dotZoness.size());
+    }
+
+    public void notifyRemovedOnSwipe(int position) {
+        dotZoness.remove(position);
+        // Notify the adapter about the removed item
+        notifyItemRemoved(position);
+        // Notify the adapter to update the positions of the remaining items
+        notifyItemRangeChanged(position, dotZoness.size());
+        mview.updateTemoZone(dotZoness);
     }
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {

@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +26,7 @@ import com.digimat.showcase.Zonas.Dialogs.bootmSheetsServicios;
 import com.digimat.showcase.Zonas.Dialogs.model.dotZonesm;
 import com.digimat.showcase.Zonas.Dialogs.zonesConfiguratuon;
 import com.digimat.showcase.Zonas.adapter.adapterCrudZones;
-import com.digimat.showcase.Zonas.model.dataFullVehicles;
+import com.digimat.showcase.Zonas.model.getVehicles.dataFullVehicles;
 import com.digimat.showcase.Zonas.presenter.presenterVehicles;
 import com.digimat.showcase.Zonas.presenter.presenterVehiclesImpl;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -51,7 +52,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private KmlLayer mKmlLayer;
     private ImageView buttonServicios,colonias,zonesButton;
     private ConstraintLayout xpand_crud;
-    private ImageButton closeCrud;
+    private ImageButton closeCrud,updateCrud;
 
     private RecyclerView rvDetailZones;
 
@@ -59,6 +60,10 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private List<dotZonesm> dotZones;
     private TextView addtextDot;
     private Marker dotZonenew;
+    private String zoneId;
+    private String descZone;
+    private String ratio;
+    private Integer typeEditZone;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,6 +97,8 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         closeCrud =view.findViewById(R.id.closeCrud);
         rvDetailZones =view.findViewById(R.id.rvDetailZones);
         addtextDot=view.findViewById(R.id. addtextDot);
+        updateCrud=view.findViewById(R.id. updateCrud);
+        updateCrud.setOnClickListener(this);
         addtextDot.setOnClickListener(this);
         closeCrud.setOnClickListener(this);
         zonesButton.setOnClickListener(this);
@@ -186,28 +193,54 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         }
     }
     private void fillAdapterCrud(List<dotZonesm> dotZoness) {
-        // Configura el LayoutManager para que sea horizontal
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvDetailZones.setLayoutManager(layoutManager);
-        // Crea y configura el Adapter (aquí asumes que ya tienes el Adapter implementado)
-        adapterCrud = new adapterCrudZones(this,dotZoness,getContext());
+
+        adapterCrud = new adapterCrudZones(this, dotZoness, getContext());
         rvDetailZones.setAdapter(adapterCrud);
+
+        // Attach ItemTouchHelper for swipe functionality
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                // No move action needed
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                // Get the position of the item that was swiped
+                int position = viewHolder.getAdapterPosition();
+
+                // Remove the item from the adapter and the list
+                adapterCrud.notifyRemovedOnSwipe(position);
+            }
+        });
+
+        itemTouchHelper.attachToRecyclerView(rvDetailZones);
     }
-    public void setDots(List<dotZonesm> dotZoness) {
+
+    public void setDots(List<dotZonesm> dotZoness) {//guarda los puntos del recycler heredado
         this.dotZones=dotZoness;
 
     }
+    public void editZonesValues(String zoneId, String descZone, String ratio) {
+        this.zoneId=zoneId;
+        this.descZone=descZone;
+        this.ratio=ratio;
+    }
     public void ZoneCrud(Integer type) {
-        if(type==1){
+        this.typeEditZone=type;
+        if(typeEditZone==1){
             //Toast.makeText(getContext(), "crear", Toast.LENGTH_SHORT).show();
             xpand_crud.setVisibility(View.VISIBLE);
             List<dotZonesm> dotZoness=new ArrayList<>();
             fillAdapterCrud(dotZoness);
-        }else if(type==2){
+        }else if(typeEditZone==2){
            // Toast.makeText(getContext(), "editar", Toast.LENGTH_SHORT).show();
             xpand_crud.setVisibility(View.VISIBLE);
             fillAdapterCrud(dotZones);
-        }else if(type==3){
+        }else if(typeEditZone==3){
             //Toast.makeText(getContext(), "eliminar", Toast.LENGTH_SHORT).show();
            // xpand_crud.setVisibility(View.VISIBLE);
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.CustomAlertDialogTheme);
@@ -233,6 +266,64 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             dialog.show();
         }
     }
+
+    public void saveNewDot(List<dotZonesm> dotZoness, int position) {
+
+        if (dotZonenew != null) {/**esto solo remuieve el marcador de nuevo punto creado*/
+            dotZonenew.remove();
+            dotZonenew=null;
+
+        }
+        this.dotZones=dotZoness;
+        adapterCrud.UpdateView(dotZones);
+    }
+
+    public void removeNewDot(List<dotZonesm> dotZoness, int position) {
+        if (dotZonenew != null) {/**esto solo remuieve el marcador de nuevo punto creado*/
+            dotZonenew.remove();
+            dotZonenew=null;
+
+        }
+        this.dotZones=dotZoness;
+        adapterCrud.notifyRemoved(position);
+    }
+    public void updateAfterScrollMarker(List<dotZonesm> dotZoness) {
+        this.dotZones=dotZoness;
+    }
+    @SuppressLint("PotentialBehaviorOverride")
+    private void setupDragNewMarker() {
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                // Called when the user starts dragging the marker
+                Log.d("MarkerDrag", "Dragging started for: " + marker.getTitle());
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+                // Called repeatedly as the marker is being dragged
+                LatLng position = marker.getPosition();
+                Log.d("MarkerDrag", "Dragging at: " + position.latitude + ", " + position.longitude);
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                // Called when the user stops dragging the marker
+                LatLng finalPosition = marker.getPosition();
+                Log.d("MarkerDrag", "Dragging ended at: " + finalPosition.latitude + ", " + finalPosition.longitude);
+
+                // Update the marker's position in the adapter
+                adapterCrud.updateDotPosition( finalPosition); // Implement update logic in your adapter
+            }
+        });
+        adapterCrud.addDot(dotZonenew.getPosition());
+    }
+    public void drawTemoZone(List<dotZonesm> dotZoness) {
+        Log.e("drawTempZone", "drawTempZone");
+    }
+    public void updateTemoZone(List<dotZonesm> dotZoness) {
+        Toast.makeText(getContext(), "updateTempZone", Toast.LENGTH_SHORT).show();
+    }
     @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onClick(View v) {
@@ -255,57 +346,30 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 }
 
                 break;
+            case R.id.updateCrud:
+                if(typeEditZone==1){
+                    Toast.makeText(getContext(), "crear zona pendiente endpoint", Toast.LENGTH_SHORT).show();
+                }else if(typeEditZone==2){
+                    this.zoneId=zoneId;
+                    this.descZone=descZone;
+                    this.ratio=ratio;
+                    presenter.updateZone(zoneId,descZone,ratio,dotZones);
+                }
+                break;
             case R.id.addtextDot:
                 if(dotZonenew==null) {
                     dotZonenew = mMap.addMarker(new MarkerOptions().position(mMap.getCameraPosition().target).title("Nuevo punto").draggable(true));
-                    mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-                        @Override
-                        public void onMarkerDragStart(Marker marker) {
-                            // Called when the user starts dragging the marker
-                            Log.d("MarkerDrag", "Dragging started for: " + marker.getTitle());
-                        }
+                    setupDragNewMarker();
 
-                        @Override
-                        public void onMarkerDrag(Marker marker) {
-                            // Called repeatedly as the marker is being dragged
-                            LatLng position = marker.getPosition();
-                            Log.d("MarkerDrag", "Dragging at: " + position.latitude + ", " + position.longitude);
-                        }
-
-                        @Override
-                        public void onMarkerDragEnd(Marker marker) {
-                            // Called when the user stops dragging the marker
-                            LatLng finalPosition = marker.getPosition();
-                            Log.d("MarkerDrag", "Dragging ended at: " + finalPosition.latitude + ", " + finalPosition.longitude);
-
-                            // Update the marker's position in the adapter
-                            adapterCrud.updateDotPosition( finalPosition); // Implement update logic in your adapter
-                        }
-                    });
-                    adapterCrud.addDot(dotZonenew.getPosition());
                 }else{
                     Toast.makeText(getContext(), "ya haz creado el marcador", Toast.LENGTH_SHORT).show();
                 }
                 break;
             }
-        }
-
-    public void saveNewDot(List<dotZonesm> dotZoness, int position) {
-        if (dotZonenew != null) {
-            dotZonenew.remove();
-            dotZonenew=null;
 
         }
-        adapterCrud.UpdateView(dotZoness);
-    }
 
-    public void removeNewDot(List<dotZonesm> dotZoness, int position) {
-        if (dotZonenew != null) {
-            dotZonenew.remove();
-            dotZonenew=null;
 
-        }
-        adapterCrud.notifyRemoved(position);
-    }
+
 }
 

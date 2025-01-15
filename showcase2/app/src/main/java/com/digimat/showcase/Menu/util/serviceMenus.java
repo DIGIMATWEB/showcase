@@ -2,8 +2,6 @@ package com.digimat.showcase.Menu.util;
 
 import com.digimat.showcase.Menu.models.requestMenus;
 import com.digimat.showcase.Menu.models.responseMenus;
-import com.digimat.showcase.Zonas.model.vehiclesRequest;
-import com.digimat.showcase.Zonas.model.vehiclesResponse;
 import com.digimat.showcase.retrofit.RetrofitEndPointsV2;
 
 import retrofit2.Call;
