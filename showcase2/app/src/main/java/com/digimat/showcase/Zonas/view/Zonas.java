@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.digimat.showcase.R;
 import com.digimat.showcase.Zonas.Dialogs.bootmSheetsServicios;
-import com.digimat.showcase.Zonas.Dialogs.model.dotZones;
+import com.digimat.showcase.Zonas.Dialogs.model.dotZonesm;
 import com.digimat.showcase.Zonas.Dialogs.zonesConfiguratuon;
 import com.digimat.showcase.Zonas.adapter.adapterCrudZones;
 import com.digimat.showcase.Zonas.model.dataFullVehicles;
@@ -33,7 +33,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -57,7 +56,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private RecyclerView rvDetailZones;
 
     private adapterCrudZones adapterCrud;
-    private List<dotZones> dotZones;
+    private List<dotZonesm> dotZones;
     private TextView addtextDot;
     private Marker dotZonenew;
 
@@ -186,15 +185,15 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             }
         }
     }
-    private void fillAdapterCrud(List<dotZones> dotZoness) {
+    private void fillAdapterCrud(List<dotZonesm> dotZoness) {
         // Configura el LayoutManager para que sea horizontal
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvDetailZones.setLayoutManager(layoutManager);
         // Crea y configura el Adapter (aquí asumes que ya tienes el Adapter implementado)
-        adapterCrud = new adapterCrudZones(dotZoness,getContext());
+        adapterCrud = new adapterCrudZones(this,dotZoness,getContext());
         rvDetailZones.setAdapter(adapterCrud);
     }
-    public void setDots(List<dotZones> dotZoness) {
+    public void setDots(List<dotZonesm> dotZoness) {
         this.dotZones=dotZoness;
 
     }
@@ -202,7 +201,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         if(type==1){
             //Toast.makeText(getContext(), "crear", Toast.LENGTH_SHORT).show();
             xpand_crud.setVisibility(View.VISIBLE);
-            List<dotZones> dotZoness=new ArrayList<>();
+            List<dotZonesm> dotZoness=new ArrayList<>();
             fillAdapterCrud(dotZoness);
         }else if(type==2){
            // Toast.makeText(getContext(), "editar", Toast.LENGTH_SHORT).show();
@@ -290,5 +289,23 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 break;
             }
         }
+
+    public void saveNewDot(List<dotZonesm> dotZoness, int position) {
+        if (dotZonenew != null) {
+            dotZonenew.remove();
+            dotZonenew=null;
+
+        }
+        adapterCrud.UpdateView(dotZoness);
+    }
+
+    public void removeNewDot(List<dotZonesm> dotZoness, int position) {
+        if (dotZonenew != null) {
+            dotZonenew.remove();
+            dotZonenew=null;
+
+        }
+        adapterCrud.notifyRemoved(position);
+    }
 }
 

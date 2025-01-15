@@ -10,13 +10,12 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.digimat.showcase.R;
 import com.digimat.showcase.Zonas.Dialogs.model.dataGetAllZones;
-import com.digimat.showcase.Zonas.Dialogs.model.dotZones;
+import com.digimat.showcase.Zonas.Dialogs.model.dotZonesm;
 import com.digimat.showcase.Zonas.Dialogs.presenter.presenterZones;
 import com.digimat.showcase.Zonas.adapter.adapterCrudZones;
 import com.digimat.showcase.Zonas.adapter.adapterZones;
@@ -88,7 +87,7 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
         rvListZones.setAdapter(adapter);
     }
 
-    public void senDotsEditor(List<dotZones> dotZoness) {
+    public void senDotsEditor(List<dotZonesm> dotZoness) {
         fragment.setDots(dotZoness);
     }
     public void sendToEditorZone(Integer type){

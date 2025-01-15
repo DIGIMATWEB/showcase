@@ -20,9 +20,9 @@ public class dataGetAllZones {
     private String ratio;
     @SerializedName("dots")
     
-    private List<dotZones> dotZoness;
+    private List<dotZonesm> dotZoness;
 
-    public dataGetAllZones(String zoneId, String zoneName,String descZone, String ratio, List<dotZones> dotZoness) {
+    public dataGetAllZones(String zoneId, String zoneName,String descZone, String ratio, List<dotZonesm> dotZoness) {
         super();
         this.zoneId = zoneId;
         this.zoneName = zoneName;
@@ -55,11 +55,11 @@ public class dataGetAllZones {
         this.descZone = descZone;
     }
 
-    public List<dotZones> getDotZoness() {
+    public List<dotZonesm> getDotZoness() {
         return dotZoness;
     }
 
-    public void setDotZoness(List<dotZones> dotZoness) {
+    public void setDotZoness(List<dotZonesm> dotZoness) {
         this.dotZoness = dotZoness;
     }
 

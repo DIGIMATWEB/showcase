@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="70dp"
@@ -21,10 +22,10 @@
             android:id="@+id/editTextLat"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:singleLine="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp" />
+            android:layout_marginEnd="10dp"
+            android:singleLine="true" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -48,7 +49,30 @@
     </androidx.cardview.widget.CardView>
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/dot_add"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:visibility="gone"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cardView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/dot_add" />
+
+    <ImageView
+        android:id="@+id/dot_remove"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/dot_add"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/dot_remove" />
+    <ImageView
+        android:id="@+id/dragButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="10dp"
