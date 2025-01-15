@@ -1,5 +1,6 @@
 package com.digimat.showcase.Zonas.view;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -231,6 +232,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             dialog.show();
         }
     }
+    @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -245,15 +247,44 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 break;
             case R.id.closeCrud:
                 xpand_crud.setVisibility(View.GONE);
+                if (dotZonenew != null) {
+                    dotZonenew.remove();
+                    dotZonenew=null;
+
+                }
+
                 break;
             case R.id.addtextDot:
                 if(dotZonenew==null) {
-                    dotZonenew = mMap.addMarker(new MarkerOptions().position(mMap.getCameraPosition().target).title("Nuevo"));
+                    dotZonenew = mMap.addMarker(new MarkerOptions().position(mMap.getCameraPosition().target).title("Nuevo punto").draggable(true));
+                    mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                        @Override
+                        public void onMarkerDragStart(Marker marker) {
+                            // Called when the user starts dragging the marker
+                            Log.d("MarkerDrag", "Dragging started for: " + marker.getTitle());
+                        }
+
+                        @Override
+                        public void onMarkerDrag(Marker marker) {
+                            // Called repeatedly as the marker is being dragged
+                            LatLng position = marker.getPosition();
+                            Log.d("MarkerDrag", "Dragging at: " + position.latitude + ", " + position.longitude);
+                        }
+
+                        @Override
+                        public void onMarkerDragEnd(Marker marker) {
+                            // Called when the user stops dragging the marker
+                            LatLng finalPosition = marker.getPosition();
+                            Log.d("MarkerDrag", "Dragging ended at: " + finalPosition.latitude + ", " + finalPosition.longitude);
+
+                            // Update the marker's position in the adapter
+                            adapterCrud.updateDotPosition( finalPosition); // Implement update logic in your adapter
+                        }
+                    });
+                    adapterCrud.addDot(dotZonenew.getPosition());
                 }else{
                     Toast.makeText(getContext(), "ya haz creado el marcador", Toast.LENGTH_SHORT).show();
                 }
-
-                adapterCrud.addDot(dotZonenew.getPosition());
                 break;
             }
         }

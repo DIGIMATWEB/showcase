@@ -44,7 +44,14 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
     }
 
     public void addDot(LatLng position) {
-        dotZoness.add(new dotZones(String.valueOf(position.latitude),String.valueOf(position.longitude)));
+        if(!dotZoness.isEmpty()) {
+            dotZoness.add( new dotZones(String.valueOf(position.latitude), String.valueOf(position.longitude)));
+        }
+        notifyDataSetChanged();
+    }
+
+    public void updateDotPosition(LatLng finalPosition) {
+        dotZoness.set(dotZoness.size()-1,new dotZones(String.valueOf(finalPosition.latitude),String.valueOf(finalPosition.longitude)));
         notifyDataSetChanged();
     }
 

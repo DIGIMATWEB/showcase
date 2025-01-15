@@ -8,11 +8,11 @@
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="350dp"
-        android:background="@drawable/ic_backgroundrocket"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
+    <!--android:background="@drawable/ic_backgroundrocket"-->
     <EditText
         android:id="@+id/editTextUsername"
         android:layout_width="0dp"
