@@ -35,13 +35,20 @@ public class presenterVehiclesImpl implements presenterVehicles{
             interactor.updateZone(zoneId,descZone,ratio,dotZones);
         }
     }
-
+    @Override
+    public void createZone(String descZone, String ratio, List<dotZonesm> dotZones) {
+        if(view!=null){
+            interactor.createZone(descZone,ratio,dotZones);
+        }
+    }
     @Override
     public void closeEdiotorZone() {
         if(view!=null){
             view.closeEdiotorZone();
         }
     }
+
+
 
     @Override
     public void setVehicles(List<dataFullVehicles> data) {

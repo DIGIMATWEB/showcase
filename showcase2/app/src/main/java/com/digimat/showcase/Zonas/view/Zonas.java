@@ -45,6 +45,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.gson.Gson;
 import com.google.maps.android.data.kml.KmlLayer;
 
 import java.util.ArrayList;
@@ -497,7 +498,14 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 break;
             case R.id.updateCrud:
                 if(typeEditZone==1){
-                    Toast.makeText(getContext(), "crear zona pendiente endpoint", Toast.LENGTH_SHORT).show();
+                    Gson gson= new Gson();
+                    String json=gson.toJson(dotZones);
+                    Log.e("newZone","Dots "+json);
+                    if(dotZones!=null) {
+                        presenter.createZone(descZoneEdtxt.getText().toString(), ratioEdtxt.getText().toString(), dotZones);
+                    }else{
+                        Toast.makeText(getContext(), "Necesitas guardar al menos un punto antes guardar informacion", Toast.LENGTH_SHORT).show();
+                    }
                 }else if(typeEditZone==2){
                     //nameZoneEdtx
                     //  descZoneEdtxt.getText().toString()

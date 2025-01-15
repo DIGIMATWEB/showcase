@@ -109,6 +109,11 @@ public class vehiclesInteractorImpl implements  requestFullVehicles{
         });
     }
 
+    @Override
+    public void createZone(String descZone, String ratio, List<dotZonesm> dotZones) {
+        Toast.makeText(context, "crear zona pendiente endpoint", Toast.LENGTH_SHORT).show();
+    }
+
     private void validateCodeCreateZone(Response<responseUpdateZone> response, Context context) {
         if (response != null) {
 

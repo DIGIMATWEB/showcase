@@ -8,4 +8,6 @@ public interface requestFullVehicles {
     void requestVehicles();
 
     void updateZone(String zoneId, String descZone, String ratio, List<dotZonesm> dotZones);
+
+    void createZone(String descZone, String ratio, List<dotZonesm> dotZones);
 }
