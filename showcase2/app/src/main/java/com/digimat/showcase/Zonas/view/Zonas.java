@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -117,6 +119,40 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         nameZoneEdtx=view.findViewById(R.id.nameZoneEdtx);
         descZoneEdtxt=view.findViewById(R.id.descZoneEdtxt);
         ratioEdtxt=view.findViewById(R.id.ratioEdtxt);
+        ratioEdtxt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(mMap!=null){
+                    mMap.clear();
+                }
+                if(!editable.toString().isEmpty()) {
+                    ratio = editable.toString();
+                    if(adapterCrud!=null) {
+                        if(editableCircle!=null) {
+                            adapterCrud.notifyDataSetChanged();
+                        }
+                    }
+                }else{
+                    ratio="50";
+                    if(adapterCrud!=null) {
+                        if(editableCircle!=null) {
+                            adapterCrud.notifyDataSetChanged();
+                        }
+                    }
+                }
+
+            }
+        });
         imageTypeZone=view.findViewById(R.id. imageTypeZone);
         updateCrud.setOnClickListener(this);
         addtextDot.setOnClickListener(this);
@@ -261,7 +297,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     .radius(Double.valueOf(ratio))
                     .strokeColor(alfa)
                     .strokeWidth(0)
-                    .strokeWidth(Float.valueOf(String.valueOf(ratioEdtxt.getText())))
+                    .strokeWidth(3)
                     .fillColor(bluealfa));
         }else if(dotZoness.size()==2){
             Glide.with(getContext()).load(R.drawable.circles).into(imageTypeZone);
@@ -367,61 +403,104 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     }
     @SuppressLint("PotentialBehaviorOverride")
     public void editDotZone(List<dotZonesm> dotZoness, int position) {
-        // Obtén la posición actual del punto que quieres editar
+        // Verificar el tamaño de dotZoness y proceder según el caso
+        if (dotZoness.size() == 1) {
+            // Si hay solo 1 punto, dibujar un círculo
+            LatLng dotPos = new LatLng(
+                    Double.valueOf(dotZoness.get(position).getLatitud()),
+                    Double.valueOf(dotZoness.get(position).getLongitud())
+            );
 
-        LatLng dotPos = new LatLng(
-                Double.valueOf(dotZoness.get(position).getLatitud()),
-                Double.valueOf(dotZoness.get(position).getLongitud())
-        );
+            // Dibujar un círculo en lugar de un marcador
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(dotPos)
+                    .title("Editando punto")
+                    .draggable(true)
+            );
+            int alfa= ContextCompat.getColor(getContext(), R.color.alfa);
+            int bluealfa= ContextCompat.getColor(getContext(), R.color.blueAddwithalpha);
+            editableCircle = mMap.addCircle(new CircleOptions()
+                    .center(new LatLng( Double.valueOf(dotZoness.get(0).getLatitud()),  Double.valueOf(dotZoness.get(0).getLongitud())))
+                    .radius(Double.valueOf(ratio))
+                    .strokeColor(alfa)
+                    .strokeWidth(3)
+                    .fillColor(bluealfa));
+        } else if (dotZoness.size() == 2) {
+            // Si hay 2 puntos, no hacer nada
+            Log.d("editDotZone", "No se realiza ninguna acción con 2 puntos.");
+        } else if (dotZoness.size() >= 3) {
+            // Si hay 3 o más puntos, mantener la funcionalidad actual
+            // Obtén la posición actual del punto que quieres editar
+            LatLng dotPos = new LatLng(
+                    Double.valueOf(dotZoness.get(position).getLatitud()),
+                    Double.valueOf(dotZoness.get(position).getLongitud())
+            );
 
-        // Mueve el marcador al nuevo punto y hazlo editable
-        Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(dotPos)
-                .title("Editando punto")
-                .draggable(true)
-        );
+            // Mueve el marcador al nuevo punto y hazlo editable
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(dotPos)
+                    .title("Editando punto")
+                    .draggable(true)
+            );
 
-        // Listener para manejar el evento de arrastre del marcador
-        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-            @Override
-            public void onMarkerDragStart(Marker marker) {
-                Log.d("MarkerDrag", "Inicio de arrastre: " + marker.getTitle());
-            }
+            // Listener para manejar el evento de arrastre del marcador
+            mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                @Override
+                public void onMarkerDragStart(Marker marker) {
+                    Log.d("MarkerDrag", "Inicio de arrastre: " + marker.getTitle());
+                }
 
-            @Override
-            public void onMarkerDrag(Marker marker) {
-                LatLng position = marker.getPosition();
-                Log.d("MarkerDrag", "Arrastrando: " + position.latitude + ", " + position.longitude);
-            }
+                @Override
+                public void onMarkerDrag(Marker marker) {
+                    LatLng position = marker.getPosition();
+                    Log.d("MarkerDrag", "Arrastrando: " + position.latitude + ", " + position.longitude);
+                }
 
-            @Override
-            public void onMarkerDragEnd(Marker marker) {
-                // Obtén la nueva posición del marcador
-                LatLng finalPosition = marker.getPosition();
-                Log.d("MarkerDrag", "Arrastre terminado en: " + finalPosition.latitude + ", " + finalPosition.longitude);
+                @Override
+                public void onMarkerDragEnd(Marker marker) {
+                    // Obtén la nueva posición del marcador
+                    LatLng finalPosition = marker.getPosition();
+                    Log.d("MarkerDrag", "Arrastre terminado en: " + finalPosition.latitude + ", " + finalPosition.longitude);
 
-                // Actualiza el punto en el polígono
-                editablePoligon.getPoints().set(position, finalPosition);
+                    // Actualiza el punto en el polígono
+                    editablePoligon.getPoints().set(position, finalPosition);
 
-                // Actualiza los datos en la lista de puntos
-                dotZonesm updatedDot = dotZoness.get(position);
-                updatedDot.setLatitud(String.valueOf(finalPosition.latitude));
-                updatedDot.setLongitud(String.valueOf(finalPosition.longitude));
+                    // Actualiza los datos en la lista de puntos
+                    dotZonesm updatedDot = dotZoness.get(position);
+                    updatedDot.setLatitud(String.valueOf(finalPosition.latitude));
+                    updatedDot.setLongitud(String.valueOf(finalPosition.longitude));
 
-                // Opcional: Actualiza el polígono visualmente si es necesario
-                refreshPolygon(editablePoligon,finalPosition,position,dotZoness);
+                    // Opcional: Actualiza el polígono visualmente si es necesario
+                    refreshPolygon(editablePoligon, finalPosition, position, dotZoness);
 
-                // Elimina el marcador, ya que el punto ha sido actualizado
-                marker.remove();
-            }
-        });
+                    // Elimina el marcador, ya que el punto ha sido actualizado
+                    marker.remove();
+                }
+            });
+        }
     }
     private void refreshPolygon(Polygon polygon, LatLng finalPosition, int position, List<dotZonesm> dotZoness) {
-     // Add points to the PolygonOptions
+        if (dotZoness.size() >= 3) {
+            // Solo actualiza el polígono si hay 3 o más puntos
+            dotZoness.set(position, new dotZonesm(String.valueOf(finalPosition.latitude), String.valueOf(finalPosition.longitude)));
+            mMap.clear();
+            adapterCrud.updateAtSingularDot(dotZoness);
+        } else if (dotZoness.size() == 1) {
+            // Si hay solo 1 punto, dibujar un círculo
+            LatLng dotPos = new LatLng(
+                    Double.valueOf(dotZoness.get(position).getLatitud()),
+                    Double.valueOf(dotZoness.get(position).getLongitud())
+            );
 
-        dotZoness.set(position,new dotZonesm(String.valueOf(finalPosition.latitude),String.valueOf(finalPosition.longitude)));
-        mMap.clear();
-        adapterCrud.updateAtSingularDot(dotZoness);
+            // Dibujar un círculo en lugar de un marcador
+            mMap.addCircle(new CircleOptions()
+                    .center(dotPos)
+                    .radius(Double.valueOf( ratio))  // Ajustar el radio según sea necesario
+                    .strokeColor(Color.RED)
+                    .fillColor(Color.TRANSPARENT)
+            );
+        }
+        // Si hay 2 puntos, no hacer nada
     }
 
 
