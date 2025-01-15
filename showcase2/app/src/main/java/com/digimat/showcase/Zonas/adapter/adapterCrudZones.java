@@ -1,5 +1,6 @@
 package com.digimat.showcase.Zonas.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,9 +29,6 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
         this.context = context;
         aNewDotIsAdded=false;
     }
-
-
-
     // Este método crea el ViewHolder para cada item
     @Override
     public adapterCrudZones.ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -41,7 +39,7 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
 
     // Este método enlaza los datos con el ViewHolder
     @Override
-    public void onBindViewHolder(adapterCrudZones.ItemViewHolder holder, int position) {
+    public void onBindViewHolder(adapterCrudZones.ItemViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.editTextLat.setText(dotZoness.get(position).getLatitud());
         holder.editTextLong.setText(dotZoness.get(position).getLongitud());
         if(position==dotZoness.size()-1) {
@@ -76,9 +74,7 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
     }
 
     public void addDot(LatLng position) {
-       // if(!dotZoness.isEmpty()) {
-            dotZoness.add( new dotZonesm(String.valueOf(position.latitude), String.valueOf(position.longitude)));
-       // }
+        dotZoness.add( new dotZonesm(String.valueOf(position.latitude), String.valueOf(position.longitude)));
         aNewDotIsAdded=true;
         notifyDataSetChanged();
     }
