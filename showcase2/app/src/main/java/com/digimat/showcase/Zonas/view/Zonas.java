@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.digimat.showcase.R;
 import com.digimat.showcase.Zonas.Dialogs.bootmSheetsServicios;
 import com.digimat.showcase.Zonas.Dialogs.model.dotZonesm;
@@ -77,6 +78,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private EditText ratioEdtxt;
     private Polygon editablePoligon;
     private Circle editableCircle;
+    private ImageView imageTypeZone;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -114,7 +116,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         nameZoneEdtx=view.findViewById(R.id.nameZoneEdtx);
         descZoneEdtxt=view.findViewById(R.id.descZoneEdtxt);
         ratioEdtxt=view.findViewById(R.id.ratioEdtxt);
-
+        imageTypeZone=view.findViewById(R.id. imageTypeZone);
         updateCrud.setOnClickListener(this);
         addtextDot.setOnClickListener(this);
         closeCrud.setOnClickListener(this);
@@ -199,6 +201,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
     @Override
     public void closeEdiotorZone() {
+        mMap.clear();
         closeCrud.performClick();
     }
 
@@ -235,6 +238,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 int position = viewHolder.getAdapterPosition();
 
                 // Remove the item from the adapter and the list
+                mMap.clear();
                 adapterCrud.notifyRemovedOnSwipe(position);
             }
         });
@@ -247,21 +251,26 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
     private void setUpPoligonOrCircle(List<dotZonesm> dotZoness) {
         if(dotZoness.size()==1) {
+            Glide.with(getContext()).load(R.drawable.circles).into(imageTypeZone);
+            ratioEdtxt.setVisibility(View.VISIBLE);
             int alfa= ContextCompat.getColor(getContext(), R.color.alfa);
-            int blue= ContextCompat.getColor(getContext(), R.color.blueAdd);
+            int bluealfa= ContextCompat.getColor(getContext(), R.color.blueAddwithalpha);
              editableCircle = mMap.addCircle(new CircleOptions()
                     .center(new LatLng( Double.valueOf(dotZoness.get(0).getLatitud()),  Double.valueOf(dotZoness.get(0).getLongitud())))
                     .radius(Double.valueOf(ratio))
                     .strokeColor(alfa)
                     .strokeWidth(0)
                     .strokeWidth(Float.valueOf(String.valueOf(ratioEdtxt.getText())))
-                    .fillColor(blue));
+                    .fillColor(bluealfa));
         }else if(dotZoness.size()==2){
+            Glide.with(getContext()).load(R.drawable.circles).into(imageTypeZone);
             Toast.makeText(getContext(), "agregar un punto para crear un poligono o eliminalo para crear un circulo", Toast.LENGTH_SHORT).show();//todo crear un dialogo con esto
         }
         else if(dotZoness.size()>=3){
+            Glide.with(getContext()).load(R.drawable.poligons).into(imageTypeZone);
+            ratioEdtxt.setVisibility(View.GONE);
             int alfa= ContextCompat.getColor(getContext(), R.color.alfa);
-            int blue= ContextCompat.getColor(getContext(), R.color.blueAdd);
+            int bluealfa= ContextCompat.getColor(getContext(), R.color.blueAddwithalfa);
             List <LatLng> dotPosition=new ArrayList<>() ;
             dotPosition.clear();
             for(dotZonesm dots:dotZoness){
@@ -269,11 +278,10 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             }
         editablePoligon= mMap.addPolygon(new PolygonOptions()
                     .addAll(dotPosition)
-                    .strokeColor(Color.RED)
-                    .fillColor(alfa));
-            editablePoligon.setStrokeWidth(3);
-            editablePoligon.setStrokeColor(Color.BLACK);
-            editablePoligon.setFillColor(alfa);
+                    .strokeColor(Color.BLACK)
+                        .strokeWidth(3)
+                    .fillColor(bluealfa));
+
         }
     }
 
@@ -336,6 +344,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
         }
         this.dotZones=dotZoness;
+        mMap.clear();
         adapterCrud.UpdateView(dotZones);
     }
 
@@ -348,6 +357,66 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         this.dotZones=dotZoness;
         adapterCrud.notifyRemoved(position);
     }
+    @SuppressLint("PotentialBehaviorOverride")
+    public void editDotZone(List<dotZonesm> dotZoness, int position) {
+        // Obtén la posición actual del punto que quieres editar
+
+        LatLng dotPos = new LatLng(
+                Double.valueOf(dotZoness.get(position).getLatitud()),
+                Double.valueOf(dotZoness.get(position).getLongitud())
+        );
+
+        // Mueve el marcador al nuevo punto y hazlo editable
+        Marker marker = mMap.addMarker(new MarkerOptions()
+                .position(dotPos)
+                .title("Editando punto")
+                .draggable(true)
+        );
+
+        // Listener para manejar el evento de arrastre del marcador
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                Log.d("MarkerDrag", "Inicio de arrastre: " + marker.getTitle());
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+                LatLng position = marker.getPosition();
+                Log.d("MarkerDrag", "Arrastrando: " + position.latitude + ", " + position.longitude);
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                // Obtén la nueva posición del marcador
+                LatLng finalPosition = marker.getPosition();
+                Log.d("MarkerDrag", "Arrastre terminado en: " + finalPosition.latitude + ", " + finalPosition.longitude);
+
+                // Actualiza el punto en el polígono
+                editablePoligon.getPoints().set(position, finalPosition);
+
+                // Actualiza los datos en la lista de puntos
+                dotZonesm updatedDot = dotZoness.get(position);
+                updatedDot.setLatitud(String.valueOf(finalPosition.latitude));
+                updatedDot.setLongitud(String.valueOf(finalPosition.longitude));
+
+                // Opcional: Actualiza el polígono visualmente si es necesario
+                refreshPolygon(editablePoligon,finalPosition,position,dotZoness);
+
+                // Elimina el marcador, ya que el punto ha sido actualizado
+                marker.remove();
+            }
+        });
+    }
+    private void refreshPolygon(Polygon polygon, LatLng finalPosition, int position, List<dotZonesm> dotZoness) {
+     // Add points to the PolygonOptions
+
+        dotZoness.set(position,new dotZonesm(String.valueOf(finalPosition.latitude),String.valueOf(finalPosition.longitude)));
+        mMap.clear();
+        adapterCrud.updateAtSingularDot(dotZoness);
+    }
+
+
     public void updateAfterScrollMarker(List<dotZonesm> dotZoness) {
         this.dotZones=dotZoness;
     }
@@ -374,9 +443,12 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 Log.d("MarkerDrag", "Dragging ended at: " + finalPosition.latitude + ", " + finalPosition.longitude);
 
                 // Update the marker's position in the adapter
+                mMap.clear();
                 adapterCrud.updateDotPosition( finalPosition); // Implement update logic in your adapter
+
             }
         });
+
         adapterCrud.addDot(dotZonenew.getPosition());
     }
     public void drawTempZone(List<dotZonesm> dotZoness) {
@@ -401,25 +473,19 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 bottomSheetDialog.show(getChildFragmentManager(), "bootmSheetsServicios");
                 break;
             case R.id.zonesButton:
+                mMap.clear();
                 zonesConfiguratuon zoneconfig = new zonesConfiguratuon();
                 zoneconfig.show(getChildFragmentManager(), "zonesConfiguratuon");
                 break;
             case R.id.closeCrud:
-                xpand_crud.setVisibility(View.GONE);
                 if (dotZonenew != null) {
                     dotZonenew.remove();
                     dotZonenew=null;
 
                 }
-                if(editableCircle!=null){
-                    editableCircle.remove();
-                    editableCircle=null;
-                }
-                if(editablePoligon!=null){
-                    editablePoligon.remove();
-                    editablePoligon=null;
+                mMap.clear();
+                xpand_crud.setVisibility(View.GONE);
 
-                }
 
                 break;
             case R.id.updateCrud:
@@ -434,12 +500,14 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 break;
             case R.id.addtextDot:
                 if(dotZonenew==null) {
+                    mMap.clear();
                     dotZonenew = mMap.addMarker(new MarkerOptions().position(mMap.getCameraPosition().target).title("Nuevo punto").draggable(true));
                     setupDragNewMarker();
 
                 }else{
                     Toast.makeText(getContext(), "ya haz creado el marcador", Toast.LENGTH_SHORT).show();
                 }
+                rvDetailZones.scrollToPosition(adapterCrud.getItemCount() - 1);
                 break;
             }
 

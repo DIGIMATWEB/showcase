@@ -65,6 +65,12 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
                 mview.removeNewDot(dotZoness,position);
             }
         });
+        holder.foundDot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mview.editDotZone(dotZoness,position);
+            }
+        });
         mview.drawTempZone(dotZoness);
     }
     // Este método retorna la cantidad de items en la lista
@@ -111,9 +117,15 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
         mview.updateTempZone(dotZoness);
     }
 
+    public void updateAtSingularDot(List<dotZonesm> dotZoness) {
+        this.aNewDotIsAdded=false;
+        this.dotZoness=dotZoness;
+        notifyDataSetChanged();
+    }
+
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView editTextLong,editTextLat;
-        ImageView dragButton,dot_add,dot_remove;
+        ImageView dragButton,dot_add,dot_remove,foundDot;
         public ItemViewHolder(View itemView) {
             super(itemView);
             editTextLong = itemView.findViewById(R.id.editTextLong);
@@ -121,6 +133,7 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
             dragButton= itemView.findViewById(R.id.dragButton);
             dot_add= itemView.findViewById(R.id.dot_add);
             dot_remove= itemView.findViewById(R.id.dot_remove);
+            foundDot = itemView.findViewById(R.id. foundDot);
         }
     }
 }
