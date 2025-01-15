@@ -36,9 +36,9 @@ public class presenterVehiclesImpl implements presenterVehicles{
         }
     }
     @Override
-    public void createZone(String descZone, String ratio, List<dotZonesm> dotZones) {
+    public void createZone(String name, String desc, String ratio, List<dotZonesm> dotZones) {
         if(view!=null){
-            interactor.createZone(descZone,ratio,dotZones);
+            interactor.createZone(name,desc,ratio,dotZones);
         }
     }
     @Override

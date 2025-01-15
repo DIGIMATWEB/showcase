@@ -294,7 +294,8 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             int bluealfa= ContextCompat.getColor(getContext(), R.color.blueAddwithalpha);
              editableCircle = mMap.addCircle(new CircleOptions()
                     .center(new LatLng( Double.valueOf(dotZoness.get(0).getLatitud()),  Double.valueOf(dotZoness.get(0).getLongitud())))
-                    .radius(Double.valueOf(ratio))
+                    .radius(Double.valueOf(ratio.isEmpty() ? "50" : ratio))
+
                     .strokeColor(alfa)
                     .strokeWidth(0)
                     .strokeWidth(3)
@@ -421,7 +422,8 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             int bluealfa= ContextCompat.getColor(getContext(), R.color.blueAddwithalpha);
             editableCircle = mMap.addCircle(new CircleOptions()
                     .center(new LatLng( Double.valueOf(dotZoness.get(0).getLatitud()),  Double.valueOf(dotZoness.get(0).getLongitud())))
-                    .radius(Double.valueOf(ratio))
+                    .radius(Double.valueOf(ratio.isEmpty() ? "50" : ratio))
+
                     .strokeColor(alfa)
                     .strokeWidth(3)
                     .fillColor(bluealfa));
@@ -581,7 +583,21 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     String json=gson.toJson(dotZones);
                     Log.e("newZone","Dots "+json);
                     if(dotZones!=null) {
-                        presenter.createZone(descZoneEdtxt.getText().toString(), ratioEdtxt.getText().toString(), dotZones);
+                        if(!nameZoneEdtx.getText().toString().isEmpty()) {
+                            if(dotZones.size()==1) {
+                                if(!ratioEdtxt.getText().toString().isEmpty()) {
+                                    presenter.createZone(nameZoneEdtx.getText().toString(),descZoneEdtxt.getText().toString(), ratioEdtxt.getText().toString(), dotZones);
+                                }else{
+                                    Toast.makeText(getContext(), "Necesitas agregar un radio a la zona", Toast.LENGTH_SHORT).show();
+                                }
+                            }else if(dotZones.size()==2) {
+                                Toast.makeText(getContext(), "Necesitas agregar otro punto a la zona", Toast.LENGTH_SHORT).show();
+                            }else{
+                                presenter.createZone(nameZoneEdtx.getText().toString(),descZoneEdtxt.getText().toString(), "1", dotZones);
+                            }
+                        }else{
+                            Toast.makeText(getContext(), "Necesitas agregar un Nombre a la zona", Toast.LENGTH_SHORT).show();
+                        }
                     }else{
                         Toast.makeText(getContext(), "Necesitas guardar al menos un punto antes guardar informacion", Toast.LENGTH_SHORT).show();
                     }

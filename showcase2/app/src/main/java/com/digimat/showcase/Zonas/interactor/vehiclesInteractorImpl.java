@@ -8,6 +8,8 @@ import com.digimat.showcase.Zonas.Dialogs.model.dotZonesm;
 import com.digimat.showcase.Zonas.model.getVehicles.dataFullVehicles;
 import com.digimat.showcase.Zonas.model.getVehicles.vehiclesRequest;
 import com.digimat.showcase.Zonas.model.getVehicles.vehiclesResponse;
+import com.digimat.showcase.Zonas.model.newZone.requestNewZone;
+import com.digimat.showcase.Zonas.model.newZone.responseNewZone;
 import com.digimat.showcase.Zonas.model.updateZones.requestUpdateZones;
 import com.digimat.showcase.Zonas.model.updateZones.responseUpdateZone;
 import com.digimat.showcase.Zonas.presenter.presenterVehicles;
@@ -99,7 +101,7 @@ public class vehiclesInteractorImpl implements  requestFullVehicles{
         call.enqueue(new Callback<responseUpdateZone>() {
             @Override
             public void onResponse(Call<responseUpdateZone> call, Response<responseUpdateZone> response) {
-                validateCodeCreateZone(response, context);
+                validateCodeEditZone(response, context);
             }
 
             @Override
@@ -110,11 +112,49 @@ public class vehiclesInteractorImpl implements  requestFullVehicles{
     }
 
     @Override
-    public void createZone(String descZone, String ratio, List<dotZonesm> dotZones) {
+    public void createZone(String name, String desc, String ratio, List<dotZonesm> dotZones) {
         Toast.makeText(context, "crear zona pendiente endpoint", Toast.LENGTH_SHORT).show();
+       requestNewZone request =new requestNewZone(name,desc,Integer.valueOf(ratio),dotZones);
+       Call<responseNewZone> call = service.newZone(request);
+       call.enqueue(new Callback<responseNewZone>() {
+           @Override
+           public void onResponse(Call<responseNewZone> call, Response<responseNewZone> response) {
+               validateCodeCreateZone(response, context);
+           }
+
+           @Override
+           public void onFailure(Call<responseNewZone> call, Throwable t) {
+               Toast.makeText(context, "onFailure  createZone cause :" + t.getMessage(), Toast.LENGTH_SHORT).show();
+           }
+       });
     }
 
-    private void validateCodeCreateZone(Response<responseUpdateZone> response, Context context) {
+    private void validateCodeCreateZone(Response<responseNewZone> response, Context context) {
+        if (response != null) {
+
+            if (RetrofitValidationsV2.checkSuccessCode(response.code())) {
+                getNewZonedata(response, context);
+            } else {
+                Toast.makeText(context, "" + RetrofitValidationsV2.getErrorByStatus(response.code(), context), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void getNewZonedata(Response<responseNewZone> response, Context context) {
+        responseNewZone resp=response.body();
+                if (resp != null) {
+                    String message = resp.getMessage();
+                    int responseCode = resp.getResponseCode();
+                    if (responseCode == GeneralConstantsV2.RESPONSE_CODE_OK) {
+                        Toast.makeText(context, "Datos actualizados correctamente" , Toast.LENGTH_SHORT).show();
+                        presenter.closeEdiotorZone();
+                    }
+                }else{
+                    Toast.makeText(context, "sin puntos de la Zona", Toast.LENGTH_SHORT).show();
+                }
+    }
+
+    private void validateCodeEditZone(Response<responseUpdateZone> response, Context context) {
         if (response != null) {
 
             if (RetrofitValidationsV2.checkSuccessCode(response.code())) {

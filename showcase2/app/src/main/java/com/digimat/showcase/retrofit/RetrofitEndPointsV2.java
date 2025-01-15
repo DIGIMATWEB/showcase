@@ -16,4 +16,5 @@ public class RetrofitEndPointsV2 {
     public static final String GET_ZONES = "zonas/getZones.php";
     public static final String UPDATE_ZONE = "zonas/edit_zone.php";
 
+    public static final String NEW_ZONE = "zonas/new_zone.php";
 }
