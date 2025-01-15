@@ -304,6 +304,13 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             //Toast.makeText(getContext(), "crear", Toast.LENGTH_SHORT).show();
             xpand_crud.setVisibility(View.VISIBLE);
             List<dotZonesm> dotZoness=new ArrayList<>();
+
+            /**esto es para inicializar la zona con valor minimo ya que no se ve en el mapa menos de 50*/
+            Glide.with(getContext()).load(R.drawable.circles).into(imageTypeZone);
+            ratio="50";
+            ratioEdtxt.setText("50");
+            /***/
+
             fillAdapterCrud(dotZoness);
         }else if(typeEditZone==2){
            // Toast.makeText(getContext(), "editar", Toast.LENGTH_SHORT).show();
