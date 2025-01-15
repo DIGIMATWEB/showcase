@@ -92,8 +92,8 @@ public class zonesConfiguratuon extends BottomSheetDialogFragment implements Vie
     public void senDotsEditor(List<dotZonesm> dotZoness) {
         fragment.setDots(dotZoness);
     }
-    public void editZonesValues(String zoneId, String descZone, String ratio) {
-        fragment.editZonesValues(zoneId,descZone,ratio);
+    public void editZonesValues(String zoneId, String descZone, String ratio, String zoneName) {
+        fragment.editZonesValues(zoneId,descZone,ratio,zoneName);
     }
     public void sendToEditorZone(Integer type){
         fragment.ZoneCrud(type);

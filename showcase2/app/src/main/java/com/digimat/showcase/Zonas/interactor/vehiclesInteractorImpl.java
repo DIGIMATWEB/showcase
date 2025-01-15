@@ -132,7 +132,8 @@ public class vehiclesInteractorImpl implements  requestFullVehicles{
                 {
                     Gson gson=new Gson();
                     String json=gson.toJson(data);
-                    Toast.makeText(context, "Datos actualizados " +json, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Datos actualizados correctamente" , Toast.LENGTH_SHORT).show();
+                    presenter.closeEdiotorZone();
                 }
             }
         }else{

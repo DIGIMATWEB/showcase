@@ -2,12 +2,14 @@ package com.digimat.showcase.Zonas.view;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,9 +37,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.maps.android.data.kml.KmlLayer;
 
 import java.util.ArrayList;
@@ -61,10 +68,15 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private TextView addtextDot;
     private Marker dotZonenew;
     private String zoneId;
+    private String nameZone;
     private String descZone;
     private String ratio;
     private Integer typeEditZone;
-
+    private EditText nameZoneEdtx;
+    private EditText descZoneEdtxt;
+    private EditText ratioEdtxt;
+    private Polygon editablePoligon;
+    private Circle editableCircle;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -98,6 +110,11 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         rvDetailZones =view.findViewById(R.id.rvDetailZones);
         addtextDot=view.findViewById(R.id. addtextDot);
         updateCrud=view.findViewById(R.id. updateCrud);
+
+        nameZoneEdtx=view.findViewById(R.id.nameZoneEdtx);
+        descZoneEdtxt=view.findViewById(R.id.descZoneEdtxt);
+        ratioEdtxt=view.findViewById(R.id.ratioEdtxt);
+
         updateCrud.setOnClickListener(this);
         addtextDot.setOnClickListener(this);
         closeCrud.setOnClickListener(this);
@@ -180,6 +197,11 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         setMarkers(vehicles);
     }
 
+    @Override
+    public void closeEdiotorZone() {
+        closeCrud.performClick();
+    }
+
     private void setMarkers(List<dataFullVehicles> mvehicles) {
         if(mMap!=null) {
             for (int i = 0; i < mvehicles.size(); i++) {
@@ -218,16 +240,55 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         });
 
         itemTouchHelper.attachToRecyclerView(rvDetailZones);
+        if(!dotZoness.isEmpty()){
+        setUpPoligonOrCircle(dotZoness);
+        }
+    }
+
+    private void setUpPoligonOrCircle(List<dotZonesm> dotZoness) {
+        if(dotZoness.size()==1) {
+            int alfa= ContextCompat.getColor(getContext(), R.color.alfa);
+            int blue= ContextCompat.getColor(getContext(), R.color.blueAdd);
+             editableCircle = mMap.addCircle(new CircleOptions()
+                    .center(new LatLng( Double.valueOf(dotZoness.get(0).getLatitud()),  Double.valueOf(dotZoness.get(0).getLongitud())))
+                    .radius(Double.valueOf(ratio))
+                    .strokeColor(alfa)
+                    .strokeWidth(0)
+                    .strokeWidth(Float.valueOf(String.valueOf(ratioEdtxt.getText())))
+                    .fillColor(blue));
+        }else if(dotZoness.size()==2){
+            Toast.makeText(getContext(), "agregar un punto para crear un poligono o eliminalo para crear un circulo", Toast.LENGTH_SHORT).show();//todo crear un dialogo con esto
+        }
+        else if(dotZoness.size()>=3){
+            int alfa= ContextCompat.getColor(getContext(), R.color.alfa);
+            int blue= ContextCompat.getColor(getContext(), R.color.blueAdd);
+            List <LatLng> dotPosition=new ArrayList<>() ;
+            dotPosition.clear();
+            for(dotZonesm dots:dotZoness){
+                dotPosition.add(new LatLng( Double.valueOf( dots.getLatitud()), Double.valueOf(dots.getLongitud())));
+            }
+        editablePoligon= mMap.addPolygon(new PolygonOptions()
+                    .addAll(dotPosition)
+                    .strokeColor(Color.RED)
+                    .fillColor(alfa));
+            editablePoligon.setStrokeWidth(3);
+            editablePoligon.setStrokeColor(Color.BLACK);
+            editablePoligon.setFillColor(alfa);
+        }
     }
 
     public void setDots(List<dotZonesm> dotZoness) {//guarda los puntos del recycler heredado
         this.dotZones=dotZoness;
 
     }
-    public void editZonesValues(String zoneId, String descZone, String ratio) {
+    public void editZonesValues(String zoneId, String descZone, String ratio, String zoneName) {
         this.zoneId=zoneId;
+        this.nameZone=zoneName;
         this.descZone=descZone;
         this.ratio=ratio;
+        nameZoneEdtx.setText(zoneName);
+        descZoneEdtxt.setText(descZone);
+        ratioEdtxt.setText(ratio);
     }
     public void ZoneCrud(Integer type) {
         this.typeEditZone=type;
@@ -318,11 +379,17 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         });
         adapterCrud.addDot(dotZonenew.getPosition());
     }
-    public void drawTemoZone(List<dotZonesm> dotZoness) {
+    public void drawTempZone(List<dotZonesm> dotZoness) {
         Log.e("drawTempZone", "drawTempZone");
+        if(!dotZoness.isEmpty()){
+            setUpPoligonOrCircle(dotZoness);
+        }
     }
-    public void updateTemoZone(List<dotZonesm> dotZoness) {
+    public void updateTempZone(List<dotZonesm> dotZoness) {
         Toast.makeText(getContext(), "updateTempZone", Toast.LENGTH_SHORT).show();
+        if(!dotZoness.isEmpty()){
+            setUpPoligonOrCircle(dotZoness);
+        }
     }
     @SuppressLint("PotentialBehaviorOverride")
     @Override
@@ -344,16 +411,25 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     dotZonenew=null;
 
                 }
+                if(editableCircle!=null){
+                    editableCircle.remove();
+                    editableCircle=null;
+                }
+                if(editablePoligon!=null){
+                    editablePoligon.remove();
+                    editablePoligon=null;
+
+                }
 
                 break;
             case R.id.updateCrud:
                 if(typeEditZone==1){
                     Toast.makeText(getContext(), "crear zona pendiente endpoint", Toast.LENGTH_SHORT).show();
                 }else if(typeEditZone==2){
-                    this.zoneId=zoneId;
-                    this.descZone=descZone;
-                    this.ratio=ratio;
-                    presenter.updateZone(zoneId,descZone,ratio,dotZones);
+                    //nameZoneEdtx
+                    //  descZoneEdtxt.getText().toString()
+
+                    presenter.updateZone(zoneId,descZoneEdtxt.getText().toString(),ratioEdtxt.getText().toString(),dotZones);//todo se debe de pooder actualizar el nombre
                 }
                 break;
             case R.id.addtextDot:

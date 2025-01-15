@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface zonasView {
     void setVehicles(List<dataFullVehicles> data);
+
+    void closeEdiotorZone();
 }

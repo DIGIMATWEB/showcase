@@ -10,4 +10,6 @@ public interface presenterVehicles {
     void setVehicles(List<dataFullVehicles> data);
 
     void updateZone(String zoneId, String descZone, String ratio, List<dotZonesm> dotZones);
+
+    void closeEdiotorZone();
 }
