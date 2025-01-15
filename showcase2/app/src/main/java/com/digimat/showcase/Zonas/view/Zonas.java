@@ -175,13 +175,15 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     }
 
     private void setMarkers(List<dataFullVehicles> mvehicles) {
-        for (int i = 0; i < mvehicles.size(); i++) {
-            double lat = Double.parseDouble(mvehicles.get(i).getLatUser());
-            double lng = Double.parseDouble(mvehicles.get(i).getLongUser());
-            LatLng ubicacion = new LatLng(lat, lng);
-            mMap.addMarker(new MarkerOptions()
-                    .position(ubicacion)
-                    .title("Marker " + i));
+        if(mMap!=null) {
+            for (int i = 0; i < mvehicles.size(); i++) {
+                double lat = Double.parseDouble(mvehicles.get(i).getLatUser());
+                double lng = Double.parseDouble(mvehicles.get(i).getLongUser());
+                LatLng ubicacion = new LatLng(lat, lng);
+                mMap.addMarker(new MarkerOptions()
+                        .position(ubicacion)
+                        .title("Marker " + i));
+            }
         }
     }
     private void fillAdapterCrud(List<dotZones> dotZoness) {
