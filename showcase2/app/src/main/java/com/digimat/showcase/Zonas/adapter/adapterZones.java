@@ -79,6 +79,7 @@ public class adapterZones extends RecyclerView.Adapter<adapterZones.ItemViewHold
         holder.eraseTextB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mview.editZonesValues(data.get(position).getZoneId(),data.get(position).getDescZone(),data.get(position).getRatio(),data.get(position).getZoneName());
                 mview.sendToEditorZone(3);
             }
         });

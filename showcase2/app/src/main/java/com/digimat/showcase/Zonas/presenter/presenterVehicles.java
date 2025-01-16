@@ -14,4 +14,6 @@ public interface presenterVehicles {
     void closeEdiotorZone();
 
     void createZone(String name, String desc, String ratio, List<dotZonesm> dotZones);
+
+    void eraseZones(String zoneId);
 }

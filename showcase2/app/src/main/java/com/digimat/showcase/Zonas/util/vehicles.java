@@ -4,6 +4,8 @@ import com.digimat.showcase.Zonas.model.getVehicles.vehiclesRequest;
 import com.digimat.showcase.Zonas.model.getVehicles.vehiclesResponse;
 import com.digimat.showcase.Zonas.model.newZone.requestNewZone;
 import com.digimat.showcase.Zonas.model.newZone.responseNewZone;
+import com.digimat.showcase.Zonas.model.removeZones.requestRemoveZone;
+import com.digimat.showcase.Zonas.model.removeZones.responseRemoveZone;
 import com.digimat.showcase.Zonas.model.updateZones.requestUpdateZones;
 import com.digimat.showcase.Zonas.model.updateZones.responseUpdateZone;
 import com.digimat.showcase.retrofit.RetrofitEndPointsV2;
@@ -21,4 +23,6 @@ public interface vehicles {
 
     @POST(RetrofitEndPointsV2.NEW_ZONE)
     Call<responseNewZone> newZone(@Body requestNewZone request);
+    @POST(RetrofitEndPointsV2.REMOVE_ZONE)
+    Call<responseRemoveZone> removeZone(@Body requestRemoveZone request);
 }

@@ -41,6 +41,14 @@ public class presenterVehiclesImpl implements presenterVehicles{
             interactor.createZone(name,desc,ratio,dotZones);
         }
     }
+
+    @Override
+    public void eraseZones(String zoneId) {
+        if(view!=null){
+            interactor.eraseZones(zoneId);
+        }
+    }
+
     @Override
     public void closeEdiotorZone() {
         if(view!=null){

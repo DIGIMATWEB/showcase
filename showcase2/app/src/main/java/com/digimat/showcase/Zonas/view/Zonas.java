@@ -377,7 +377,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // Action for "OK" button
-                            Toast.makeText(getContext(), "Pendiente eliminar", Toast.LENGTH_SHORT).show();
+                            presenter.eraseZones(zoneId);
                         }
                     })
                     .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {

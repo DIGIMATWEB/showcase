@@ -10,6 +10,8 @@ import com.digimat.showcase.Zonas.model.getVehicles.vehiclesRequest;
 import com.digimat.showcase.Zonas.model.getVehicles.vehiclesResponse;
 import com.digimat.showcase.Zonas.model.newZone.requestNewZone;
 import com.digimat.showcase.Zonas.model.newZone.responseNewZone;
+import com.digimat.showcase.Zonas.model.removeZones.requestRemoveZone;
+import com.digimat.showcase.Zonas.model.removeZones.responseRemoveZone;
 import com.digimat.showcase.Zonas.model.updateZones.requestUpdateZones;
 import com.digimat.showcase.Zonas.model.updateZones.responseUpdateZone;
 import com.digimat.showcase.Zonas.presenter.presenterVehicles;
@@ -113,7 +115,7 @@ public class vehiclesInteractorImpl implements  requestFullVehicles{
 
     @Override
     public void createZone(String name, String desc, String ratio, List<dotZonesm> dotZones) {
-        Toast.makeText(context, "crear zona pendiente endpoint", Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(context, "crear zona pendiente endpoint", Toast.LENGTH_SHORT).show();
        requestNewZone request =new requestNewZone(name,desc,Integer.valueOf(ratio),dotZones);
        Call<responseNewZone> call = service.newZone(request);
        call.enqueue(new Callback<responseNewZone>() {
@@ -128,6 +130,8 @@ public class vehiclesInteractorImpl implements  requestFullVehicles{
            }
        });
     }
+
+
 
     private void validateCodeCreateZone(Response<responseNewZone> response, Context context) {
         if (response != null) {
@@ -185,5 +189,45 @@ public class vehiclesInteractorImpl implements  requestFullVehicles{
             Toast.makeText(context, "sin puntos de la Zona", Toast.LENGTH_SHORT).show();
         }
     }
+    @Override
+    public void eraseZones(String zoneId) {
+        requestRemoveZone request =new requestRemoveZone(Integer.valueOf( zoneId));
+        Call<responseRemoveZone> call = service.removeZone(request);
+        call.enqueue(new Callback<responseRemoveZone>() {
+            @Override
+            public void onResponse(Call<responseRemoveZone> call, Response<responseRemoveZone> response) {
+                validateCodeEraseZone(response, context);
+            }
 
+            @Override
+            public void onFailure(Call<responseRemoveZone> call, Throwable t) {
+                Toast.makeText(context, "onFailure  eraseZones cause :" + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void validateCodeEraseZone(Response<responseRemoveZone> response, Context context) {//
+        if (response != null) {
+
+            if (RetrofitValidationsV2.checkSuccessCode(response.code())) {
+                getRemoveZonedata(response, context);
+            } else {
+                Toast.makeText(context, "" + RetrofitValidationsV2.getErrorByStatus(response.code(), context), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void getRemoveZonedata(Response<responseRemoveZone> response, Context context) {
+        responseRemoveZone resp=response.body();
+        if (resp != null) {
+            String message = resp.getMessage();
+            int responseCode = resp.getResponseCode();
+            if (responseCode == GeneralConstantsV2.RESPONSE_CODE_OK) {
+                Toast.makeText(context, "Zona eliminada correctamente id: "+resp.getIdZone() , Toast.LENGTH_SHORT).show();
+
+            }
+        }else{
+            Toast.makeText(context, "sin puntos de la Zona", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
