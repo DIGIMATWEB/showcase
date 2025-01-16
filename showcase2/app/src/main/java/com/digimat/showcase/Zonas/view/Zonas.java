@@ -32,9 +32,9 @@ import com.digimat.showcase.Zonas.Dialogs.bootmSheetsServicios;
 import com.digimat.showcase.Zonas.Dialogs.model.dotZonesm;
 import com.digimat.showcase.Zonas.Dialogs.zonesConfiguratuon;
 import com.digimat.showcase.Zonas.adapter.adapterCrudZones;
-import com.digimat.showcase.Zonas.model.getVehicles.dataFullVehicles;
-import com.digimat.showcase.Zonas.presenter.presenterVehicles;
-import com.digimat.showcase.Zonas.presenter.presenterVehiclesImpl;
+import com.digimat.showcase.Zonas.model.getVehicles.dataFullUsers;
+import com.digimat.showcase.Zonas.presenter.presenterComunities;
+import com.digimat.showcase.Zonas.presenter.presenterComunitiesImpl;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -59,12 +59,12 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     public static final String TAG = Zonas.class.getSimpleName();
     private MapView mView;
     private GoogleMap mMap;
-    private List<dataFullVehicles> vehicles;
-    private presenterVehicles presenter;
+    private List<dataFullUsers> vehicles;
+    private presenterComunities presenter;
     private Marker vehicle;
     private KmlLayer mKmlLayer;
-    private ImageView buttonServicios,colonias,zonesButton;
-    private ConstraintLayout xpand_crud;
+    private ImageView buttonServicios,colonias,zonesButton,users,vehiculosB;
+    private ConstraintLayout xpand_crud,xpand_usercrud,xpand_vehiclescrud;
     private ImageButton closeCrud,updateCrud;
 
     private RecyclerView rvDetailZones;
@@ -112,7 +112,11 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         buttonServicios= view.findViewById(R.id. buttonServicios);
         colonias = view.findViewById(R.id. colonias);
         xpand_crud=view.findViewById(R.id.xpand_crud);
+        xpand_usercrud =view.findViewById(R.id.xpand_usercrud);
+        xpand_vehiclescrud =view.findViewById(R.id.xpand_vehiclescrud);
         zonesButton =view.findViewById(R.id.zonesButton);
+        vehiculosB=view.findViewById(R.id. vehiculosB);
+        users =view.findViewById(R.id.users);
         closeCrud =view.findViewById(R.id.closeCrud);
         rvDetailZones =view.findViewById(R.id.rvDetailZones);
         addtextDot=view.findViewById(R.id. addtextDot);
@@ -160,8 +164,10 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         addtextDot.setOnClickListener(this);
         closeCrud.setOnClickListener(this);
         zonesButton.setOnClickListener(this);
+        vehiculosB.setOnClickListener(this);
+        users.setOnClickListener(this);
         buttonServicios.setOnClickListener(this);
-        presenter= new presenterVehiclesImpl(this,getContext());
+        presenter= new presenterComunitiesImpl(this,getContext());
 
     }
     //region map config
@@ -243,7 +249,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     }
     //endregion
     @Override
-    public void setVehicles(List<dataFullVehicles> data) {
+    public void setVehicles(List<dataFullUsers> data) {
     this.vehicles=data;
         setMarkers(vehicles);
     }
@@ -254,7 +260,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         closeCrud.performClick();
     }
 
-    private void setMarkers(List<dataFullVehicles> mvehicles) {
+    private void setMarkers(List<dataFullUsers> mvehicles) {
         if(mMap!=null) {
             for (int i = 0; i < mvehicles.size(); i++) {
                 double lat = Double.parseDouble(mvehicles.get(i).getLatUser());
@@ -599,6 +605,20 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 bootmSheetsServicios bottomSheetDialog = new bootmSheetsServicios();
                 bottomSheetDialog.show(getChildFragmentManager(), "bootmSheetsServicios");
                 break;
+            case R.id.users:
+                if(xpand_usercrud.getVisibility()==View.VISIBLE){
+                    xpand_usercrud.setVisibility(View.GONE);
+                }else{
+                    xpand_usercrud.setVisibility(View.VISIBLE);
+                }
+                break;
+            case  R.id.vehiculosB:
+                if(xpand_vehiclescrud.getVisibility()==View.VISIBLE){
+                    xpand_vehiclescrud.setVisibility(View.GONE);
+                }else{
+                    xpand_vehiclescrud.setVisibility(View.VISIBLE);
+                }
+                break;
             case R.id.zonesButton:
                 mMap.clear();
                 callKml();
@@ -606,6 +626,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 zoneconfig.show(getChildFragmentManager(), "zonesConfiguratuon");
                 break;
             case R.id.closeCrud:
+
                 if (dotZonenew != null) {
                     dotZonenew.remove();
                     dotZonenew=null;

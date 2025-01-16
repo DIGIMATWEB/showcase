@@ -53,7 +53,7 @@
         app:srcCompat="@drawable/colonias" />
 
     <ImageView
-        android:id="@+id/vehiculosSimulados"
+        android:id="@+id/vehiculosB"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="12dp"
@@ -61,7 +61,41 @@
         app:layout_constraintBottom_toTopOf="@+id/zonesButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/vehiculos" />
-
+    <ImageView
+        android:id="@+id/users"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/vehiculosB"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/usuarios" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/xpand_usercrud"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/map_view_tracking"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+        <include
+            android:id="@+id/include"
+            layout="@layout/crud_users" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/xpand_vehiclescrud"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/map_view_tracking"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+        <include
+            android:id="@+id/include"
+            layout="@layout/crud_vehicles" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/xpand_crud"
         android:layout_width="0dp"
