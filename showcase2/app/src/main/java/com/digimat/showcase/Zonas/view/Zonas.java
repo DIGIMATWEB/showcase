@@ -441,6 +441,30 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     .strokeColor(alfa)
                     .strokeWidth(3)
                     .fillColor(bluealfa));
+            mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                @Override
+                public void onMarkerDragStart(Marker marker) {
+                    Log.d("MarkerDrag", "Inicio de arrastre: " + marker.getTitle());
+                }
+
+                @Override
+                public void onMarkerDrag(Marker marker) {
+                    LatLng position = marker.getPosition();
+                    Log.d("MarkerDrag", "Arrastrando: " + position.latitude + ", " + position.longitude);
+                }
+
+                @Override
+                public void onMarkerDragEnd(Marker marker) {
+                    // Obtén la nueva posición del marcador
+                    LatLng finalPosition = marker.getPosition();
+                    Log.e("Editar", "Dragging ended at v1: " + finalPosition.latitude + ", " + finalPosition.longitude);
+
+                    // Update the marker's position in the adapter
+                    mMap.clear();
+                    adapterCrud.updateDotPosition( finalPosition);
+                }
+            });
+
         } else if (dotZoness.size() == 2) {
             // Si hay 2 puntos, no hacer nada
             Log.d("editDotZone", "No se realiza ninguna acción con 2 puntos.");
@@ -476,7 +500,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 public void onMarkerDragEnd(Marker marker) {
                     // Obtén la nueva posición del marcador
                     LatLng finalPosition = marker.getPosition();
-                    Log.d("Editar", "Arrastre terminado en: " + finalPosition.latitude + ", " + finalPosition.longitude);
+                    Log.e("Editar", "Arrastre terminado en: " + finalPosition.latitude + ", " + finalPosition.longitude);
 
                     // Actualiza el punto en el polígono
                     editablePoligon.getPoints().set(position, finalPosition);
@@ -543,7 +567,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             public void onMarkerDragEnd(Marker marker) {
                 // Called when the user stops dragging the marker
                 LatLng finalPosition = marker.getPosition();
-                Log.d("Editar", "Dragging ended at v1: " + finalPosition.latitude + ", " + finalPosition.longitude);
+                Log.e("Editar", "Dragging ended at v1: " + finalPosition.latitude + ", " + finalPosition.longitude);
 
                 // Update the marker's position in the adapter
                 mMap.clear();
