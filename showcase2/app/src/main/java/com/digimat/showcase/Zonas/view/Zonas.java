@@ -49,6 +49,8 @@ import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.gson.Gson;
 import com.google.maps.android.data.kml.KmlLayer;
+import com.google.maps.android.data.kml.KmlPlacemark;
+import com.google.maps.android.data.kml.KmlPolygon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,27 +171,37 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         mMap.clear();
        // mMap.setTrafficEnabled(true);
 
-//        try {
-//            // Load KML file from resources (replace R.raw.kml_file with your KML file name)
-////            mKmlLayer = new KmlLayer(mMap, R.raw.morkml, getContext());
-////            mKmlLayer.addLayerToMap();
-//
-//        } catch (IOException | XmlPullParserException e) {
-//            e.printStackTrace();
-//        }
+        callKml();
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.9567483, -98.9836352), 13.5f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.9567483, -98.9710052), 11.5f));
 
         uiSettingsMap(mMap);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.9567483, -98.9836352), 14f));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.9567483, -98.9710052), 12.4f));
             }
         }, 4000);
     }
 
-//
+    private void callKml() {
+        try {
+            KmlLayer kmlLayer = new KmlLayer(mMap, R.raw.tlayacapan, getContext());
+            kmlLayer.addLayerToMap();
+
+            // Optionally handle KML features
+            for (KmlPlacemark placemark : kmlLayer.getPlacemarks()) {
+                if (placemark.getGeometry() instanceof KmlPolygon) {
+                    KmlPolygon polygon = (KmlPolygon) placemark.getGeometry();
+                    Log.d("KML", "Polygon: " + polygon.getGeometryObject());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //
     private void uiSettingsMap(GoogleMap googleMap) {
         UiSettings uiSettings = googleMap.getUiSettings();
         uiSettings.setZoomControlsEnabled(true);
@@ -337,6 +349,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         ratioEdtxt.setText(ratio);
     }
     public void ZoneCrud(Integer type) {
+        callKml();
         this.typeEditZone=type;
         if(typeEditZone==1){
             //Toast.makeText(getContext(), "crear", Toast.LENGTH_SHORT).show();
@@ -406,6 +419,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     public void editDotZone(List<dotZonesm> dotZoness, int position) {
         // Verificar el tamaño de dotZoness y proceder según el caso
         if (dotZoness.size() == 1) {
+            Log.e("Editar","click circulo");
             // Si hay solo 1 punto, dibujar un círculo
             LatLng dotPos = new LatLng(
                     Double.valueOf(dotZoness.get(position).getLatitud()),
@@ -462,7 +476,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 public void onMarkerDragEnd(Marker marker) {
                     // Obtén la nueva posición del marcador
                     LatLng finalPosition = marker.getPosition();
-                    Log.d("MarkerDrag", "Arrastre terminado en: " + finalPosition.latitude + ", " + finalPosition.longitude);
+                    Log.d("Editar", "Arrastre terminado en: " + finalPosition.latitude + ", " + finalPosition.longitude);
 
                     // Actualiza el punto en el polígono
                     editablePoligon.getPoints().set(position, finalPosition);
@@ -493,13 +507,13 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     Double.valueOf(dotZoness.get(position).getLatitud()),
                     Double.valueOf(dotZoness.get(position).getLongitud())
             );
-
+            int bluealfa= ContextCompat.getColor(getContext(), R.color.blueAddwithalpha);
             // Dibujar un círculo en lugar de un marcador
             mMap.addCircle(new CircleOptions()
                     .center(dotPos)
                     .radius(Double.valueOf( ratio))  // Ajustar el radio según sea necesario
                     .strokeColor(Color.RED)
-                    .fillColor(Color.TRANSPARENT)
+                    .fillColor(bluealfa)
             );
         }
         // Si hay 2 puntos, no hacer nada
@@ -529,7 +543,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             public void onMarkerDragEnd(Marker marker) {
                 // Called when the user stops dragging the marker
                 LatLng finalPosition = marker.getPosition();
-                Log.d("MarkerDrag", "Dragging ended at: " + finalPosition.latitude + ", " + finalPosition.longitude);
+                Log.d("Editar", "Dragging ended at v1: " + finalPosition.latitude + ", " + finalPosition.longitude);
 
                 // Update the marker's position in the adapter
                 mMap.clear();
@@ -563,6 +577,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 break;
             case R.id.zonesButton:
                 mMap.clear();
+                callKml();
                 zonesConfiguratuon zoneconfig = new zonesConfiguratuon();
                 zoneconfig.show(getChildFragmentManager(), "zonesConfiguratuon");
                 break;
