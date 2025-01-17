@@ -11,9 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ import com.digimat.showcase.Zonas.Dialogs.bootmSheetsServicios;
 import com.digimat.showcase.Zonas.Dialogs.model.dotZonesm;
 import com.digimat.showcase.Zonas.Dialogs.zonesConfiguratuon;
 import com.digimat.showcase.Zonas.adapter.adapterCrudZones;
+import com.digimat.showcase.Zonas.adapter.adapterUsers;
 import com.digimat.showcase.Zonas.model.getVehicles.dataFullUsers;
 import com.digimat.showcase.Zonas.presenter.presenterComunities;
 import com.digimat.showcase.Zonas.presenter.presenterComunitiesImpl;
@@ -59,7 +62,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     public static final String TAG = Zonas.class.getSimpleName();
     private MapView mView;
     private GoogleMap mMap;
-    private List<dataFullUsers> vehicles;
+    private List<dataFullUsers> usersAll;
     private presenterComunities presenter;
     private Marker vehicle;
     private KmlLayer mKmlLayer;
@@ -84,6 +87,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private Polygon editablePoligon;
     private Circle editableCircle;
     private ImageView imageTypeZone;
+    private adapterUsers madapterUsrs;
+    private RecyclerView rvUsrs;
+    private Switch switchrank;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -118,7 +124,22 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         vehiculosB=view.findViewById(R.id. vehiculosB);
         users =view.findViewById(R.id.users);
         closeCrud =view.findViewById(R.id.closeCrud);
+
         rvDetailZones =view.findViewById(R.id.rvDetailZones);
+        rvUsrs =view.findViewById(R.id.rvUsrs);
+        switchrank =view.findViewById(R.id.switchrank);
+        switchrank.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // Acción cuando el Switch está encendido
+                    Log.d("Switch", "Encendido");
+                } else {
+                    // Acción cuando el Switch está apagado
+                    Log.d("Switch", "Apagado");
+                }
+            }
+        });
         addtextDot=view.findViewById(R.id. addtextDot);
         updateCrud=view.findViewById(R.id. updateCrud);
 
@@ -249,22 +270,34 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     }
     //endregion
     @Override
-    public void setVehicles(List<dataFullUsers> data) {
-    this.vehicles=data;
-        setMarkers(vehicles);
+    public void setUsers(List<dataFullUsers> data) {
+    this.usersAll=data;
+        setMarkers(usersAll);//
+        fillUssers(usersAll);
+
     }
 
+    private void fillUssers(List<dataFullUsers> usersAll) {
+         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        rvUsrs.setLayoutManager(layoutManager);
+        madapterUsrs = new adapterUsers(this, usersAll, getContext());
+        rvUsrs.setAdapter(madapterUsrs);
+
+    }
+    public void goUserLocation(LatLng locationUser) {
+        Toast.makeText(getContext(), "ir a la ubicacion del usuario", Toast.LENGTH_SHORT).show();
+    }
     @Override
     public void closeEdiotorZone() {
         mMap.clear();
         closeCrud.performClick();
     }
 
-    private void setMarkers(List<dataFullUsers> mvehicles) {
+    private void setMarkers(List<dataFullUsers> mUsers) {
         if(mMap!=null) {
-            for (int i = 0; i < mvehicles.size(); i++) {
-                double lat = Double.parseDouble(mvehicles.get(i).getLatUser());
-                double lng = Double.parseDouble(mvehicles.get(i).getLongUser());
+            for (int i = 0; i < mUsers.size(); i++) {
+                double lat = Double.parseDouble(mUsers.get(i).getLatUser());
+                double lng = Double.parseDouble(mUsers.get(i).getLongUser());
                 LatLng ubicacion = new LatLng(lat, lng);
                 mMap.addMarker(new MarkerOptions()
                         .position(ubicacion)
