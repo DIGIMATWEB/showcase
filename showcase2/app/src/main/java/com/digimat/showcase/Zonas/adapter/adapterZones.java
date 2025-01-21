@@ -14,9 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.digimat.showcase.R;
-import com.digimat.showcase.Zonas.Dialogs.model.dataGetAllZones;
-import com.digimat.showcase.Zonas.Dialogs.zonesConfiguratuon;
+import com.digimat.showcase.Zonas.Dialogs.ZonesConfig.model.dataGetAllZones;
+import com.digimat.showcase.Zonas.Dialogs.ZonesConfig.zonesConfiguratuon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class adapterZones extends RecyclerView.Adapter<adapterZones.ItemViewHolder> {
@@ -89,6 +90,13 @@ public class adapterZones extends RecyclerView.Adapter<adapterZones.ItemViewHold
     public int getItemCount() {
         return data.size();
     }
+
+    public void setFilter(List<dataGetAllZones> filterList) {
+        this.data = new ArrayList<>();
+        this.data.addAll(filterList);
+        notifyDataSetChanged();
+    }
+
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView nameZone,descZone,ratio,editTextB,eraseTextB;
         private ImageView typeZone,dotsButton;

@@ -27,7 +27,7 @@ public class adapterServicios extends RecyclerView.Adapter<adapterServicios.Item
     @Override
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Inflamos el layout para cada item
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_servicios, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_horizontal_rv, parent, false);
         return new ItemViewHolder(view);
     }
 
@@ -45,6 +45,12 @@ public class adapterServicios extends RecyclerView.Adapter<adapterServicios.Item
     @Override
     public int getItemCount() {
         return itemList.size();
+    }
+
+    public void setFilter(List<String> filterList) {
+        this.itemList = new ArrayList<>();
+        this.itemList.addAll(filterList);
+        notifyDataSetChanged();
     }
 
     // ViewHolder interno

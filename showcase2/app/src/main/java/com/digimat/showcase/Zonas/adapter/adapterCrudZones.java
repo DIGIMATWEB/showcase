@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.digimat.showcase.R;
-import com.digimat.showcase.Zonas.Dialogs.model.dotZonesm;
+import com.digimat.showcase.Zonas.Dialogs.ZonesConfig.model.dotZonesm;
 import com.digimat.showcase.Zonas.view.Zonas;
 import com.google.android.gms.maps.model.LatLng;
 
