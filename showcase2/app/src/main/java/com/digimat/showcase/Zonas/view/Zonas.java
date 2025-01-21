@@ -376,23 +376,24 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     public void setVehicles(List<dataVehicles> data) {
         Log.e("vehiculos", "Se solicitan vehiculos");
         this.mvehicles=data;
-        setVehiclesInMap();
+        if(mvehicles!=null){
+            setVehiclesInMap();
+        }
     }
-    private void setVehiclesInMap() {
+    private void setVehiclesInMap(){
         if (mvehicles == null || mvehicles.isEmpty()) {
-            Log.e("vehiculos", "La lista de vehículos está vacía o nula.");
             return; // Evitar errores si la lista está vacía o nula.
         }
 
-        // Limpiar el mapa antes de agregar nuevos marcadores
-        Log.e("vehiculos", "Limpieza del mapa antes de agregar los nuevos marcadores");
-        mMap.clear(); // Clear any previous markers
+        // Verificar que mMap está correctamente inicializado
+        if (mMap == null) {
+            return;
+        }
 
         // Crear un mapa temporal para rastrear los marcadores actualizados
         Map<String, Marker> updatedMarkers = new HashMap<>();
-        Log.e("vehiculos", "Procesando " + mvehicles.size() + " vehículos.");
 
-        // Recorremos cada vehículo y agregamos o actualizamos el marcador
+        // Recorrer los datos y agregar o actualizar los marcadores
         for (dataVehicles vehiculo : mvehicles) {
             String vehicleId = vehiculo.getVehicleId();
             LatLng position = new LatLng(
@@ -400,19 +401,19 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     Double.valueOf(vehiculo.getLongitude())
             );
 
-            Log.e("vehiculos", "Procesando vehículo con ID: " + vehicleId + ", Posición: " + position.toString());
+            // Verificar si los datos del vehículo son correctos
+            if (position.latitude == 0 || position.longitude == 0) {
+                continue; // Salta este vehículo si la posición es inválida
+            }
 
-            // Verificar si ya existe un marcador para este vehículo
+            // Verificar si ya existe un marcador para este vehículo en el mapa
             Marker marker = markerVehiculosMap.get(vehicleId);
             if (marker != null) {
-                // Marcador encontrado, actualizamos su posición
-                Log.e("vehiculos", "Marcador encontrado para el vehículo con ID: " + vehicleId);
+                // Si ya existe un marcador, lo actualizamos
                 marker.setPosition(position);
                 marker.setSnippet("Velocidad: " + vehiculo.getSpeed() + " km/h");
-                Log.e("vehiculos", "Marcador actualizado para el vehículo con ID: " + vehicleId);
             } else {
-                // Crear un nuevo marcador si no existe
-                Log.e("vehiculos", "Creando un nuevo marcador para el vehículo con ID: " + vehicleId);
+                // Si el marcador no existe, creamos uno nuevo
                 MarkerOptions markerOptions = new MarkerOptions()
                         .position(position)
                         .title("Vehículo ID: " + vehicleId)
@@ -420,37 +421,19 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)) // Personalizar color
                         .draggable(false); // Hacerlo no arrastrable si no es necesario
 
-                // Agregar el marcador al mapa
+                // Agregar el nuevo marcador al mapa
                 marker = mMap.addMarker(markerOptions);
                 if (marker != null) {
+                    // Añadimos el nuevo marcador al mapa de marcadores
                     markerVehiculosMap.put(vehicleId, marker);
                     updatedMarkers.put(vehicleId, marker);
-                    Log.e("vehiculos", "Nuevo marcador agregado para el vehículo con ID: " + vehicleId);
-                } else {
-                    Log.e("vehiculos", "No se pudo agregar el marcador para el vehículo con ID: " + vehicleId);
                 }
             }
         }
 
-        // Eliminando los marcadores que ya no están en la lista de datos
-        Log.e("vehiculos", "Eliminando marcadores que no están en la lista de datos.");
-        for (String vehicleId : markerVehiculosMap.keySet()) {
-            if (!updatedMarkers.containsKey(vehicleId)) {
-                Log.e("vehiculos", "Marcador para el vehículo con ID: " + vehicleId + " eliminado.");
-                Marker markerToRemove = markerVehiculosMap.get(vehicleId);
-                if (markerToRemove != null) {
-                    markerToRemove.remove(); // Eliminar marcador del mapa
-                }
-            }
-        }
-
-        // Actualizar el mapa de marcadores activos
-        Log.e("vehiculos", "Actualizando el mapa de marcadores activos.");
-        markerVehiculosMap.clear(); // Limpiar el mapa de marcadores
-        markerVehiculosMap.putAll(updatedMarkers); // Poner los marcadores actualizados
-
-        // Mostrar el tamaño final del mapa de marcadores
-        Log.e("vehiculos", "El mapa de marcadores tiene " + markerVehiculosMap.size() + " marcadores activos.");
+        // Actualizamos el mapa de marcadores activos con los nuevos
+        // No necesitamos eliminar los marcadores que ya están presentes.
+        markerVehiculosMap.putAll(updatedMarkers);
     }
 
 
@@ -831,6 +814,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             case R.id.zonesButton:
                 mMap.clear();
                 callKml();
+                markerVehiculosMap.clear();
                 zonesConfiguratuon zoneconfig = new zonesConfiguratuon();
                 zoneconfig.show(getChildFragmentManager(), "zonesConfiguratuon");
                 break;
