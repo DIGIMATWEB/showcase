@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -74,7 +75,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private Marker vehicle;
     private KmlLayer mKmlLayer;
     private ImageView buttonServicios,colonias,zonesButton,users,vehiculosB,vehiculos;
-    private ConstraintLayout xpand_crud,xpand_usercrud,xpand_vehiclescrud;
+    private ConstraintLayout xpand_crud,xpand_usercrud,xpand_vehiclescrud,xpand_vehiclescrudView;
     private ImageButton closeCrud,updateCrud;
 
     private RecyclerView rvDetailZones;
@@ -101,6 +102,10 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private adapterVehicles adapterV;
     private List<Marker> markerVehiculos=new ArrayList<>();
     private Map<String, Marker> markerVehiculosMap = new HashMap<>();
+    private Handler handler;
+    private Runnable periodicTask;
+    private ImageView close_crud_vehicles_view;
+    private  List<dataVehicles> mvehicles;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -111,6 +116,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private void initTrackingMapFragment(View view, Bundle savedInstanceState) {
         bindViews(view);
         onCreateViewMap(savedInstanceState);
+        callVehicles();
         presenter.requestUsers();
     }
 
@@ -131,16 +137,17 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         xpand_crud=view.findViewById(R.id.xpand_crud);
         xpand_usercrud =view.findViewById(R.id.xpand_usercrud);
         xpand_vehiclescrud =view.findViewById(R.id.xpand_vehiclescrud);
+        xpand_vehiclescrudView =view.findViewById(R.id.xpand_vehiclescrudView);
         zonesButton =view.findViewById(R.id.zonesButton);
         vehiculosB=view.findViewById(R.id. vehiculosB);
         vehiculos=view.findViewById(R.id.  vehiculos);
         users =view.findViewById(R.id.users);
-
+        close_crud_vehicles_view =view.findViewById(R.id. close_crud_vehicles_view);
         closeCrud =view.findViewById(R.id.closeCrud);
 
         rvDetailZones =view.findViewById(R.id.rvDetailZones);
         rvUsrs =view.findViewById(R.id.rvUsrs);
-        rvVehicles =view.findViewById(R.id.rvVehicles);
+        rvVehicles =view.findViewById(R.id.rvVehicles_view);
 
         switchrank =view.findViewById(R.id.switchrank);
         switchrank.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -218,6 +225,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         users.setOnClickListener(this);
         buttonServicios.setOnClickListener(this);
         colonias.setOnClickListener(this);
+        close_crud_vehicles_view.setOnClickListener(this);
         presenter= new presenterComunitiesImpl(this,getContext());
 
     }
@@ -239,6 +247,25 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.9567483, -98.9710052), 12.4f));
             }
         }, 4000);
+        if(mvehicles!=null){
+            setVehiclesInMap();
+        }
+    }
+
+    private void callVehicles() {
+        handler = new Handler(Looper.getMainLooper());
+
+        // Define the periodic task
+        periodicTask = new Runnable() {
+            @Override
+            public void run() {
+                // Call the method in the presenter
+                presenter.getVehicles();
+
+                // Re-schedule the task to run again in 10 seconds
+                handler.postDelayed(this, 10000); // 10000 ms = 10 seconds
+            }
+        };
     }
 
     private void callKml() {
@@ -271,10 +298,16 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     public void onStart() {
         super.onStart();
         mView.onStart();
+        if(handler!=null) {
+            handler.post(periodicTask);
+        }
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if(handler!=null) {
+            handler.removeCallbacks(periodicTask);
+        }
     }
     @Override
     public void onResume() {
@@ -291,6 +324,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     public void onStop() {
         super.onStop();
         mView.onStop();
+        if(handler!=null) {
+        handler.removeCallbacks(periodicTask);
+        }
     }
 
     @Override
@@ -338,31 +374,45 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
     @Override
     public void setVehicles(List<dataVehicles> data) {
-        if (data == null || data.isEmpty()) {
+        Log.e("vehiculos", "Se solicitan vehiculos");
+        this.mvehicles=data;
+        setVehiclesInMap();
+    }
+    private void setVehiclesInMap() {
+        if (mvehicles == null || mvehicles.isEmpty()) {
+            Log.e("vehiculos", "La lista de vehículos está vacía o nula.");
             return; // Evitar errores si la lista está vacía o nula.
         }
 
+        // Limpiar el mapa antes de agregar nuevos marcadores
+        Log.e("vehiculos", "Limpieza del mapa antes de agregar los nuevos marcadores");
+        mMap.clear(); // Clear any previous markers
+
         // Crear un mapa temporal para rastrear los marcadores actualizados
         Map<String, Marker> updatedMarkers = new HashMap<>();
+        Log.e("vehiculos", "Procesando " + mvehicles.size() + " vehículos.");
 
-        for (dataVehicles vehiculo : data) {
+        // Recorremos cada vehículo y agregamos o actualizamos el marcador
+        for (dataVehicles vehiculo : mvehicles) {
             String vehicleId = vehiculo.getVehicleId();
             LatLng position = new LatLng(
                     Double.valueOf(vehiculo.getLatitude()),
                     Double.valueOf(vehiculo.getLongitude())
             );
 
+            Log.e("vehiculos", "Procesando vehículo con ID: " + vehicleId + ", Posición: " + position.toString());
+
             // Verificar si ya existe un marcador para este vehículo
-            if (markerVehiculosMap.containsKey(vehicleId)) {
-                // Actualizar posición del marcador existente
-                Marker marker = markerVehiculosMap.get(vehicleId);
-                if (marker != null) {
-                    marker.setPosition(position);
-                    marker.setSnippet("Velocidad: " + vehiculo.getSpeed() + " km/h");
-                }
-                updatedMarkers.put(vehicleId, marker);
+            Marker marker = markerVehiculosMap.get(vehicleId);
+            if (marker != null) {
+                // Marcador encontrado, actualizamos su posición
+                Log.e("vehiculos", "Marcador encontrado para el vehículo con ID: " + vehicleId);
+                marker.setPosition(position);
+                marker.setSnippet("Velocidad: " + vehiculo.getSpeed() + " km/h");
+                Log.e("vehiculos", "Marcador actualizado para el vehículo con ID: " + vehicleId);
             } else {
                 // Crear un nuevo marcador si no existe
+                Log.e("vehiculos", "Creando un nuevo marcador para el vehículo con ID: " + vehicleId);
                 MarkerOptions markerOptions = new MarkerOptions()
                         .position(position)
                         .title("Vehículo ID: " + vehicleId)
@@ -370,27 +420,37 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)) // Personalizar color
                         .draggable(false); // Hacerlo no arrastrable si no es necesario
 
-                Marker marker = mMap.addMarker(markerOptions);
+                // Agregar el marcador al mapa
+                marker = mMap.addMarker(markerOptions);
                 if (marker != null) {
                     markerVehiculosMap.put(vehicleId, marker);
                     updatedMarkers.put(vehicleId, marker);
+                    Log.e("vehiculos", "Nuevo marcador agregado para el vehículo con ID: " + vehicleId);
+                } else {
+                    Log.e("vehiculos", "No se pudo agregar el marcador para el vehículo con ID: " + vehicleId);
                 }
             }
         }
 
-        // Remover los marcadores que ya no están en la lista de datos
+        // Eliminando los marcadores que ya no están en la lista de datos
+        Log.e("vehiculos", "Eliminando marcadores que no están en la lista de datos.");
         for (String vehicleId : markerVehiculosMap.keySet()) {
             if (!updatedMarkers.containsKey(vehicleId)) {
-                Marker marker = markerVehiculosMap.get(vehicleId);
-                if (marker != null) {
-                    marker.remove(); // Eliminar marcador del mapa
+                Log.e("vehiculos", "Marcador para el vehículo con ID: " + vehicleId + " eliminado.");
+                Marker markerToRemove = markerVehiculosMap.get(vehicleId);
+                if (markerToRemove != null) {
+                    markerToRemove.remove(); // Eliminar marcador del mapa
                 }
             }
         }
 
         // Actualizar el mapa de marcadores activos
-        markerVehiculosMap.clear();
-        markerVehiculosMap.putAll(updatedMarkers);
+        Log.e("vehiculos", "Actualizando el mapa de marcadores activos.");
+        markerVehiculosMap.clear(); // Limpiar el mapa de marcadores
+        markerVehiculosMap.putAll(updatedMarkers); // Poner los marcadores actualizados
+
+        // Mostrar el tamaño final del mapa de marcadores
+        Log.e("vehiculos", "El mapa de marcadores tiene " + markerVehiculosMap.size() + " marcadores activos.");
     }
 
 
@@ -749,8 +809,17 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     xpand_usercrud.setVisibility(View.VISIBLE);
                 }
                 break;
+            case R.id.close_crud_vehicles_view:
+                xpand_vehiclescrudView.setVisibility(View.GONE);
+                break;
             case  R.id.vehiculos:
-                presenter.getVehicles();
+                if(xpand_vehiclescrudView.getVisibility()==View.VISIBLE){
+                    xpand_vehiclescrudView.setVisibility(View.GONE);
+                }else{
+                    xpand_vehiclescrudView.setVisibility(View.VISIBLE);
+                    fillVehicles();
+                }
+
                 break;
             case  R.id.vehiculosB:
                 if(xpand_vehiclescrud.getVisibility()==View.VISIBLE){
