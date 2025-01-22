@@ -44,7 +44,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Switch
-                android:id="@+id/switchVehicles"
+                android:id="@+id/switchVehicles_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:thumb="@drawable/switchinf"
@@ -60,20 +60,20 @@
                 android:layout_height="wrap_content"
                 android:text="Vehiculos"
                 android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="@+id/switchVehicles"
+                app:layout_constraintBottom_toBottomOf="@+id/switchVehicles_view"
                 app:layout_constraintEnd_toStartOf="@+id/guidelineusers"
                 app:layout_constraintStart_toStartOf="@+id/guidelineusersa"
-                app:layout_constraintTop_toTopOf="@+id/switchVehicles" />
+                app:layout_constraintTop_toTopOf="@+id/switchVehicles_view" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Bots"
                 android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="@+id/switchVehicles"
+                app:layout_constraintBottom_toBottomOf="@+id/switchVehicles_view"
                 app:layout_constraintEnd_toStartOf="@+id/guidelineusersb"
                 app:layout_constraintStart_toStartOf="@+id/guidelineusers"
-                app:layout_constraintTop_toTopOf="@+id/switchVehicles" />
+                app:layout_constraintTop_toTopOf="@+id/switchVehicles_view" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvVehicles_view"
@@ -84,7 +84,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/switchVehicles" />
+                app:layout_constraintTop_toBottomOf="@+id/switchVehicles_view" />
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guidelineusersa"
                 android:layout_width="wrap_content"

@@ -97,8 +97,8 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private ImageView imageTypeZone;
     private adapterUsers madapterUsrs;
     private RecyclerView rvUsrs;
-    private Switch switchrank,switchVehicles;
-    private RecyclerView rvVehicles;
+    private Switch switchrank,switchVehicles,switchVehicles_view;
+    private RecyclerView rvVehicles_view;
     private adapterVehicles adapterV;
     private List<Marker> markerVehiculos=new ArrayList<>();
     private Map<String, Marker> markerVehiculosMap = new HashMap<>();
@@ -147,7 +147,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
         rvDetailZones =view.findViewById(R.id.rvDetailZones);
         rvUsrs =view.findViewById(R.id.rvUsrs);
-        rvVehicles =view.findViewById(R.id.rvVehicles_view);
+        rvVehicles_view =view.findViewById(R.id.rvVehicles_view);
 
         switchrank =view.findViewById(R.id.switchrank);
         switchrank.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -172,6 +172,25 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 } else {
                     // Acción cuando el Switch está apagado
                     Log.d("SwitchVehicles", "Apagado");
+                }
+            }
+        });
+        switchVehicles_view  =view.findViewById(R.id.switchVehicles_view);
+        switchVehicles_view.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // Acción cuando el Switch está encendido
+
+                    if(adapterV!=null){
+                        adapterV.filterByReal(mvehicles);
+                    }
+                } else {
+                    // Acción cuando el Switch está apagado
+                    if(adapterV!=null) {
+                        adapterV.filterByBots(mvehicles);
+
+                    }
                 }
             }
         });
@@ -352,9 +371,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     }
     private void fillVehicles(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        rvVehicles.setLayoutManager(layoutManager);
-        adapterV=new adapterVehicles(this,getContext());
-         rvVehicles.setAdapter(adapterV);
+        rvVehicles_view.setLayoutManager(layoutManager);
+        adapterV=new adapterVehicles(this,getContext(),mvehicles,true);
+         rvVehicles_view.setAdapter(adapterV);
     }
     public void goUserLocation(LatLng locationUser) {
         Toast.makeText(getContext(), "ir a la ubicacion del usuario", Toast.LENGTH_SHORT).show();
