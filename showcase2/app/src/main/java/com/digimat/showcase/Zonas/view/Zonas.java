@@ -39,6 +39,7 @@ import com.digimat.showcase.Zonas.Dialogs.ZonesView.bottomSheetsZonasView;
 import com.digimat.showcase.Zonas.adapter.adapterCrudZones;
 import com.digimat.showcase.Zonas.adapter.adapterUsers;
 import com.digimat.showcase.Zonas.adapter.adapterVehicles;
+import com.digimat.showcase.Zonas.adapter.adapterVehiclesCrud;
 import com.digimat.showcase.Zonas.model.getUsers.dataFullUsers;
 import com.digimat.showcase.Zonas.model.getVehicles.dataVehicles;
 import com.digimat.showcase.Zonas.presenter.presenterComunities;
@@ -98,8 +99,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private adapterUsers madapterUsrs;
     private RecyclerView rvUsrs;
     private Switch switchrank,switchVehicles,switchVehicles_view;
-    private RecyclerView rvVehicles_view;
+    private RecyclerView rvVehicles_view,rvVehicles;
     private adapterVehicles adapterV;
+    private adapterVehiclesCrud madapterVehiclesCrud;
     private List<Marker> markerVehiculos=new ArrayList<>();
     private Map<String, Marker> markerVehiculosMap = new HashMap<>();
     private Handler handler;
@@ -148,6 +150,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         rvDetailZones =view.findViewById(R.id.rvDetailZones);
         rvUsrs =view.findViewById(R.id.rvUsrs);
         rvVehicles_view =view.findViewById(R.id.rvVehicles_view);
+        rvVehicles =view.findViewById(R.id. rvVehicles);
 
         switchrank =view.findViewById(R.id.switchrank);
         switchrank.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -168,10 +171,15 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // Acción cuando el Switch está encendido
-                    Log.d("SwitchVehicles", "Encendido");
+                    if(madapterVehiclesCrud!=null){
+                        madapterVehiclesCrud.filterByReal(mvehicles);
+                    }
                 } else {
                     // Acción cuando el Switch está apagado
-                    Log.d("SwitchVehicles", "Apagado");
+                    if(madapterVehiclesCrud!=null) {
+                        madapterVehiclesCrud.filterByBots(mvehicles);
+
+                    }
                 }
             }
         });
@@ -368,6 +376,12 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         madapterUsrs = new adapterUsers(this, usersAll, getContext());
         rvUsrs.setAdapter(madapterUsrs);
 
+    }
+    private void fillVehiclesAdmin(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        rvVehicles.setLayoutManager(layoutManager);
+        madapterVehiclesCrud=new adapterVehiclesCrud(this,getContext(),mvehicles,true);
+        rvVehicles.setAdapter(madapterVehiclesCrud);
     }
     private void fillVehicles(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -828,6 +842,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     xpand_vehiclescrud.setVisibility(View.GONE);
                 }else{
                     xpand_vehiclescrud.setVisibility(View.VISIBLE);
+                    fillVehiclesAdmin();
                 }
                 break;
             case R.id.zonesButton:
