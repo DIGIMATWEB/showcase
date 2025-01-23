@@ -40,8 +40,10 @@ import com.digimat.showcase.Zonas.adapter.adapterCrudZones;
 import com.digimat.showcase.Zonas.adapter.adapterUsers;
 import com.digimat.showcase.Zonas.adapter.adapterVehicles;
 import com.digimat.showcase.Zonas.adapter.adapterVehiclesCrud;
+import com.digimat.showcase.Zonas.adapter.adapterVehiclesCrudDetail;
 import com.digimat.showcase.Zonas.model.getUsers.dataFullUsers;
 import com.digimat.showcase.Zonas.model.getVehicles.dataVehicles;
+import com.digimat.showcase.Zonas.model.getVehicles.dotVehiclesPath;
 import com.digimat.showcase.Zonas.presenter.presenterComunities;
 import com.digimat.showcase.Zonas.presenter.presenterComunitiesImpl;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -76,15 +78,18 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private Marker vehicle;
     private KmlLayer mKmlLayer;
     private ImageView buttonServicios,colonias,zonesButton,users,vehiculosB,vehiculos;
-    private ConstraintLayout xpand_crud,xpand_usercrud,xpand_vehiclescrud,xpand_vehiclescrudView;
-    private ImageButton closeCrud,updateCrud;
+    private ConstraintLayout xpand_crud,xpand_usercrud,xpand_vehiclescrud,xpand_vehiclescrudView,xpand_vehicle_detail;
+    private ImageButton closeCrud,updateCrud,closeCrudVehiclesDetail;
 
     private RecyclerView rvDetailZones;
 
     private adapterCrudZones adapterCrud;
     private List<dotZonesm> dotZones;
+    private List<dotVehiclesPath> dotPath;
     private TextView addtextDot;
+    private TextView addtextDotVehicle;
     private Marker dotZonenew;
+    private Marker dotPathnew;
     private String zoneId;
     private String nameZone;
     private String descZone;
@@ -102,12 +107,16 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private RecyclerView rvVehicles_view,rvVehicles;
     private adapterVehicles adapterV;
     private adapterVehiclesCrud madapterVehiclesCrud;
+    private adapterVehiclesCrudDetail madapterVehiclesCrudDetail;
     private List<Marker> markerVehiculos=new ArrayList<>();
     private Map<String, Marker> markerVehiculosMap = new HashMap<>();
     private Handler handler;
     private Runnable periodicTask;
     private ImageView close_crud_vehicles_view;
     private  List<dataVehicles> mvehicles;
+    private Marker currentVehicle;
+    private RecyclerView rvDetailVehicleDots;
+    private String path;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -139,6 +148,8 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         xpand_crud=view.findViewById(R.id.xpand_crud);
         xpand_usercrud =view.findViewById(R.id.xpand_usercrud);
         xpand_vehiclescrud =view.findViewById(R.id.xpand_vehiclescrud);
+        xpand_vehicle_detail =view.findViewById(R.id.xpand_vehicle_detail);
+
         xpand_vehiclescrudView =view.findViewById(R.id.xpand_vehiclescrudView);
         zonesButton =view.findViewById(R.id.zonesButton);
         vehiculosB=view.findViewById(R.id. vehiculosB);
@@ -146,12 +157,12 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         users =view.findViewById(R.id.users);
         close_crud_vehicles_view =view.findViewById(R.id. close_crud_vehicles_view);
         closeCrud =view.findViewById(R.id.closeCrud);
-
+        closeCrudVehiclesDetail =view.findViewById(R.id. closeCrudVehiclesDetail);
         rvDetailZones =view.findViewById(R.id.rvDetailZones);
         rvUsrs =view.findViewById(R.id.rvUsrs);
         rvVehicles_view =view.findViewById(R.id.rvVehicles_view);
         rvVehicles =view.findViewById(R.id. rvVehicles);
-
+        rvDetailVehicleDots=view.findViewById(R.id.rvDetailVehicleDots);
         switchrank =view.findViewById(R.id.switchrank);
         switchrank.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -203,6 +214,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             }
         });
         addtextDot=view.findViewById(R.id. addtextDot);
+        addtextDotVehicle=view.findViewById(R.id. addtextDotVehicle);
         updateCrud=view.findViewById(R.id. updateCrud);
 
         nameZoneEdtx=view.findViewById(R.id.nameZoneEdtx);
@@ -245,7 +257,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         imageTypeZone=view.findViewById(R.id. imageTypeZone);
         updateCrud.setOnClickListener(this);
         addtextDot.setOnClickListener(this);
+        addtextDotVehicle.setOnClickListener(this);
         closeCrud.setOnClickListener(this);
+        closeCrudVehiclesDetail.setOnClickListener(this);
         zonesButton.setOnClickListener(this);
         vehiculosB.setOnClickListener(this);
         vehiculos.setOnClickListener(this);
@@ -377,17 +391,39 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         rvUsrs.setAdapter(madapterUsrs);
 
     }
-    private void fillVehiclesAdmin(){
+    private void fillVehiclesAdmin(){//este metodo es para los vehiculos del admin
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvVehicles.setLayoutManager(layoutManager);
         madapterVehiclesCrud=new adapterVehiclesCrud(this,getContext(),mvehicles,true);
         rvVehicles.setAdapter(madapterVehiclesCrud);
+    }
+    private void fillVehiclesAdminDetail(){//este metodo es para los puntos del path
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        rvDetailVehicleDots.setLayoutManager(layoutManager);
+        madapterVehiclesCrudDetail=new adapterVehiclesCrudDetail(this,getContext(),path);
+        rvDetailVehicleDots.setAdapter(madapterVehiclesCrudDetail);
     }
     private void fillVehicles(){
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         rvVehicles_view.setLayoutManager(layoutManager);
         adapterV=new adapterVehicles(this,getContext(),mvehicles,true);
          rvVehicles_view.setAdapter(adapterV);
+    }
+    public void drawPosition(dataVehicles dataVehicles) {//este metodo es para los vehiculos del admin y pra el path
+        Log.e("path","vehiclePath "+dataVehicles.getPath());
+        LatLng postionCurrentVehicle=new LatLng(Double.valueOf(dataVehicles.getLatitude()),Double.valueOf(dataVehicles.getLongitude()));
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(postionCurrentVehicle)
+                .title(dataVehicles.getVehicleId())
+                .snippet("Velocidad: " + dataVehicles.getSpeed() + " km/h")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)); // Personalizar color
+
+        currentVehicle=mMap.addMarker(markerOptions);
+        //TODO mostrar constrain con ruta de path
+        xpand_vehicle_detail.setVisibility(View.VISIBLE);
+        xpand_vehiclescrud .setVisibility(View.GONE);
+        this.path=dataVehicles.getPath();
+        fillVehiclesAdminDetail();
     }
     public void goUserLocation(LatLng locationUser) {
         Toast.makeText(getContext(), "ir a la ubicacion del usuario", Toast.LENGTH_SHORT).show();
@@ -785,12 +821,16 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
                 // Update the marker's position in the adapter
                 mMap.clear();
-                adapterCrud.updateDotPosition( finalPosition); // Implement update logic in your adapter
+                if(adapterCrud!=null) {
+                    adapterCrud.updateDotPosition(finalPosition); // Implement update logic in your adapter
+                }
 
             }
         });
 
+        if(adapterCrud!=null){
         adapterCrud.addDot(dotZonenew.getPosition());
+        }
     }
     public void drawTempZone(List<dotZonesm> dotZoness) {
         Log.e("drawTempZone", "drawTempZone");
@@ -828,7 +868,15 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             case R.id.close_crud_vehicles_view:
                 xpand_vehiclescrudView.setVisibility(View.GONE);
                 break;
-            case  R.id.vehiculos:
+            case R.id.closeCrudVehiclesDetail:
+                xpand_vehicle_detail.setVisibility(View.GONE);
+
+                break;
+          //case R.id.saveVehicleCrudDetailPath:
+          //    presenter.savePathVehicle(dotPath);
+          //  xpand_vehicle_detail.setVisibility(View.GONE);
+          //    break;
+            case  R.id.vehiculos://TODO esto es para ver vehiculos desde usuario
                 if(xpand_vehiclescrudView.getVisibility()==View.VISIBLE){
                     xpand_vehiclescrudView.setVisibility(View.GONE);
                 }else{
@@ -837,7 +885,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 }
 
                 break;
-            case  R.id.vehiculosB:
+            case  R.id.vehiculosB://TODO esto es para ver vehiculos desde administrador
                 if(xpand_vehiclescrud.getVisibility()==View.VISIBLE){
                     xpand_vehiclescrud.setVisibility(View.GONE);
                 }else{
@@ -845,14 +893,14 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     fillVehiclesAdmin();
                 }
                 break;
-            case R.id.zonesButton:
+            case R.id.zonesButton://TODO esto es para zonas
                 mMap.clear();
                 callKml();
                 markerVehiculosMap.clear();
                 zonesConfiguratuon zoneconfig = new zonesConfiguratuon();
                 zoneconfig.show(getChildFragmentManager(), "zonesConfiguratuon");
                 break;
-            case R.id.closeCrud:
+            case R.id.closeCrud://TODO esto es para zonas
 
                 if (dotZonenew != null) {
                     dotZonenew.remove();
@@ -864,7 +912,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
 
                 break;
-            case R.id.updateCrud:
+            case R.id.updateCrud://TODO esto es para zonas
                 if(typeEditZone==1){
                     Gson gson= new Gson();
                     String json=gson.toJson(dotZones);
@@ -895,7 +943,16 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     presenter.updateZone(zoneId,descZoneEdtxt.getText().toString(),ratioEdtxt.getText().toString(),dotZones);//todo se debe de pooder actualizar el nombre
                 }
                 break;
-            case R.id.addtextDot:
+            case R.id.addtextDotVehicle://TODO esto es para vehiculos administrador y agregar uhn punto
+                if(dotPathnew==null){
+                    dotPathnew=mMap.addMarker(new MarkerOptions().position(mMap.getCameraPosition().target).title("Nueva marca").draggable(true));
+                    setupDragNewMarker();
+                }else{
+                    Toast.makeText(getContext(), "ya haz creado el marcador", Toast.LENGTH_SHORT).show();
+                }
+                rvDetailVehicleDots.scrollToPosition(madapterVehiclesCrudDetail.getItemCount() - 1);
+                break;
+            case R.id.addtextDot://TODO esto es para un punto en la zona
                 if(dotZonenew==null) {
                     mMap.clear();
                     dotZonenew = mMap.addMarker(new MarkerOptions().position(mMap.getCameraPosition().target).title("Nuevo punto").draggable(true));
@@ -909,8 +966,5 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             }
 
         }
-
-
-
 }
 

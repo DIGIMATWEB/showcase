@@ -123,6 +123,19 @@
             android:id="@+id/include"
             layout="@layout/crud_zonas" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/xpand_vehicle_detail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/map_view_tracking"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
+        <include
+            android:id="@+id/include"
+            layout="@layout/crud_vehicles_detail" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <!-- este boton debe desplegar un bottom sheet para ver la lista de servicios disponibles-->
 </androidx.constraintlayout.widget.ConstraintLayout>

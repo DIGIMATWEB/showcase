@@ -38,12 +38,12 @@ public class dataVehicles {
     private String ultimaConexion;
     @SerializedName("path")
     
-    private Object path;
+    private String path;
     @SerializedName("icon")
     
     private String icon;
 
-    public dataVehicles(String vehicleId, String isBot, String speed, String comunidad, String latitude, String longitude, String type, String gforce, String status, String orientation, String ultimaConexion, Object path, String icon) {
+    public dataVehicles(String vehicleId, String isBot, String speed, String comunidad, String latitude, String longitude, String type, String gforce, String status, String orientation, String ultimaConexion, String path, String icon) {
         super();
         this.vehicleId = vehicleId;
         this.isBot = isBot;
@@ -148,11 +148,11 @@ public class dataVehicles {
         this.ultimaConexion = ultimaConexion;
     }
 
-    public Object getPath() {
+    public String getPath() {
         return path;
     }
 
-    public void setPath(Object path) {
+    public void setPath(String path) {
         this.path = path;
     }
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.digimat.showcase.R;
@@ -53,12 +54,18 @@ public class adapterVehiclesCrud extends RecyclerView.Adapter<adapterVehiclesCru
     // Este método enlaza los datos con el ViewHolder
     @Override
     public void onBindViewHolder(adapterVehiclesCrud.ItemViewHolder holder, @SuppressLint("RecyclerView") int position) {
-
+        holder.vehicleCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mview.drawPosition(vehicles.get(position));
+            }
+        });
     }
 
     // Este método retorna la cantidad de items en la lista
     @Override
-    public int getItemCount() {
+    public  int getItemCount() {
+
         return vehicles.size();
     }
 
@@ -87,9 +94,11 @@ public class adapterVehiclesCrud extends RecyclerView.Adapter<adapterVehiclesCru
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         private TextView textNameUsr;
         private ImageView location;
+        private CardView vehicleCard;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
+            vehicleCard=itemView.findViewById(R.id.vehicleCard);
         }
     }
 
