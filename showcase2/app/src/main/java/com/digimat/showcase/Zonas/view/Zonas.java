@@ -59,6 +59,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.maps.android.data.kml.KmlLayer;
 import com.google.maps.android.data.kml.KmlPlacemark;
@@ -100,6 +102,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private EditText ratioEdtxt;
     private Polygon editablePoligon;
     private Circle editableCircle;
+    private Polyline polylinePath;
     private ImageView imageTypeZone;
     private adapterUsers madapterUsrs;
     private RecyclerView rvUsrs;
@@ -656,6 +659,18 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         mMap.clear();
         adapterCrud.UpdateView(dotZones);
     }
+    public void saveNewDotV(List<dotVehiclesPath> pathDots, int position) {
+
+            if (dotPathnew != null) {/**esto solo remuieve el marcador de nuevo punto creado*/
+                dotPathnew.remove();
+                dotPathnew=null;
+
+            }
+            this.dotPath=pathDots;
+            //mMap.clear();
+        refreshDrawPathPoliline(pathDots,position);
+            madapterVehiclesCrudDetail.UpdateView(dotPath);
+        }
 
     public void removeNewDot(List<dotZonesm> dotZoness, int position) {
         if (dotZonenew != null) {/**esto solo remuieve el marcador de nuevo punto creado*/
@@ -666,8 +681,82 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         this.dotZones=dotZoness;
         adapterCrud.notifyRemoved(position);
     }
+      public void removeNewDotV(List<dotVehiclesPath> pathDots, int position) {
+            if (dotPathnew != null) {/**esto solo remuieve el marcador de nuevo punto creado*/
+                dotPathnew.remove();
+                dotPathnew=null;
+
+            }
+            this.dotPath=pathDots;
+          refreshDrawPathPoliline(pathDots,position);
+            madapterVehiclesCrudDetail.notifyRemoved(position);
+        }
+    private void refreshDrawPathPoliline(List<dotVehiclesPath> pathDots, int position) {
+        if(pathDots!=null) {
+            if(pathDots.size()>1) {
+                int bluealfa= ContextCompat.getColor(getContext(), R.color.purple_700);
+                PolylineOptions polylineOptions = new PolylineOptions()
+                        .color(bluealfa) // Azul (ARGB)
+                        .width(10);
+                for (dotVehiclesPath dot : pathDots) {
+                    LatLng dotPos = new LatLng(
+                            Double.valueOf(dot.getLatitud()),
+                            Double.valueOf(dot.getLongitud())
+                    );
+                    polylineOptions.add(dotPos);
+                }
+
+                polylinePath = mMap.addPolyline(polylineOptions);
+            }else{
+                Toast.makeText(getContext(), "Nesecitas agregar al menos dos puntos", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     @SuppressLint("PotentialBehaviorOverride")
-    public void editDotZone(List<dotZonesm> dotZoness, int position) {
+    public void editDotVehicle(List<dotVehiclesPath> pathDots, int position) {//este metodo deberia de crear una polilinea
+        //Toast crear polilinea
+        refreshDrawPathPoliline(pathDots,position);
+        LatLng dotPos = new LatLng(
+                Double.valueOf(pathDots.get(position).getLatitud()),
+                Double.valueOf(pathDots.get(position).getLongitud())
+        );
+        Marker marker = mMap.addMarker(new MarkerOptions()
+                        .position(dotPos)
+                        .title("Editando punto")
+                        .draggable(true));
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+                Log.d("MarkerDrag", "Inicio de arrastre: " + marker.getTitle());
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+                LatLng position = marker.getPosition();
+                Log.d("MarkerDrag", "Arrastrando: " + position.latitude + ", " + position.longitude);
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                // Obtén la nueva posición del marcador
+                LatLng finalLatLong = marker.getPosition();
+                Log.e("MarkerDrag", "Dragging ended at v1: " + finalLatLong.latitude + ", " + finalLatLong.longitude);
+
+                // Update the marker's position in the adapter
+                mMap.clear();
+                pathDots.get(position).setLatitud(String.valueOf(finalLatLong.latitude));
+                pathDots.get(position).setLongitud(String.valueOf(finalLatLong.longitude));
+                refreshDrawPathPoliline(pathDots,position);
+                madapterVehiclesCrudDetail.updateDotPosition( finalLatLong);
+            }
+        });
+
+    }
+
+
+    @SuppressLint("PotentialBehaviorOverride")
+    public void editDotZone(List<dotZonesm> dotZoness, int position) {//este metodo es para crear poligonos detecta si hay un punto(crea un circulo), dos(solicita un punto extra) o 3(crea un poligono triangular)
         // Verificar el tamaño de dotZoness y proceder según el caso
         if (dotZoness.size() == 1) {
             Log.e("Editar","click circulo");
@@ -707,7 +796,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 public void onMarkerDragEnd(Marker marker) {
                     // Obtén la nueva posición del marcador
                     LatLng finalPosition = marker.getPosition();
-                    Log.e("Editar", "Dragging ended at v1: " + finalPosition.latitude + ", " + finalPosition.longitude);
+                    Log.e("MarkerDrag", "Dragging ended at v1: " + finalPosition.latitude + ", " + finalPosition.longitude);
 
                     // Update the marker's position in the adapter
                     mMap.clear();
@@ -797,8 +886,11 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     public void updateAfterScrollMarker(List<dotZonesm> dotZoness) {
         this.dotZones=dotZoness;
     }
+    public void updateAfterScrollMarkerV(List<dotVehiclesPath> dotPath) {
+        this.dotPath=dotPath;
+    }
     @SuppressLint("PotentialBehaviorOverride")
-    private void setupDragNewMarker() {
+    private void setupDragNewMarker() {//onDragListener Marker
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
@@ -814,15 +906,23 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             }
 
             @Override
-            public void onMarkerDragEnd(Marker marker) {
+            public void onMarkerDragEnd(Marker marker) {//este metodo se debe moderar sirve para dos casos el de la zona y el de la ruta del vehiculo
                 // Called when the user stops dragging the marker
                 LatLng finalPosition = marker.getPosition();
-                Log.e("Editar", "Dragging ended at v1: " + finalPosition.latitude + ", " + finalPosition.longitude);
+                Log.e("MarkerDrag", "Dragging ended at v1: " + finalPosition.latitude + ", " + finalPosition.longitude+" is adapterCrud visible "+adapterCrud);
 
                 // Update the marker's position in the adapter
-                mMap.clear();
-                if(adapterCrud!=null) {
-                    adapterCrud.updateDotPosition(finalPosition); // Implement update logic in your adapter
+                if(adapterCrud!=null) {//aqui se maneja solo si el adaptador de la zona no es nulo
+                    mMap.clear();
+                    if (adapterCrud != null) {
+                        adapterCrud.updateDotPosition(finalPosition); // Implement update logic in your adapter
+                    }
+                }
+                if(madapterVehiclesCrudDetail!=null){
+                    //mMap.clear();
+                    if(madapterVehiclesCrudDetail!=null){
+                    madapterVehiclesCrudDetail.updateDotPosition(finalPosition);
+                    }
                 }
 
             }
@@ -831,12 +931,19 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         if(adapterCrud!=null){
         adapterCrud.addDot(dotZonenew.getPosition());
         }
+        if(madapterVehiclesCrudDetail!=null){
+            madapterVehiclesCrudDetail.addDot(dotPathnew.getPosition());
+        }
     }
     public void drawTempZone(List<dotZonesm> dotZoness) {
         Log.e("drawTempZone", "drawTempZone");
         if(!dotZoness.isEmpty()){
             setUpPoligonOrCircle(dotZoness);
         }
+    }
+    public void drawTempPoliline(List<dotVehiclesPath> pathDots){
+        Log.e("Path","pendiente dibujarpolilinea");
+
     }
     public void updateTempZone(List<dotZonesm> dotZoness) {
         Toast.makeText(getContext(), "updateTempZone", Toast.LENGTH_SHORT).show();

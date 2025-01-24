@@ -39,6 +39,8 @@ public class adapterVehiclesCrud extends RecyclerView.Adapter<adapterVehiclesCru
                 }
                 this.vehicles = bvehicles;
                 this.isfistTime = false;
+            }else{
+                this.vehicles=new ArrayList<>();
             }
         }
 
