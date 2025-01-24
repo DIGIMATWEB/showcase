@@ -48,6 +48,7 @@ public class adapterVehiclesCrudDetail extends RecyclerView.Adapter<adapterVehic
             pathDots=new ArrayList<>();
         //    System.out.println("El JSON no pudo ser deserializado en una lista.");
         }
+        mview.drawTempPoliline(pathDots);
     }
 
     public  void UpdateView(List<dotVehiclesPath> dotPath) {
@@ -98,7 +99,7 @@ public class adapterVehiclesCrudDetail extends RecyclerView.Adapter<adapterVehic
                 mview.editDotVehicle(pathDots,position,pathDots.get(position).getLatitud(),pathDots.get(position).getLongitud());
             }
         });
-        mview.drawTempPoliline(pathDots);
+
     }
 
     // Este método retorna la cantidad de items en la lista

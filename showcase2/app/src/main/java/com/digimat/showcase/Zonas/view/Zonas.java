@@ -431,6 +431,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         xpand_vehiclescrud .setVisibility(View.GONE);
         this.path=dataVehicles.getPath();
         fillVehiclesAdminDetail();
+        if(dotPath!=null) {
+            refreshDrawPathPoliline(dotPath);
+        }
     }
     @Override
     public void setVehiclePath(String data) {
@@ -677,7 +680,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             }
             this.dotPath=pathDots;
             //mMap.clear();
-        refreshDrawPathPoliline(pathDots,position);
+        refreshDrawPathPoliline(pathDots);
             madapterVehiclesCrudDetail.UpdateView(dotPath);
         }
 
@@ -697,10 +700,10 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
             }
             this.dotPath=pathDots;
-          refreshDrawPathPoliline(pathDots,position);
+          refreshDrawPathPoliline(pathDots);
             madapterVehiclesCrudDetail.notifyRemoved(position);
         }
-    private void refreshDrawPathPoliline(List<dotVehiclesPath> pathDots, int position) {
+    private void refreshDrawPathPoliline(List<dotVehiclesPath> pathDots) {
         if(pathDots!=null) {
             if(pathDots.size()>1) {
                 int bluealfa= ContextCompat.getColor(getContext(), R.color.purple_700);
@@ -717,7 +720,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
                 polylinePath = mMap.addPolyline(polylineOptions);
                 this.dotPath=pathDots;
-                madapterVehiclesCrudDetail.notifyDataSetChanged();
+                if(madapterVehiclesCrudDetail!=null) {
+                    madapterVehiclesCrudDetail.notifyDataSetChanged();
+                }
             }else{
                 Toast.makeText(getContext(), "Nesecitas agregar al menos dos puntos", Toast.LENGTH_SHORT).show();
             }
@@ -727,7 +732,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     @SuppressLint("PotentialBehaviorOverride")
     public void editDotVehicle(List<dotVehiclesPath> pathDots, int position, String latitud, String longitud) {//este metodo deberia de crear una polilinea
         //Toast crear polilinea
-        refreshDrawPathPoliline(pathDots,position);
+        refreshDrawPathPoliline(pathDots);
         LatLng dotPos = new LatLng(
                 Double.valueOf(latitud),
                 Double.valueOf(longitud)
@@ -760,7 +765,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 mMap.clear();
                 pathDots.get(position).setLatitud(String.valueOf(finalLatLong.latitude));
                 pathDots.get(position).setLongitud(String.valueOf(finalLatLong.longitude));
-                refreshDrawPathPoliline(pathDots,position);
+                refreshDrawPathPoliline(pathDots);
                 marker.remove();
                 marker=null;
             }
@@ -959,7 +964,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     }
     public void drawTempPoliline(List<dotVehiclesPath> pathDots){
         Log.e("Path","pendiente dibujarpolilinea");
-
+        if(!pathDots.isEmpty()){
+            this.dotPath=pathDots;
+        }
     }
     public void updateTempZone(List<dotZonesm> dotZoness) {
         Toast.makeText(getContext(), "updateTempZone", Toast.LENGTH_SHORT).show();
