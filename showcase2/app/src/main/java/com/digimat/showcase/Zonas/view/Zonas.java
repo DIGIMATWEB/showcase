@@ -81,7 +81,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private KmlLayer mKmlLayer;
     private ImageView buttonServicios,colonias,zonesButton,users,vehiculosB,vehiculos;
     private ConstraintLayout xpand_crud,xpand_usercrud,xpand_vehiclescrud,xpand_vehiclescrudView,xpand_vehicle_detail;
-    private ImageButton closeCrud,updateCrud,closeCrudVehiclesDetail;
+    private ImageButton closeCrud,updateCrud,closeCrudVehiclesDetail,updatePath;
 
     private RecyclerView rvDetailZones;
 
@@ -118,6 +118,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private ImageView close_crud_vehicles_view;
     private  List<dataVehicles> mvehicles;
     private Marker currentVehicle;
+    private String currentVehicleId;
     private RecyclerView rvDetailVehicleDots;
     private String path;
     @Override
@@ -161,6 +162,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         close_crud_vehicles_view =view.findViewById(R.id. close_crud_vehicles_view);
         closeCrud =view.findViewById(R.id.closeCrud);
         closeCrudVehiclesDetail =view.findViewById(R.id. closeCrudVehiclesDetail);
+        updatePath =view.findViewById(R.id.updatePath);
         rvDetailZones =view.findViewById(R.id.rvDetailZones);
         rvUsrs =view.findViewById(R.id.rvUsrs);
         rvVehicles_view =view.findViewById(R.id.rvVehicles_view);
@@ -263,6 +265,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         addtextDotVehicle.setOnClickListener(this);
         closeCrud.setOnClickListener(this);
         closeCrudVehiclesDetail.setOnClickListener(this);
+        updatePath.setOnClickListener(this);
         zonesButton.setOnClickListener(this);
         vehiculosB.setOnClickListener(this);
         vehiculos.setOnClickListener(this);
@@ -422,11 +425,17 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)); // Personalizar color
 
         currentVehicle=mMap.addMarker(markerOptions);
+        currentVehicleId=dataVehicles.getVehicleId();
         //TODO mostrar constrain con ruta de path
         xpand_vehicle_detail.setVisibility(View.VISIBLE);
         xpand_vehiclescrud .setVisibility(View.GONE);
         this.path=dataVehicles.getPath();
         fillVehiclesAdminDetail();
+    }
+    @Override
+    public void setVehiclePath(String data) {
+        Log.e("savePath","datos salvados Path = "+data                                                                     );
+
     }
     public void goUserLocation(LatLng locationUser) {
         Toast.makeText(getContext(), "ir a la ubicacion del usuario", Toast.LENGTH_SHORT).show();
@@ -992,10 +1001,10 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 xpand_vehicle_detail.setVisibility(View.GONE);
 
                 break;
-          //case R.id.saveVehicleCrudDetailPath:
-          //    presenter.savePathVehicle(dotPath);
-          //  xpand_vehicle_detail.setVisibility(View.GONE);
-          //    break;
+          case R.id.updatePath:
+              presenter.savePathVehicle(currentVehicleId,dotPath);
+            xpand_vehicle_detail.setVisibility(View.GONE);
+              break;
             case  R.id.vehiculos://TODO esto es para ver vehiculos desde usuario
                 if(xpand_vehiclescrudView.getVisibility()==View.VISIBLE){
                     xpand_vehiclescrudView.setVisibility(View.GONE);

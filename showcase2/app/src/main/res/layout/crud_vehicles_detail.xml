@@ -50,7 +50,6 @@
                     android:text=""
                     android:textAlignment="textStart"
                     android:textSize="14dp"
-                    app:layout_constraintEnd_toStartOf="@+id/closeCrud"
                     app:layout_constraintStart_toEndOf="@+id/imageTypeZone"
                     app:layout_constraintTop_toTopOf="@+id/imageTypeZone"
                     tools:ignore="RtlCompat" />
@@ -83,7 +82,16 @@
                     android:src="@android:drawable/btn_dialog"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
+                <ImageButton
+                    android:id="@+id/updatePath"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:elevation="8dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/guardar"
+                    app:layout_constraintBottom_toBottomOf="@+id/closeCrudVehiclesDetail"
+                    app:layout_constraintEnd_toStartOf="@+id/closeCrudVehiclesDetail"
+                    app:layout_constraintTop_toTopOf="@+id/closeCrudVehiclesDetail" />
                 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

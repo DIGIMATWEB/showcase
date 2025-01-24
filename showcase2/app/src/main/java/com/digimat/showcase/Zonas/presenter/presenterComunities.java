@@ -4,6 +4,7 @@ import com.digimat.showcase.Zonas.Dialogs.ZonesConfig.model.dataGetAllZones;
 import com.digimat.showcase.Zonas.Dialogs.ZonesConfig.model.dotZonesm;
 import com.digimat.showcase.Zonas.model.getUsers.dataFullUsers;
 import com.digimat.showcase.Zonas.model.getVehicles.dataVehicles;
+import com.digimat.showcase.Zonas.model.getVehicles.dotVehiclesPath;
 
 import java.util.List;
 
@@ -25,4 +26,8 @@ public interface presenterComunities {
     void getVehicles();
 
     void setVehicles(List<dataVehicles> data);
+
+    void savePathVehicle(String currentVehicleId, List<dotVehiclesPath> dotPath);
+
+    void setVehiclePath(String data);
 }

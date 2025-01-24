@@ -6,6 +6,8 @@ import com.digimat.showcase.Zonas.model.getUsers.usersRequest;
 import com.digimat.showcase.Zonas.model.getUsers.usersResponse;
 import com.digimat.showcase.Zonas.model.getVehicles.requestVehicles;
 import com.digimat.showcase.Zonas.model.getVehicles.responseVehicles;
+import com.digimat.showcase.Zonas.model.getVehicles.savePath.requestSavePath;
+import com.digimat.showcase.Zonas.model.getVehicles.savePath.responseSavePath;
 import com.digimat.showcase.Zonas.model.newZone.requestNewZone;
 import com.digimat.showcase.Zonas.model.newZone.responseNewZone;
 import com.digimat.showcase.Zonas.model.removeZones.requestRemoveZone;
@@ -33,4 +35,7 @@ public interface comunities {
     Call<responseRemoveZone> removeZone(@Body requestRemoveZone request);
     @POST(RetrofitEndPointsV2.GET_VEHICLES)
     Call<responseVehicles> getAllVehicles(@Body requestVehicles request);
+
+    @POST(RetrofitEndPointsV2.SAVE_PATH)
+    Call<responseSavePath> savePath(@Body  requestSavePath request);
 }

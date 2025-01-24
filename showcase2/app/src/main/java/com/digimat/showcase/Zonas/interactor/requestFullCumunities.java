@@ -1,6 +1,7 @@
 package com.digimat.showcase.Zonas.interactor;
 
 import com.digimat.showcase.Zonas.Dialogs.ZonesConfig.model.dotZonesm;
+import com.digimat.showcase.Zonas.model.getVehicles.dotVehiclesPath;
 
 import java.util.List;
 
@@ -15,4 +16,7 @@ public interface requestFullCumunities {
 
 
     void getVehicles();
+
+    void savePathVehicle(String currentVehicleId, List<dotVehiclesPath> dotPath);
+
 }

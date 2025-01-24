@@ -13,8 +13,11 @@ import com.digimat.showcase.Zonas.model.getUsers.dataFullUsers;
 import com.digimat.showcase.Zonas.model.getUsers.usersRequest;
 import com.digimat.showcase.Zonas.model.getUsers.usersResponse;
 import com.digimat.showcase.Zonas.model.getVehicles.dataVehicles;
+import com.digimat.showcase.Zonas.model.getVehicles.dotVehiclesPath;
 import com.digimat.showcase.Zonas.model.getVehicles.requestVehicles;
 import com.digimat.showcase.Zonas.model.getVehicles.responseVehicles;
+import com.digimat.showcase.Zonas.model.getVehicles.savePath.requestSavePath;
+import com.digimat.showcase.Zonas.model.getVehicles.savePath.responseSavePath;
 import com.digimat.showcase.Zonas.model.newZone.requestNewZone;
 import com.digimat.showcase.Zonas.model.newZone.responseNewZone;
 import com.digimat.showcase.Zonas.model.removeZones.requestRemoveZone;
@@ -307,7 +310,7 @@ public class comunityInteractorImpl implements requestFullCumunities {
 
             @Override
             public void onFailure(Call<responseVehicles> call, Throwable t) {
-
+                Toast.makeText(context, "Error on getVehicles:"+ t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -344,4 +347,53 @@ public class comunityInteractorImpl implements requestFullCumunities {
             Toast.makeText(context, "sin informacion de vehiculo", Toast.LENGTH_SHORT).show();
         }
     }
+    @Override
+    public void savePathVehicle(String currentVehicleId, List<dotVehiclesPath> dotPath) {
+
+        Gson gson=new Gson();
+        String json =gson.toJson(dotPath);
+        Log.e("savePath",json);
+        requestSavePath request=new requestSavePath(currentVehicleId,json);
+        Call<responseSavePath> call=service.savePath(request);
+        call.enqueue(new Callback<responseSavePath>() {
+            @Override
+            public void onResponse(Call<responseSavePath> call, Response<responseSavePath> response) {
+                validatePathVehicle(response,context);
+            }
+
+            @Override
+            public void onFailure(Call<responseSavePath> call, Throwable t) {
+                Toast.makeText(context, "Error on savePathVehicle:"+ t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void validatePathVehicle(Response<responseSavePath> response, Context context) {
+        if (response != null) {
+
+            if (RetrofitValidationsV2.checkSuccessCode(response.code())) {
+                getPathVehiclesdata(response, context);
+            } else {
+                Toast.makeText(context, "" + RetrofitValidationsV2.getErrorByStatus(response.code(), context), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void getPathVehiclesdata(Response<responseSavePath> response, Context context) {
+        responseSavePath resp=response.body();
+        if (resp != null) {
+            String message = resp.getMessage();
+            int responseCode = resp.getResponseCode();
+            if (responseCode == GeneralConstantsV2.RESPONSE_CODE_OK) {
+                String data = resp.getData();
+                if (data != null)//data
+                {
+                    presenter.setVehiclePath(data);
+                }
+            }
+        }else{
+            Toast.makeText(context, "sin informacion de ruta", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

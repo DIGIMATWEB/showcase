@@ -8,6 +8,7 @@ import com.digimat.showcase.Zonas.interactor.requestFullCumunities;
 import com.digimat.showcase.Zonas.interactor.comunityInteractorImpl;
 import com.digimat.showcase.Zonas.model.getUsers.dataFullUsers;
 import com.digimat.showcase.Zonas.model.getVehicles.dataVehicles;
+import com.digimat.showcase.Zonas.model.getVehicles.dotVehiclesPath;
 import com.digimat.showcase.Zonas.view.zonasView;
 
 import java.util.List;
@@ -62,6 +63,19 @@ public class presenterComunitiesImpl implements presenterComunities {
             interactor.getVehicles();
         }
     }
+    @Override
+    public void savePathVehicle(String currentVehicleId, List<dotVehiclesPath> dotPath) {
+        if(view!=null){
+            interactor.savePathVehicle(currentVehicleId,dotPath);
+        }
+    }
+
+    @Override
+    public void setVehiclePath(String data) {
+        if(view!=null){
+            view.setVehiclePath(data);
+        }
+    }
 
     @Override
     public void setVehicles(List<dataVehicles> data) {
@@ -69,6 +83,8 @@ public class presenterComunitiesImpl implements presenterComunities {
             view.setVehicles(data);
         }
     }
+
+
 
     @Override
     public void setZonesView(List<dataGetAllZones> data) {

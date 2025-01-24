@@ -14,4 +14,6 @@ public interface zonasView {
     void drawZonesOnView(List<dataGetAllZones> data);
 
     void setVehicles(List<dataVehicles> data);
+
+    void setVehiclePath(String data);
 }

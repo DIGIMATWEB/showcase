@@ -25,4 +25,5 @@ public class RetrofitEndPointsV2 {
     public static final String REMOVE_ZONE = "zonas/remove_zone.php";
     public static final String GET_VEHICLES = "zonas/getVehicles.php";
 
+    public static final String SAVE_PATH = "zonas/savePath.php";
 }
