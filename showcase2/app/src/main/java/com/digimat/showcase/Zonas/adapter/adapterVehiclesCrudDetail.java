@@ -95,7 +95,7 @@ public class adapterVehiclesCrudDetail extends RecyclerView.Adapter<adapterVehic
         holder.foundDot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mview.editDotVehicle(pathDots,position);
+                mview.editDotVehicle(pathDots,position,pathDots.get(position).getLatitud(),pathDots.get(position).getLongitud());
             }
         });
         mview.drawTempPoliline(pathDots);

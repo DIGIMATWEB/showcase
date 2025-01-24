@@ -707,6 +707,8 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 }
 
                 polylinePath = mMap.addPolyline(polylineOptions);
+                this.dotPath=pathDots;
+                madapterVehiclesCrudDetail.notifyDataSetChanged();
             }else{
                 Toast.makeText(getContext(), "Nesecitas agregar al menos dos puntos", Toast.LENGTH_SHORT).show();
             }
@@ -714,17 +716,19 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     }
 
     @SuppressLint("PotentialBehaviorOverride")
-    public void editDotVehicle(List<dotVehiclesPath> pathDots, int position) {//este metodo deberia de crear una polilinea
+    public void editDotVehicle(List<dotVehiclesPath> pathDots, int position, String latitud, String longitud) {//este metodo deberia de crear una polilinea
         //Toast crear polilinea
         refreshDrawPathPoliline(pathDots,position);
         LatLng dotPos = new LatLng(
-                Double.valueOf(pathDots.get(position).getLatitud()),
-                Double.valueOf(pathDots.get(position).getLongitud())
+                Double.valueOf(latitud),
+                Double.valueOf(longitud)
         );
+
         Marker marker = mMap.addMarker(new MarkerOptions()
                         .position(dotPos)
-                        .title("Editando punto")
+                        .title("punto "+position)
                         .draggable(true));
+        Log.d("MarkerDrag1", "Marcador " + marker.getTitle()+" marcadorlat: "+latitud+" marcadorlong: "+longitud);
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
@@ -734,24 +738,24 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             @Override
             public void onMarkerDrag(Marker marker) {
                 LatLng position = marker.getPosition();
-                Log.d("MarkerDrag", "Arrastrando: " + position.latitude + ", " + position.longitude);
+              //  Log.d("MarkerDrag", "Arrastrando: " + position.latitude + ", " + position.longitude);
             }
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
                 // Obtén la nueva posición del marcador
                 LatLng finalLatLong = marker.getPosition();
-                Log.e("MarkerDrag", "Dragging ended at v1: " + finalLatLong.latitude + ", " + finalLatLong.longitude);
+                Log.e("MarkerDrag", "vDragging ended at v1 b: " + finalLatLong.latitude + ", " + finalLatLong.longitude);
 
                 // Update the marker's position in the adapter
                 mMap.clear();
                 pathDots.get(position).setLatitud(String.valueOf(finalLatLong.latitude));
                 pathDots.get(position).setLongitud(String.valueOf(finalLatLong.longitude));
                 refreshDrawPathPoliline(pathDots,position);
-                madapterVehiclesCrudDetail.updateDotPosition( finalLatLong);
+                marker.remove();
+                marker=null;
             }
         });
-
     }
 
 
@@ -902,14 +906,14 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             public void onMarkerDrag(Marker marker) {
                 // Called repeatedly as the marker is being dragged
                 LatLng position = marker.getPosition();
-                Log.d("MarkerDrag", "Dragging at: " + position.latitude + ", " + position.longitude);
+                //yLog.d("MarkerDrag", "Dragging at: " + position.latitude + ", " + position.longitude);
             }
 
             @Override
             public void onMarkerDragEnd(Marker marker) {//este metodo se debe moderar sirve para dos casos el de la zona y el de la ruta del vehiculo
                 // Called when the user stops dragging the marker
                 LatLng finalPosition = marker.getPosition();
-                Log.e("MarkerDrag", "Dragging ended at v1: " + finalPosition.latitude + ", " + finalPosition.longitude+" is adapterCrud visible "+adapterCrud);
+                Log.e("MarkerDrag", "vDragging ended at v1 a: " + finalPosition.latitude + ", " + finalPosition.longitude+" is adapterCrud visible "+adapterCrud);
 
                 // Update the marker's position in the adapter
                 if(adapterCrud!=null) {//aqui se maneja solo si el adaptador de la zona no es nulo
@@ -919,17 +923,20 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     }
                 }
                 if(madapterVehiclesCrudDetail!=null){
-                    //mMap.clear();
+                  // mMap.clear();
                     if(madapterVehiclesCrudDetail!=null){
                     madapterVehiclesCrudDetail.updateDotPosition(finalPosition);
                     }
                 }
+                marker.remove();
 
             }
         });
 
         if(adapterCrud!=null){
-        adapterCrud.addDot(dotZonenew.getPosition());
+            if(dotZonenew.getPosition()!=null) {
+                adapterCrud.addDot(dotZonenew.getPosition());
+            }
         }
         if(madapterVehiclesCrudDetail!=null){
             madapterVehiclesCrudDetail.addDot(dotPathnew.getPosition());
@@ -976,6 +983,12 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 xpand_vehiclescrudView.setVisibility(View.GONE);
                 break;
             case R.id.closeCrudVehiclesDetail:
+                if (dotPathnew != null) {
+                    dotPathnew.remove();
+                    dotPathnew=null;
+
+                }
+                mMap.clear();
                 xpand_vehicle_detail.setVisibility(View.GONE);
 
                 break;
