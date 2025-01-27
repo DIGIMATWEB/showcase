@@ -1,5 +1,6 @@
 package com.digimat.showcase.Zonas.view;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -464,7 +466,8 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             setVehiclesInMap();
         }
     }
-    private void setVehiclesInMap(){
+    //region animation marker
+    private void setVehiclesInMap() {
         if (mvehicles == null || mvehicles.isEmpty()) {
             return; // Evitar errores si la lista está vacía o nula.
         }
@@ -493,8 +496,12 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             // Verificar si ya existe un marcador para este vehículo en el mapa
             Marker marker = markerVehiculosMap.get(vehicleId);
             if (marker != null) {
-                // Si ya existe un marcador, lo actualizamos
-                marker.setPosition(position);
+                // Si ya existe un marcador, lo actualizamos con animación
+                LatLng oldPosition = marker.getPosition();
+                if (!oldPosition.equals(position)) {
+                    // Animate the marker to the new position
+                    animateMarker(marker, position);
+                }
                 marker.setSnippet("Velocidad: " + vehiculo.getSpeed() + " km/h");
             } else {
                 // Si el marcador no existe, creamos uno nuevo
@@ -520,7 +527,42 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         markerVehiculosMap.putAll(updatedMarkers);
     }
 
+    // Método para animar un marcador de su posición antigua a la nueva
+    private void animateMarker(final Marker marker, final LatLng toPosition) {
+        final LatLng fromPosition = marker.getPosition();
+        final long duration = 1000; // Duración de la animación en milisegundos
+        final int stepCount = 100; // Número de pasos en la animación
 
+        // Interpolador para interpolar entre dos latitudes y longitudes
+        LatLngInterpolator latLngInterpolator = new LatLngInterpolator.LinearFixed();
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1);
+        valueAnimator.setDuration(duration);
+        valueAnimator.setInterpolator(new LinearInterpolator());
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float fraction = animation.getAnimatedFraction();
+                LatLng currentPosition = latLngInterpolator.interpolate(fraction, fromPosition, toPosition);
+                marker.setPosition(currentPosition);
+            }
+        });
+        valueAnimator.start();
+    }
+
+    // Interpolador para movimiento suave entre latitudes y longitudes
+    public interface LatLngInterpolator {
+        LatLng interpolate(float fraction, LatLng from, LatLng to);
+
+        class LinearFixed implements LatLngInterpolator {
+            @Override
+            public LatLng interpolate(float fraction, LatLng from, LatLng to) {
+                double lat = from.latitude + (to.latitude - from.latitude) * fraction;
+                double lng = from.longitude + (to.longitude - from.longitude) * fraction;
+                return new LatLng(lat, lng);
+            }
+        }
+    }
+    //endregion
     private void setMarkers(List<dataFullUsers> mUsers) {//estos son los usuarios
         if(mMap!=null) {
             for (int i = 0; i < mUsers.size(); i++) {
