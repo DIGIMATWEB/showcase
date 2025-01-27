@@ -1005,8 +1005,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
                 }
                 mMap.clear();
+                dotPath.clear();
+                switchVehicles_view.setChecked(false);
                 xpand_vehicle_detail.setVisibility(View.GONE);
-
                 break;
           case R.id.updatePath:
               presenter.savePathVehicle(currentVehicleId,dotPath);
