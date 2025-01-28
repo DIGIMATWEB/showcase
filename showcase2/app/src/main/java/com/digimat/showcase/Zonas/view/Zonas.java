@@ -544,6 +544,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 float fraction = animation.getAnimatedFraction();
                 LatLng currentPosition = latLngInterpolator.interpolate(fraction, fromPosition, toPosition);
                 marker.setPosition(currentPosition);
+                //  // Actualizar la rotación del marcador mientras se mueve
+                //            float currentBearing = bearing + (computeBearing(fromPosition, currentPosition) - bearing) * fraction;
+                //            marker.setRotation(currentBearing);
             }
         });
         valueAnimator.start();
@@ -562,6 +565,24 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             }
         }
     }
+    //private float computeBearing(LatLng fromPosition, LatLng toPosition) {
+    //    double lat1 = Math.toRadians(fromPosition.latitude);
+    //    double lon1 = Math.toRadians(fromPosition.longitude);
+    //    double lat2 = Math.toRadians(toPosition.latitude);
+    //    double lon2 = Math.toRadians(toPosition.longitude);
+    //
+    //    double dLon = lon2 - lon1;
+    //
+    //    double y = Math.sin(dLon) * Math.cos(lat2);
+    //    double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+    //
+    //    double initialBearing = Math.atan2(y, x);
+    //
+    //    // Convertir de radianes a grados
+    //    double degrees = Math.toDegrees(initialBearing);
+    //    // Normalizar el ángulo a un valor entre 0° y 360°
+    //    return (float) ((degrees + 360) % 360);
+    //}
     //endregion
     private void setMarkers(List<dataFullUsers> mUsers) {//estos son los usuarios
         if(mMap!=null) {
