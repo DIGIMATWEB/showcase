@@ -57,21 +57,24 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
             @Override
             public void onClick(View view) {
                 mview.saveNewDot(dotZoness,position);
+                mview.drawTempZone(dotZoness);
             }
         });
         holder.dot_remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mview.removeNewDot(dotZoness,position);
+                mview.drawTempZone(dotZoness);
             }
         });
         holder.foundDot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mview.editDotZone(dotZoness,position);
+                mview.drawTempZone(dotZoness);
             }
         });
-        mview.drawTempZone(dotZoness);
+
     }
     // Este método retorna la cantidad de items en la lista
     @Override
@@ -120,6 +123,7 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
     public void updateAtSingularDot(List<dotZonesm> dotZoness) {
         this.aNewDotIsAdded=false;
         this.dotZoness=dotZoness;
+        mview.drawTempZone(dotZoness);
         notifyDataSetChanged();
     }
 

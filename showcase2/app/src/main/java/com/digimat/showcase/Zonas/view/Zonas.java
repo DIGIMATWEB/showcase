@@ -103,6 +103,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private Integer typeEditZone;
     private EditText nameZoneEdtx;
     private EditText descZoneEdtxt;
+    private TextView textView5;
     private EditText ratioEdtxt;
     private Polygon editablePoligon;
     private Circle editableCircle;
@@ -126,6 +127,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private RecyclerView rvDetailVehicleDots;
     private String path;
     private dialogFragmentProgress dialogProgres;
+    private Switch switchFreeDotMode;
+    private List<LatLng> freemode = new ArrayList<>();
+    private Polyline polylinefreemode;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -174,6 +178,8 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         rvVehicles =view.findViewById(R.id. rvVehicles);
         rvDetailVehicleDots=view.findViewById(R.id.rvDetailVehicleDots);
         switchrank =view.findViewById(R.id.switchrank);
+        switchFreeDotMode =view.findViewById(R.id.switchFreeDotMode);
+        textView5= view.findViewById(R.id.textView5);
         switchrank.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -183,6 +189,24 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 } else {
                     // Acción cuando el Switch está apagado
                     Log.d("Switch", "Apagado");
+                }
+            }
+        });
+        switchFreeDotMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // Acción cuando el Switch está encendido
+                    Log.e("Switch", "Free mode");
+                    addtextDot.setText("Free mode");
+                    addtextDot.setEnabled(false);
+                    mMap.clear();
+                    manageFreepoligonPoliline();
+                } else {
+                    // Acción cuando el Switch está apagado
+                    Log.e("Switch", "Agregar");
+                    addtextDot.setText("Agregar");
+                    addtextDot.setEnabled(true);
                 }
             }
         });
@@ -283,6 +307,37 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         dialogProgres.show(fragmentManager, "dialogFragmentProgress");
     }
+
+    private void manageFreepoligonPoliline() {
+        mMap.setOnMapLongClickListener(latLng -> {
+            // Agregar un marcador en la posición seleccionada
+            mMap.addMarker(new MarkerOptions().position(latLng).title("Punto " + (freemode.size() + 1)));
+
+            // Agregar el punto a la lista
+            freemode.add(latLng);
+
+            // Dibujar la Polilínea
+            actualizarPolilineaFreeMode();
+
+            // Mostrar los puntos en Logcat
+            Log.d("PUNTOS", "Lista de Puntos: " + freemode);
+        });
+
+    }
+
+    private void actualizarPolilineaFreeMode() {
+        if (polylinefreemode != null) {
+            polylinefreemode.remove();
+        }
+
+        // Dibujar la nueva polilínea
+        polylinefreemode = mMap.addPolyline(new PolylineOptions()
+                .addAll(freemode)
+                .width(8f)
+                .color(Color.BLUE) // Puedes cambiar el color
+                .geodesic(true));
+    }
+
     //region map config
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -655,6 +710,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         }
         else if(dotZoness.size()>=3){
             Glide.with(getContext()).load(R.drawable.poligons).into(imageTypeZone);
+            textView5.setVisibility(View.GONE);
             ratioEdtxt.setVisibility(View.GONE);
             int alfa= ContextCompat.getColor(getContext(), R.color.alfa);
             int bluealfa= ContextCompat.getColor(getContext(), R.color.blueAddwithalfa);
@@ -847,6 +903,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     @SuppressLint("PotentialBehaviorOverride")
     public void editDotZone(List<dotZonesm> dotZoness, int position) {//este metodo es para crear poligonos detecta si hay un punto(crea un circulo), dos(solicita un punto extra) o 3(crea un poligono triangular)
         // Verificar el tamaño de dotZoness y proceder según el caso
+        Log.e("drawTempZone","Editar dotZoness: "+dotZoness.size());
         if (dotZoness.size() == 1) {
             Log.e("Editar","click circulo");
             // Si hay solo 1 punto, dibujar un círculo
@@ -1029,8 +1086,11 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     }
     public void drawTempZone(List<dotZonesm> dotZoness) {
         Log.e("drawTempZone", "drawTempZone");
+        mMap.clear();
         if(!dotZoness.isEmpty()){
             setUpPoligonOrCircle(dotZoness);
+        }else{
+            Log.e("drawTempZone", "drawTempZone is empty");
         }
     }
     public void drawTempPoliline(List<dotVehiclesPath> pathDots){
