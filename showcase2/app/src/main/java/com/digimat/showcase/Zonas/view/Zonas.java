@@ -27,11 +27,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.digimat.showcase.Dialogs.dialogFragmentProgress;
 import com.digimat.showcase.R;
 import com.digimat.showcase.Zonas.Dialogs.Servicios.bootmSheetsServicios;
 import com.digimat.showcase.Zonas.Dialogs.ZonesConfig.model.dataGetAllZones;
@@ -123,6 +125,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private String currentVehicleId;
     private RecyclerView rvDetailVehicleDots;
     private String path;
+    private dialogFragmentProgress dialogProgres;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -276,7 +279,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         colonias.setOnClickListener(this);
         close_crud_vehicles_view.setOnClickListener(this);
         presenter= new presenterComunitiesImpl(this,getContext());
-
+        dialogProgres= new dialogFragmentProgress();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        dialogProgres.show(fragmentManager, "dialogFragmentProgress");
     }
     //region map config
     @Override
@@ -294,11 +299,13 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         handler.postDelayed(new Runnable() {
             public void run() {
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(18.9567483, -98.9710052), 12.4f));
+                dialogProgres.dismiss();
             }
         }, 4000);
         if(mvehicles!=null){
             setVehiclesInMap();
         }
+
     }
 
     private void callVehicles() {
@@ -525,6 +532,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         // Actualizamos el mapa de marcadores activos con los nuevos
         // No necesitamos eliminar los marcadores que ya están presentes.
         markerVehiculosMap.putAll(updatedMarkers);
+
     }
 
     // Método para animar un marcador de su posición antigua a la nueva
