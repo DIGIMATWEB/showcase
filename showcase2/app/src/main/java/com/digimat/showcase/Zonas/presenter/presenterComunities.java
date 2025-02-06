@@ -13,7 +13,7 @@ public interface presenterComunities {
     void setUsers(List<dataFullUsers> data);
     void getZonesView();
 
-    void updateZone(String zoneId, String descZone, String ratio, List<dotZonesm> dotZones);
+    void updateZone(String zoneId, String descZone, String ratio, List<dotZonesm> dotZones, String string);
 
     void closeEdiotorZone();
 

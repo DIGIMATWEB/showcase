@@ -8,6 +8,8 @@ import java.util.List;
 public class requestUpdateZones {
     @SerializedName("idzone")
     private Integer idzone;
+    @SerializedName("nameZone")
+    private String name;
     @SerializedName("descripcion")
     private String descripcion;
     @SerializedName("radio")
@@ -15,12 +17,13 @@ public class requestUpdateZones {
     @SerializedName("puntos")
     private List<dotZonesm> dotZonesms;
 
-    public requestUpdateZones(Integer idzone, String descripcion, Integer radio, List<dotZonesm> dotZonesms) {
+    public requestUpdateZones(Integer idzone, String descripcion, Integer radio, List<dotZonesm> dotZonesms, String name) {
         super();
         this.idzone = idzone;
         this.descripcion = descripcion;
         this.radio = radio;
         this.dotZonesms = dotZonesms;
+        this.name=name;
     }
 
     public Integer getIdzone() {
@@ -53,5 +56,13 @@ public class requestUpdateZones {
 
     public void setdotZonesms(List<dotZonesm> dotZonesms) {
         this.dotZonesms = dotZonesms;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

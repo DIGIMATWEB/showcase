@@ -162,8 +162,8 @@ public class comunityInteractorImpl implements requestFullCumunities {
             Toast.makeText(context, "sin datos de vehiculos", Toast.LENGTH_SHORT).show();
         }
     }  @Override
-    public void updateZone(String zoneId, String descZone, String ratio, List<dotZonesm> dotZones) {
-        requestUpdateZones request =new requestUpdateZones(Integer.valueOf(zoneId),descZone,Integer.valueOf(ratio),dotZones);
+    public void updateZone(String zoneId, String descZone, String ratio, List<dotZonesm> dotZones, String name) {
+        requestUpdateZones request =new requestUpdateZones(Integer.valueOf(zoneId),descZone,Integer.valueOf(ratio),dotZones,name);
         Call<responseUpdateZone> call = service.setUpdatedZone(request);
         call.enqueue(new Callback<responseUpdateZone>() {
             @Override

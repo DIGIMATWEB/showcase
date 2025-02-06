@@ -39,9 +39,9 @@ public class presenterComunitiesImpl implements presenterComunities {
         }
     }
     @Override
-    public void updateZone(String zoneId, String descZone, String ratio, List<dotZonesm> dotZones) {
+    public void updateZone(String zoneId, String descZone, String ratio, List<dotZonesm> dotZones, String name) {
         if(view!=null){
-            interactor.updateZone(zoneId,descZone,ratio,dotZones);
+            interactor.updateZone(zoneId,descZone,ratio,dotZones,name);
         }
     }
     @Override

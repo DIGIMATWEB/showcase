@@ -8,7 +8,7 @@ import java.util.List;
 public interface requestFullCumunities {
     void requestUsers();
     void getZonesView();
-    void updateZone(String zoneId, String descZone, String ratio, List<dotZonesm> dotZones);
+    void updateZone(String zoneId, String descZone, String ratio, List<dotZonesm> dotZones, String name);
 
     void createZone(String name, String desc, String ratio, List<dotZonesm> dotZones);
 

@@ -1148,7 +1148,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     //nameZoneEdtx
                     //  descZoneEdtxt.getText().toString()
 
-                    presenter.updateZone(zoneId,descZoneEdtxt.getText().toString(),ratioEdtxt.getText().toString(),dotZones);//todo se debe de pooder actualizar el nombre
+                    presenter.updateZone(zoneId,descZoneEdtxt.getText().toString(),ratioEdtxt.getText().toString(),dotZones,nameZoneEdtx.getText().toString());//todo se debe de pooder actualizar el nombre
                 }
                 break;
             case R.id.addtextDotVehicle://TODO esto es para vehiculos administrador y agregar uhn punto
