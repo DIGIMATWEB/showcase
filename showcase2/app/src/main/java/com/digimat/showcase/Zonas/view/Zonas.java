@@ -130,6 +130,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private Switch switchFreeDotMode;
     private List<LatLng> freemode = new ArrayList<>();
     private Polyline polylinefreemode;
+    List<dotZonesm> freModeDotsZones=new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -321,6 +322,17 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
             // Mostrar los puntos en Logcat
             Log.d("PUNTOS", "Lista de Puntos: " + freemode);
+            if(adapterCrud!=null){
+
+                freModeDotsZones.clear();
+                for(LatLng position:freemode){
+                    freModeDotsZones.add(new dotZonesm(String.valueOf(position.latitude),String.valueOf(position.longitude)));
+                }
+                //mMap.clear();
+                if(freModeDotsZones.size()>2){
+                adapterCrud.fillRvFreemode(freModeDotsZones);
+                }
+            }
         });
 
     }
@@ -1196,6 +1208,10 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                             }else if(dotZones.size()==2) {
                                 Toast.makeText(getContext(), "Necesitas agregar otro punto a la zona", Toast.LENGTH_SHORT).show();
                             }else{
+                                if(freModeDotsZones!=null&&freModeDotsZones.size()>3){
+                                    dotZones=freModeDotsZones;
+                                    freModeDotsZones.clear();
+                                }
                                 presenter.createZone(nameZoneEdtx.getText().toString(),descZoneEdtxt.getText().toString(), "1", dotZones);
                             }
                         }else{

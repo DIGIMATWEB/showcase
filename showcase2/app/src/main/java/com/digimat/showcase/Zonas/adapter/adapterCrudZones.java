@@ -127,6 +127,11 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
         notifyDataSetChanged();
     }
 
+    public void fillRvFreemode(List<dotZonesm> freModeDotsZones) {
+        this.dotZoness=freModeDotsZones;
+        notifyDataSetChanged();
+    }
+
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
         TextView editTextLong,editTextLat;
         ImageView dragButton,dot_add,dot_remove,foundDot;
