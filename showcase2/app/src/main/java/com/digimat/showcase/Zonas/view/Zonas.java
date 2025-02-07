@@ -1224,6 +1224,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     Gson gson= new Gson();
                     String json=gson.toJson(dotZones);
                     Log.e("newZone","Dots "+json);
+
                     if(dotZones!=null) {
                         if(!nameZoneEdtx.getText().toString().isEmpty()) {
                             if(dotZones.size()==1) {
@@ -1245,6 +1246,12 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                             Toast.makeText(getContext(), "Necesitas agregar un Nombre a la zona", Toast.LENGTH_SHORT).show();
                         }
                     }else{
+                        if(freModeDotsZones!=null&&freModeDotsZones.size()>3){
+                            dotZones=freModeDotsZones;
+                            freModeDotsZones.clear();
+                            presenter.createZone(nameZoneEdtx.getText().toString(),descZoneEdtxt.getText().toString(), "1", dotZones);
+                        }
+
                         Toast.makeText(getContext(), "Necesitas guardar al menos un punto antes guardar informacion", Toast.LENGTH_SHORT).show();
                     }
                 }else if(typeEditZone==2){
