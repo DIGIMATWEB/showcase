@@ -6,9 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.digimat.showcase.R;
+import com.digimat.showcase.Zonas.Dialogs.ZonesView.bottomSheetsZonasView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +19,13 @@ public class adapterZonesView extends RecyclerView.Adapter<adapterZonesView.Item
 
     private List<String> itemList;  // Lista de items a mostrar
     private Context context;
+    private  bottomSheetsZonasView mview;
 
     // Constructor del Adapter
-    public adapterZonesView(List<String> itemList, Context context) {
+    public adapterZonesView(bottomSheetsZonasView mview, List<String> itemList, Context context) {
         this.itemList = itemList;           //todo 16 rubros inspeccionar y revisar
         this.context = context;
+        this.mview=mview;
     }
 
     // Este método crea el ViewHolder para cada item
@@ -40,6 +44,12 @@ public class adapterZonesView extends RecyclerView.Adapter<adapterZonesView.Item
         // Asignamos los datos del item a las vistas correspondientes
         holder.nombreTextView.setText(item);
         // holder.descripcionTextView.setText(item.getDescripcion());
+        holder.zoneDescriptor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                 mview.goZoneifExist(position);
+            }
+        });
     }
 
     // Este método retorna la cantidad de items en la lista
@@ -58,12 +68,14 @@ public class adapterZonesView extends RecyclerView.Adapter<adapterZonesView.Item
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
 
         TextView nombreTextView;
+        CardView zoneDescriptor;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
 
             // Enlazamos las vistas del layout
             nombreTextView = itemView.findViewById(R.id.nombreTextView);
+            zoneDescriptor= itemView.findViewById(R.id.zoneDescriptor);
         }
     }
 }

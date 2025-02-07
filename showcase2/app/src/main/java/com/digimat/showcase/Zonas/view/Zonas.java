@@ -50,6 +50,7 @@ import com.digimat.showcase.Zonas.model.getVehicles.dataVehicles;
 import com.digimat.showcase.Zonas.model.getVehicles.dotVehiclesPath;
 import com.digimat.showcase.Zonas.presenter.presenterComunities;
 import com.digimat.showcase.Zonas.presenter.presenterComunitiesImpl;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -59,6 +60,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
@@ -131,6 +133,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private List<LatLng> freemode = new ArrayList<>();
     private Polyline polylinefreemode;
     List<dotZonesm> freModeDotsZones=new ArrayList<>();
+    private bottomSheetsZonasView bottomSheetsZonasViewDialog;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -527,8 +530,12 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
     @Override
     public void drawZonesOnView(List<dataGetAllZones> data) {
+        if(data!=null){
+            bottomSheetsZonasViewDialog.checkExistingZone(data);
+        }
         for(dataGetAllZones zone:data){
             setUpPoligonOrCircle(zone.getDotZoness());
+
         }
     }
 
@@ -625,6 +632,26 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             }
         });
         valueAnimator.start();
+    }
+
+    public void goToBoundsZone(dataGetAllZones zone) {
+        //
+        LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+
+        for(dotZonesm dot :zone.getDotZoness())
+        {
+            LatLng dotfinal=new LatLng(Double.valueOf( dot.getLatitud()),Double.valueOf(dot.getLongitud()));
+            boundsBuilder.include(dotfinal);
+        }
+        // Create LatLngBounds from the builder
+        LatLngBounds bounds = boundsBuilder.build();
+
+        // Create a camera update to fit the bounds with a padding (adjust padding as necessary)
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 100); // 100 is the padding in pixels
+
+        // Move the camera to fit the bounds
+        mMap.moveCamera(cameraUpdate);
+
     }
 
     // Interpolador para movimiento suave entre latitudes y longitudes
@@ -1127,7 +1154,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 bottomSheetDialog.show(getChildFragmentManager(), "bootmSheetsServicios");
                 break;
             case R.id.colonias:
-                bottomSheetsZonasView bottomSheetsZonasViewDialog= new bottomSheetsZonasView();
+                bottomSheetsZonasViewDialog= new bottomSheetsZonasView();
                 bottomSheetsZonasViewDialog.show(getChildFragmentManager(),"bottomSheetsZonasView");
                 presenter.getZonesView();
                 break;
