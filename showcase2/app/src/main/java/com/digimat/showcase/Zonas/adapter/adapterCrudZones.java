@@ -16,7 +16,9 @@ import com.digimat.showcase.Zonas.view.Zonas;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.ItemViewHolder> {
     private Context context;
@@ -121,8 +123,21 @@ public class adapterCrudZones extends RecyclerView.Adapter<adapterCrudZones.Item
     }
 
     public void updateAtSingularDot(List<dotZonesm> dotZoness) {
-        this.aNewDotIsAdded=false;
-        this.dotZoness=dotZoness;
+        this.aNewDotIsAdded = false;
+
+        // Use a Set to remove duplicates
+        Set<String> uniqueDots = new HashSet<>();
+        List<dotZonesm> filteredDots = new ArrayList<>();
+
+        for (dotZonesm dot : dotZoness) {
+            String key = dot.getLatitud() + "," + dot.getLongitud();
+            if (!uniqueDots.contains(key)) {
+                uniqueDots.add(key);
+                filteredDots.add(dot);
+            }
+        }
+
+        this.dotZoness = filteredDots;
         mview.drawTempZone(dotZoness);
         notifyDataSetChanged();
     }

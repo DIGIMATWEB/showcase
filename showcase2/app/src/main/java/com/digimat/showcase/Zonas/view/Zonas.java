@@ -74,8 +74,10 @@ import com.google.maps.android.data.kml.KmlPolygon;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,View.OnClickListener{
     public static final String TAG = Zonas.class.getSimpleName();
@@ -134,6 +136,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private Polyline polylinefreemode;
     List<dotZonesm> freModeDotsZones=new ArrayList<>();
     private bottomSheetsZonasView bottomSheetsZonasViewDialog;
+    private Set<String> uniquePositions = new HashSet<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -205,9 +208,11 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                     addtextDot.setText("Free mode");
                     addtextDot.setEnabled(false);
                     mMap.clear();
+                    freModeDotsZones.clear();
                     manageFreepoligonPoliline();
                 } else {
                     // Acción cuando el Switch está apagado
+                    freModeDotsZones.clear();
                     Log.e("Switch", "Agregar");
                     addtextDot.setText("Agregar");
                     addtextDot.setEnabled(true);
@@ -314,30 +319,44 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
     private void manageFreepoligonPoliline() {
         mMap.setOnMapLongClickListener(latLng -> {
-            // Agregar un marcador en la posición seleccionada
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Punto " + (freemode.size() + 1)));
+            // Convertir latLng en una clave única
+            String key = latLng.latitude + "," + latLng.longitude;
 
-            // Agregar el punto a la lista
-            freemode.add(latLng);
+            // Verificar si el punto ya existe en la lista
+            if (!uniquePositions.contains(key)) {
+                // Agregar punto a la lista global de control
+                uniquePositions.add(key);
 
-            // Dibujar la Polilínea
-            actualizarPolilineaFreeMode();
+                // Agregar punto a la lista
+                freemode.add(latLng);
 
-            // Mostrar los puntos en Logcat
-            Log.d("PUNTOS", "Lista de Puntos: " + freemode);
-            if(adapterCrud!=null){
+                // Agregar marcador en la posición seleccionada
+                mMap.addMarker(new MarkerOptions().position(latLng).title("Punto " + freemode.size()));
 
-                freModeDotsZones.clear();
-                for(LatLng position:freemode){
-                    freModeDotsZones.add(new dotZonesm(String.valueOf(position.latitude),String.valueOf(position.longitude)));
+                // Dibujar la Polilínea
+                actualizarPolilineaFreeMode();
+
+                // Mostrar los puntos en Logcat
+                Log.d("PUNTOS", "Lista de Puntos: " + freemode);
+
+                if (adapterCrud != null) {
+                    // Limpiar la lista antes de llenarla para evitar duplicados
+                    freModeDotsZones.clear();
+
+                    // Agregar solo puntos únicos
+                    for (LatLng position : freemode) {
+                        freModeDotsZones.add(new dotZonesm(String.valueOf(position.latitude), String.valueOf(position.longitude)));
+                    }
+
+                    // Uncomment if needed
+                     if (freModeDotsZones.size() > 2) {
+                         adapterCrud.fillRvFreemode(freModeDotsZones);
+                     }
                 }
-                //mMap.clear();
-                if(freModeDotsZones.size()>2){
-                adapterCrud.fillRvFreemode(freModeDotsZones);
-                }
+            } else {
+                Log.d("PUNTOS", "El punto ya existe, no se agregará nuevamente.");
             }
         });
-
     }
 
     private void actualizarPolilineaFreeMode() {
@@ -345,14 +364,13 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
             polylinefreemode.remove();
         }
 
-        // Dibujar la nueva polilínea
+        // Dibujar la nueva polilínea sin duplicados
         polylinefreemode = mMap.addPolyline(new PolylineOptions()
-                .addAll(freemode)
+                .addAll(freemode)  // Ya está filtrado para que no haya repetidos
                 .width(8f)
-                .color(Color.BLUE) // Puedes cambiar el color
+                .color(Color.BLUE)
                 .geodesic(true));
     }
-
     //region map config
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -1223,42 +1241,53 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 if(typeEditZone==1){
                     Gson gson= new Gson();
                     String json=gson.toJson(dotZones);
-                    Log.e("newZone","Dots "+json);
-
+                    Log.e("PUNTOS","Dots "+json);
                     if(dotZones!=null) {
                         if(!nameZoneEdtx.getText().toString().isEmpty()) {
                             if(dotZones.size()==1) {
+                                Log.e("PUNTOS","one dot");
                                 if(!ratioEdtxt.getText().toString().isEmpty()) {
+
                                     presenter.createZone(nameZoneEdtx.getText().toString(),descZoneEdtxt.getText().toString(), ratioEdtxt.getText().toString(), dotZones);
                                 }else{
+                                    Log.e("PUNTOS","isEmpty");
                                     Toast.makeText(getContext(), "Necesitas agregar un radio a la zona", Toast.LENGTH_SHORT).show();
                                 }
                             }else if(dotZones.size()==2) {
+                                Log.e("PUNTOS","two dots");
                                 Toast.makeText(getContext(), "Necesitas agregar otro punto a la zona", Toast.LENGTH_SHORT).show();
                             }else{
+                                Log.e("PUNTOS","two 3+");
                                 if(freModeDotsZones!=null&&freModeDotsZones.size()>3){
                                     dotZones=freModeDotsZones;
-                                    freModeDotsZones.clear();
                                 }
                                 presenter.createZone(nameZoneEdtx.getText().toString(),descZoneEdtxt.getText().toString(), "1", dotZones);
+                                switchFreeDotMode.setChecked(false);
                             }
                         }else{
                             Toast.makeText(getContext(), "Necesitas agregar un Nombre a la zona", Toast.LENGTH_SHORT).show();
                         }
                     }else{
+                        Log.e("PUNTOS","else dotsnull");
                         if(freModeDotsZones!=null&&freModeDotsZones.size()>3){
                             dotZones=freModeDotsZones;
-                            freModeDotsZones.clear();
                             presenter.createZone(nameZoneEdtx.getText().toString(),descZoneEdtxt.getText().toString(), "1", dotZones);
+                            switchFreeDotMode.setChecked(false);
+                        }else {
+                            Toast.makeText(getContext(), "Necesitas guardar al menos un punto antes guardar informacion", Toast.LENGTH_SHORT).show();
                         }
-
-                        Toast.makeText(getContext(), "Necesitas guardar al menos un punto antes guardar informacion", Toast.LENGTH_SHORT).show();
                     }
-                }else if(typeEditZone==2){
+                }else if(typeEditZone==2){//
+
                     //nameZoneEdtx
                     //  descZoneEdtxt.getText().toString()
-
+                    Log.e("PUNTOS","type 2 "+freModeDotsZones.size());
+                    if(freModeDotsZones!=null&&freModeDotsZones.size()>3){
+                        dotZones=freModeDotsZones;
+                    }
+                    Log.e("PUNTOS","type 2 "+dotZones.size());
                     presenter.updateZone(zoneId,descZoneEdtxt.getText().toString(),ratioEdtxt.getText().toString(),dotZones,nameZoneEdtx.getText().toString());//todo se debe de pooder actualizar el nombre
+                    switchFreeDotMode.setChecked(false);
                 }
                 break;
             case R.id.addtextDotVehicle://TODO esto es para vehiculos administrador y agregar uhn punto
