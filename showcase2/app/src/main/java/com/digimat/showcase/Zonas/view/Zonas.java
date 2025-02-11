@@ -2,8 +2,12 @@ package com.digimat.showcase.Zonas.view;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -56,6 +60,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -599,7 +604,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 LatLng oldPosition = marker.getPosition();
                 if (!oldPosition.equals(position)) {
                     // Animate the marker to the new position
-                    animateMarker(marker, position);
+                    animateMarker(marker, position,getContext());
                 }
                 marker.setSnippet("Velocidad: " + vehiculo.getSpeed() + " km/h");
             } else {
@@ -607,8 +612,9 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 MarkerOptions markerOptions = new MarkerOptions()
                         .position(position)
                         .title("Vehículo ID: " + vehicleId)
+                        .anchor(.5f,.5f)
                         .snippet("Velocidad: " + vehiculo.getSpeed() + " km/h")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)) // Personalizar color
+                        .icon(getBitmapDescriptorFromVector(getContext(),R.drawable.d,.85f))//BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)) // Personalizar color
                         .draggable(false); // Hacerlo no arrastrable si no es necesario
 
                 // Agregar el nuevo marcador al mapa
@@ -628,10 +634,19 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     }
 
     // Método para animar un marcador de su posición antigua a la nueva
-    private void animateMarker(final Marker marker, final LatLng toPosition) {
+    private void animateMarker(final Marker marker, final LatLng toPosition, Context context) {
         final LatLng fromPosition = marker.getPosition();
         final long duration = 1000; // Duración de la animación en milisegundos
-        final int stepCount = 100; // Número de pasos en la animación
+
+        // Calcular la dirección del movimiento
+        final float bearing = computeBearing(fromPosition, toPosition);
+        final int resourceId = getMarkerResourceForBearing(bearing);
+
+        // Obtener el BitmapDescriptor correcto
+        final BitmapDescriptor icon = getBitmapDescriptorFromVector(context, resourceId,.85f);
+
+        // Aplicar solo una vez el cambio de ícono antes de la animación
+        marker.setIcon(icon);
 
         // Interpolador para interpolar entre dos latitudes y longitudes
         LatLngInterpolator latLngInterpolator = new LatLngInterpolator.LinearFixed();
@@ -644,15 +659,11 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 float fraction = animation.getAnimatedFraction();
                 LatLng currentPosition = latLngInterpolator.interpolate(fraction, fromPosition, toPosition);
                 marker.setPosition(currentPosition);
-                //  // Actualizar la rotación del marcador mientras se mueve
-                //            float currentBearing = bearing + (computeBearing(fromPosition, currentPosition) - bearing) * fraction;
-                //            marker.setRotation(currentBearing);
             }
         });
         valueAnimator.start();
     }
-
-     // Interpolador para movimiento suave entre latitudes y longitudes
+    // Interpolador para movimiento suave entre latitudes y longitudes
     public interface LatLngInterpolator {
         LatLng interpolate(float fraction, LatLng from, LatLng to);
 
@@ -678,10 +689,75 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
         double initialBearing = Math.atan2(y, x);
 
-        // Convertir de radianes a grados
-        double degrees = Math.toDegrees(initialBearing);
-        // Normalizar el ángulo a un valor entre 0° y 360°
-        return (float) ((degrees + 360) % 360);
+        // Convertir de radianes a grados y normalizar el ángulo
+        return (float) ((Math.toDegrees(initialBearing) + 360) % 360);
+    }
+    private int getMarkerResourceForBearing(float bearing) {
+        int angle = Math.round(bearing / 30) * 30; // Redondear al múltiplo de 30 más cercano
+
+        switch (angle) {
+            case 0:
+                Log.e("angleV","0");
+                return R.drawable.a;
+            case 30:
+                Log.e("angleV","30");
+                return R.drawable.b;
+            case 60:
+                Log.e("angleV","60");
+                return R.drawable.c;
+            case 90:
+                Log.e("angleV","90");
+                return R.drawable.d;
+            case 120:
+                Log.e("angleV","120");
+                return R.drawable.d;
+            case 150:
+                Log.e("angleV","150");
+                return R.drawable.g;
+            case 180:
+                Log.e("angleV","180");
+                return R.drawable.h;
+            case 210:
+                Log.e("angleV","210");
+                return R.drawable.h;
+            case 240:
+                Log.e("angleV","240");
+                return R.drawable.j;
+            case 270:
+                Log.e("angleV","270");
+                return R.drawable.k;
+            case 300:
+                Log.e("angleV","300");
+                return R.drawable.h;
+            case 330:
+                Log.e("angleV","330");
+                return R.drawable.a;
+            default:
+                Log.e("angleV","default");
+                return R.drawable.d; // Imagen por defecto
+        }
+    }
+    private BitmapDescriptor getBitmapDescriptorFromVector(Context context, int vectorResId, float scale) {
+        // Get the vector drawable
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        if (vectorDrawable == null) return null;
+
+        // Scale the drawable by adjusting the width and height
+        int width = (int) (vectorDrawable.getIntrinsicWidth() * scale);
+        int height = (int) (vectorDrawable.getIntrinsicHeight() * scale);
+
+        // Set the bounds for the drawable to scale it
+        vectorDrawable.setBounds(0, 0, width, height);
+
+        // Create a bitmap with the scaled size
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        // Draw the vector onto the canvas
+        vectorDrawable.draw(canvas);
+
+        // Return the bitmap as a BitmapDescriptor
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
     //endregion
     public void goToBoundsZone(dataGetAllZones zone) {
