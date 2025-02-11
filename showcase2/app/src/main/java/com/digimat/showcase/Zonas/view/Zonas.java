@@ -652,6 +652,38 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         valueAnimator.start();
     }
 
+     // Interpolador para movimiento suave entre latitudes y longitudes
+    public interface LatLngInterpolator {
+        LatLng interpolate(float fraction, LatLng from, LatLng to);
+
+        class LinearFixed implements LatLngInterpolator {
+            @Override
+            public LatLng interpolate(float fraction, LatLng from, LatLng to) {
+                double lat = from.latitude + (to.latitude - from.latitude) * fraction;
+                double lng = from.longitude + (to.longitude - from.longitude) * fraction;
+                return new LatLng(lat, lng);
+            }
+        }
+    }
+    private float computeBearing(LatLng fromPosition, LatLng toPosition) {
+        double lat1 = Math.toRadians(fromPosition.latitude);
+        double lon1 = Math.toRadians(fromPosition.longitude);
+        double lat2 = Math.toRadians(toPosition.latitude);
+        double lon2 = Math.toRadians(toPosition.longitude);
+
+        double dLon = lon2 - lon1;
+
+        double y = Math.sin(dLon) * Math.cos(lat2);
+        double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+
+        double initialBearing = Math.atan2(y, x);
+
+        // Convertir de radianes a grados
+        double degrees = Math.toDegrees(initialBearing);
+        // Normalizar el ángulo a un valor entre 0° y 360°
+        return (float) ((degrees + 360) % 360);
+    }
+    //endregion
     public void goToBoundsZone(dataGetAllZones zone) {
         //
         LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
@@ -672,38 +704,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
 
     }
 
-    // Interpolador para movimiento suave entre latitudes y longitudes
-    public interface LatLngInterpolator {
-        LatLng interpolate(float fraction, LatLng from, LatLng to);
 
-        class LinearFixed implements LatLngInterpolator {
-            @Override
-            public LatLng interpolate(float fraction, LatLng from, LatLng to) {
-                double lat = from.latitude + (to.latitude - from.latitude) * fraction;
-                double lng = from.longitude + (to.longitude - from.longitude) * fraction;
-                return new LatLng(lat, lng);
-            }
-        }
-    }
-    //private float computeBearing(LatLng fromPosition, LatLng toPosition) {
-    //    double lat1 = Math.toRadians(fromPosition.latitude);
-    //    double lon1 = Math.toRadians(fromPosition.longitude);
-    //    double lat2 = Math.toRadians(toPosition.latitude);
-    //    double lon2 = Math.toRadians(toPosition.longitude);
-    //
-    //    double dLon = lon2 - lon1;
-    //
-    //    double y = Math.sin(dLon) * Math.cos(lat2);
-    //    double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-    //
-    //    double initialBearing = Math.atan2(y, x);
-    //
-    //    // Convertir de radianes a grados
-    //    double degrees = Math.toDegrees(initialBearing);
-    //    // Normalizar el ángulo a un valor entre 0° y 360°
-    //    return (float) ((degrees + 360) % 360);
-    //}
-    //endregion
     private void setMarkers(List<dataFullUsers> mUsers) {//estos son los usuarios
         if(mMap!=null) {
             for (int i = 0; i < mUsers.size(); i++) {
