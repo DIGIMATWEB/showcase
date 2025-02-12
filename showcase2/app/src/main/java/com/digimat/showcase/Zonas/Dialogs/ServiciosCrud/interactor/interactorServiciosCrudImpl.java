@@ -74,7 +74,7 @@ public class interactorServiciosCrudImpl implements  interactorServiciosCrud{
 
                         if (data != null)//data
                         {
-                            presenter.setServicesAvailable(data);
+                            presenter.setCatalogServices(data);
                         }
                     }
                 }else{
@@ -121,7 +121,8 @@ public class interactorServiciosCrudImpl implements  interactorServiciosCrud{
 
                                 if (data != null)//data
                                 {
-                                    presenter.setCatalogServices(data);
+                                    presenter.setServicesAvailable(data);
+
                                 }
                             }
                         }else{

@@ -102,22 +102,20 @@ public class bootomSheetServiciosCrud extends BottomSheetDialogFragment implemen
 //                    if(presenter!=null) {
                         presenter.getCatalogoServicios();
 //                    }
-                    rv1.setVisibility(View.GONE);
-                    rv2.setVisibility(View.VISIBLE);
+
                     //}
                 } else {
 //                    if(presenter!=null) {
                         presenter.getServiciosComunity();
 //                    }
                     //  if(madapter!=null&&madapter2!=null) {
-//                    rv1.setVisibility(View.VISIBLE);
-//                    rv2.setVisibility(View.GONE);
+
                     //  }
 
                 }
             }
         });
-
+        presenter.getServiciosComunity();
     }
 
     private List<dataServicesCatalog> filter(List<dataServicesCatalog> itemList, String newText) {
@@ -167,6 +165,8 @@ public class bootomSheetServiciosCrud extends BottomSheetDialogFragment implemen
     @Override
     public void setCatalogServices(List<dataServicesCatalog> catalog) {
         fillCatalog(catalog);
+        rv1.setVisibility(View.GONE);
+        rv2.setVisibility(View.VISIBLE);
     }
 
 
@@ -174,6 +174,8 @@ public class bootomSheetServiciosCrud extends BottomSheetDialogFragment implemen
     @Override
     public void setServicesAvailable(List<dataServicesCatalog> catalog) {
         fillAdapter(catalog);
+        rv1.setVisibility(View.VISIBLE);
+        rv2.setVisibility(View.GONE);
     }
 
     @Override
