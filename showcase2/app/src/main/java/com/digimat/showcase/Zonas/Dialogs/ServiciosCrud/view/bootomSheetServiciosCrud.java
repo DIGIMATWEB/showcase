@@ -99,19 +99,9 @@ public class bootomSheetServiciosCrud extends BottomSheetDialogFragment implemen
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-//                    if(presenter!=null) {
                         presenter.getCatalogoServicios();
-//                    }
-
-                    //}
                 } else {
-//                    if(presenter!=null) {
                         presenter.getServiciosComunity();
-//                    }
-                    //  if(madapter!=null&&madapter2!=null) {
-
-                    //  }
-
                 }
             }
         });
