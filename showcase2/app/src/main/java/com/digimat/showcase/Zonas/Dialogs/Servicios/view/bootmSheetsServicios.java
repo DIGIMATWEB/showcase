@@ -1,4 +1,4 @@
-package com.digimat.showcase.Zonas.Dialogs.Servicios;
+package com.digimat.showcase.Zonas.Dialogs.Servicios.view;
 
 import static java.util.Locale.filter;
 
@@ -14,6 +14,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.digimat.showcase.Zonas.Dialogs.Servicios.presenter.presenterServicios;
+import com.digimat.showcase.Zonas.Dialogs.Servicios.presenter.presenterServiciosImpl;
+import com.digimat.showcase.Zonas.Dialogs.ServiciosCrud.model.crudServicios.dataServicesCatalog;
 import com.digimat.showcase.Zonas.adapter.adapterServicios;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.digimat.showcase.R;
@@ -21,14 +24,15 @@ import com.digimat.showcase.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class bootmSheetsServicios extends BottomSheetDialogFragment implements View.OnClickListener {
+public class bootmSheetsServicios extends BottomSheetDialogFragment implements View.OnClickListener,viewServices {
     public static final String TAG = bootmSheetsServicios.class.getSimpleName();
 
     private ImageButton closeButton;
     private RecyclerView rvServicios;
     private adapterServicios madapter;
-    private List<String> itemList;
+    private List<dataServicesCatalog> catalogs;
     private SearchView msearchView;
+    private presenterServicios presenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,8 +61,8 @@ public class bootmSheetsServicios extends BottomSheetDialogFragment implements V
         closeButton.setOnClickListener(this);
         rvServicios= view.findViewById(R.id.rvServicios);
         msearchView= view.findViewById(R.id.searchViewServicios);
-        harcodedData();
-        fillAdapter(itemList);
+       // harcodedData();
+
         msearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -68,7 +72,7 @@ public class bootmSheetsServicios extends BottomSheetDialogFragment implements V
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                List<String>  filterList =filter(itemList,newText);
+                List<dataServicesCatalog>  filterList =filter(catalogs,newText);
                 madapter.setFilter(filterList);
 //                if(newText.isEmpty()){
 //                    Log.e("unitsV3filter","clear filter2");
@@ -77,15 +81,17 @@ public class bootmSheetsServicios extends BottomSheetDialogFragment implements V
                 return true;
             }
         });
+        presenter=new presenterServiciosImpl(this,getContext());
+        presenter.getServiciosComunity();
     }
 
-    private List<String> filter(List<String> itemList, String newText) {
-        List<String>  mfilterList= new ArrayList<>();
+    private List<dataServicesCatalog> filter(List<dataServicesCatalog> itemList, String newText) {
+        List<dataServicesCatalog>  mfilterList= new ArrayList<>();
         newText =newText.toLowerCase();
         if(newText!=null){
-            for(String data:itemList)
+            for(dataServicesCatalog data:itemList)
             {
-                String servicioName=data.toString().toLowerCase();
+                String servicioName=data.getNameService().toString().toLowerCase();
                 if(servicioName.contains(newText)){
                     mfilterList.add(data);
                 }
@@ -96,30 +102,30 @@ public class bootmSheetsServicios extends BottomSheetDialogFragment implements V
     }
 
     private void harcodedData() {
-        itemList= new ArrayList<>();
-        itemList.add("Seguridad publica");
-        itemList.add("Recoleccion basura");
-        itemList.add("Seguridad preventiva");
-        itemList.add("Proteccion Civil");
-        itemList.add("Alumbrado público");
-        itemList.add("Agua Drenaje alcantarillado");
-        itemList.add("Tramites");
-        itemList.add("Participacion Ciudadana");//estodeberia ser un checklist
-        itemList.add("Fomento Comercial");
-        itemList.add("Fomento Turistico");
-        itemList.add("Fomento Artesanal");
-        itemList.add("Salud");
-        itemList.add("Vivienda");
-        itemList.add("Educacion y Cultura");
-        itemList.add("Deporte y Juventud");
+//        itemList= new ArrayList<>();
+//        itemList.add("Seguridad publica");
+//        itemList.add("Recoleccion basura");
+//        itemList.add("Seguridad preventiva");
+//        itemList.add("Proteccion Civil");
+//        itemList.add("Alumbrado público");
+//        itemList.add("Agua Drenaje alcantarillado");
+//        itemList.add("Tramites");
+//        itemList.add("Participacion Ciudadana");//estodeberia ser un checklist
+//        itemList.add("Fomento Comercial");
+//        itemList.add("Fomento Turistico");
+//        itemList.add("Fomento Artesanal");
+//        itemList.add("Salud");
+//        itemList.add("Vivienda");
+//        itemList.add("Educacion y Cultura");
+//        itemList.add("Deporte y Juventud");
     }
 
-    private void fillAdapter(List<String> itemList) {
+    private void fillAdapter(List<dataServicesCatalog> catalog) {
         // Configura el LayoutManager para que sea horizontal
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvServicios.setLayoutManager(layoutManager);
         // Crea y configura el Adapter (aquí asumes que ya tienes el Adapter implementado)
-        madapter = new adapterServicios(itemList,getContext());
+        madapter = new adapterServicios(this,catalog,getContext());
         rvServicios.setAdapter(madapter);
     }
 
@@ -131,5 +137,10 @@ public class bootmSheetsServicios extends BottomSheetDialogFragment implements V
                 dismiss();
                 break;
         }
+    }
+
+    @Override
+    public void setServicesAvailable(List<dataServicesCatalog> catalog){
+        fillAdapter(catalog);
     }
 }

@@ -40,7 +40,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.digimat.showcase.Dialogs.dialogFragmentProgress;
 import com.digimat.showcase.R;
-import com.digimat.showcase.Zonas.Dialogs.Servicios.bootmSheetsServicios;
+import com.digimat.showcase.Zonas.Dialogs.Servicios.view.bootmSheetsServicios;
 import com.digimat.showcase.Zonas.Dialogs.ServiciosCrud.view.bootomSheetServiciosCrud;
 import com.digimat.showcase.Zonas.Dialogs.ZonesConfig.model.dataGetAllZones;
 import com.digimat.showcase.Zonas.Dialogs.ZonesConfig.model.dotZonesm;
