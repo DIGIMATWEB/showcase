@@ -98,20 +98,20 @@ public class bootmSheetsServicios extends BottomSheetDialogFragment implements V
     private void harcodedData() {
         itemList= new ArrayList<>();
         itemList.add("Seguridad publica");
+        itemList.add("Recoleccion basura");
         itemList.add("Seguridad preventiva");
         itemList.add("Proteccion Civil");
-        itemList.add("Recoleccion basura");
-        itemList.add("Alumbrado publico");
+        itemList.add("Alumbrado público");
         itemList.add("Agua Drenaje alcantarillado");
         itemList.add("Tramites");
-        itemList.add("Participacion Ciudadana");
+        itemList.add("Participacion Ciudadana");//estodeberia ser un checklist
         itemList.add("Fomento Comercial");
         itemList.add("Fomento Turistico");
         itemList.add("Fomento Artesanal");
-        itemList.add("Salud ");
-        itemList.add("vivienda ");
-        itemList.add("Educacion y Cultura ");
-        itemList.add("Deporte y Juventud ");
+        itemList.add("Salud");
+        itemList.add("Vivienda");
+        itemList.add("Educacion y Cultura");
+        itemList.add("Deporte y Juventud");
     }
 
     private void fillAdapter(List<String> itemList) {

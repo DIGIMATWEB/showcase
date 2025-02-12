@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -40,6 +41,7 @@ import com.bumptech.glide.Glide;
 import com.digimat.showcase.Dialogs.dialogFragmentProgress;
 import com.digimat.showcase.R;
 import com.digimat.showcase.Zonas.Dialogs.Servicios.bootmSheetsServicios;
+import com.digimat.showcase.Zonas.Dialogs.ServiciosCrud.view.bootomSheetServiciosCrud;
 import com.digimat.showcase.Zonas.Dialogs.ZonesConfig.model.dataGetAllZones;
 import com.digimat.showcase.Zonas.Dialogs.ZonesConfig.model.dotZonesm;
 import com.digimat.showcase.Zonas.Dialogs.ZonesConfig.zonesConfiguratuon;
@@ -92,7 +94,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private presenterComunities presenter;
     private Marker vehicle;
     private KmlLayer mKmlLayer;
-    private ImageView buttonServicios,colonias,zonesButton,users,vehiculosB,vehiculos;
+    private ImageView buttonServiciosCrud,buttonServicios,colonias,zonesButton,users,vehiculosB,vehiculos;
     private ConstraintLayout xpand_crud,xpand_usercrud,xpand_vehiclescrud,xpand_vehiclescrudView,xpand_vehicle_detail;
     private ImageButton closeCrud,updateCrud,closeCrudVehiclesDetail,updatePath;
 
@@ -169,6 +171,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
     private void bindViews(View view) {
         mView = view.findViewById(R.id.map_view_tracking);
         buttonServicios= view.findViewById(R.id. buttonServicios);
+        buttonServiciosCrud=view.findViewById(R.id. buttonServiciosCrud);
         colonias = view.findViewById(R.id. colonias);
         xpand_crud=view.findViewById(R.id.xpand_crud);
         xpand_usercrud =view.findViewById(R.id.xpand_usercrud);
@@ -313,6 +316,7 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         vehiculosB.setOnClickListener(this);
         vehiculos.setOnClickListener(this);
         users.setOnClickListener(this);
+        buttonServiciosCrud.setOnClickListener(this);
         buttonServicios.setOnClickListener(this);
         colonias.setOnClickListener(this);
         close_crud_vehicles_view.setOnClickListener(this);
@@ -738,27 +742,29 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
         }
     }
     private BitmapDescriptor getBitmapDescriptorFromVector(Context context, int vectorResId, float scale) {
-        // Get the vector drawable
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
-        if (vectorDrawable == null) return null;
+        if (context == null) {
+            Log.e("BitmapDescriptor", "Context is null");
+            return null;
+        }
 
-        // Scale the drawable by adjusting the width and height
+        Drawable vectorDrawable = AppCompatResources.getDrawable(context, vectorResId);
+        if (vectorDrawable == null) {
+            Log.e("BitmapDescriptor", "Drawable not found for resource ID: " + vectorResId);
+            return null;
+        }
+
         int width = (int) (vectorDrawable.getIntrinsicWidth() * scale);
         int height = (int) (vectorDrawable.getIntrinsicHeight() * scale);
 
-        // Set the bounds for the drawable to scale it
         vectorDrawable.setBounds(0, 0, width, height);
 
-        // Create a bitmap with the scaled size
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-
-        // Draw the vector onto the canvas
         vectorDrawable.draw(canvas);
 
-        // Return the bitmap as a BitmapDescriptor
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
+
     //endregion
     public void goToBoundsZone(dataGetAllZones zone) {
         //
@@ -1247,6 +1253,11 @@ public class Zonas extends Fragment implements OnMapReadyCallback ,zonasView,Vie
                 //este bottom sheeet es para desplkegar una lista de servicios disponibles
                 bootmSheetsServicios bottomSheetDialog = new bootmSheetsServicios();
                 bottomSheetDialog.show(getChildFragmentManager(), "bootmSheetsServicios");
+                break;
+            case R.id.buttonServiciosCrud:
+                //este bottom sheeet es para desplkegar una lista de servicios disponibles
+                bootomSheetServiciosCrud bottomSheetDialogcrud = new bootomSheetServiciosCrud();
+                bottomSheetDialogcrud.show(getChildFragmentManager(), "bootomSheetServiciosCrud");
                 break;
             case R.id.colonias:
                 bottomSheetsZonasViewDialog= new bottomSheetsZonasView();

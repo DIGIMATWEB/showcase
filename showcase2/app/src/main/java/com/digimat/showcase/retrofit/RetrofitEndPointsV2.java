@@ -26,4 +26,7 @@ public class RetrofitEndPointsV2 {
     public static final String GET_VEHICLES = "zonas/getVehicles.php";
 
     public static final String SAVE_PATH = "zonas/savePath.php";
+    public static final String GET_CATALOG_SERVICES = "zonas/servicesCatalog.php";
+    public static final String SET_UPDATE_CATALOG_SERVICES = "zonas/updateServiceComunity.php";
+    public static final String GET_SERVICES ="zonas/getServiciosByComunidad.php" ;
 }
