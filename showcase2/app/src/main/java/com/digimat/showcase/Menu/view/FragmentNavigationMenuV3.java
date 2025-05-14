@@ -1,8 +1,6 @@
 package com.digimat.showcase.Menu.view;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,11 +19,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.digimat.showcase.GeneralUtils.GeneralConstantsV2;
 import com.digimat.showcase.Menu.models.MenuData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.digimat.showcase.Menu.presenter.presenterMenus;
@@ -352,6 +348,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
 
     @Override
     public void listItems(List<Integer> items) {
+        distributionConstrain( items);
         for(int menu:items){
             setIconandName(menu);
         }
@@ -525,7 +522,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         }
     }
 
-    public void distributionConstrain(List<MenuData> myemenuItems)
+    public void distributionConstrain(List<Integer> myemenuItems)
     {
         boolean hasprofile=false;
         if(myemenuItems.size()==0)//objectsize//llevaperfil
@@ -625,7 +622,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 f1=0.25f;
                 f2=0.5f;
                 f3=0.75f;
-                f4=.75f;
+                f4=.1f;
                 f5=1f;
                 if(hasHiddenmenus)
                 {
@@ -649,16 +646,35 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         }
         else  if(myemenuItems.size()==4)//objectsize// hamburguesa
         {
-            f1=0.2f;
-            f2=0.4f;
-            f3=0.6f;
-            f4=0.8f;
-            f5=1;
+            if(hasprofile==false)
+            {
+                f1=0.25f;
+                f2=0.5f;
+                f3=0.75f;
+                f4=1f;
+                f5=1f;
+           /*     if(hasHiddenmenus)
+                {
+                    setHamburger();
+                    hasHiddenmenus=false;
+                }else
+                {
+                    setPerfil();
+                }*/
+
+            }else {
+                f1 = 0.2f;
+                f2 = 0.4f;
+                f3 = 0.6f;
+                f4 = 0.8f;
+                f5 = 1;
+            }
             constrainGuidelideParamsInit();
-            setHamburger();
+          //  setHamburger();
         }
         else  if(myemenuItems.size()>4)//objectsize
         {
+
             f1=0.2f;
             f2=0.4f;
             f3=0.6f;
