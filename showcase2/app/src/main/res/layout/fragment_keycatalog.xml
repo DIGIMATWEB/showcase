@@ -42,9 +42,7 @@
             android:orientation="horizontal">
 
             <!-- Add more chips as needed -->
-            <Button android:text="Ramen" style="@style/Widget.Material3.Button.OutlinedButton"/>
-            <Button android:text="Sushi" style="@style/Widget.Material3.Button.OutlinedButton"/>
-            <Button android:text="Rolls" style="@style/Widget.Material3.Button.OutlinedButton"/>
+
         </LinearLayout>
     </HorizontalScrollView>
 
