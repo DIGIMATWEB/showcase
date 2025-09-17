@@ -12,6 +12,7 @@ import com.digimat.showcase.Menu.util.serviceMenus;
 import com.digimat.showcase.retrofit.RetrofitClientV2;
 import com.digimat.showcase.retrofit.RetrofitValidationsV2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -37,6 +38,8 @@ public class interactorMenusImpl  implements  interactorMenus{
         String token="af599b21642927b27963b1d66694896a";
         if (token != null) {
            getMenus();
+        }else{
+            manageNotConection();
         }
     }
 
@@ -52,6 +55,7 @@ public class interactorMenusImpl  implements  interactorMenus{
             @Override
             public void onFailure(Call<responseMenus> call, Throwable t) {
                 Toast.makeText(context, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                manageNotConection();
             }
         });
     }
@@ -62,7 +66,8 @@ public class interactorMenusImpl  implements  interactorMenus{
             if (RetrofitValidationsV2.checkSuccessCode(response.code())) {
                 getvehiclesdata(response, context);
             } else {
-                Toast.makeText(context, "" + RetrofitValidationsV2.getErrorByStatus(response.code(), context), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(context, "" + RetrofitValidationsV2.getErrorByStatus(response.code(), context), Toast.LENGTH_SHORT).show();
+                manageNotConection();
             }
         }
     }
@@ -84,5 +89,13 @@ public class interactorMenusImpl  implements  interactorMenus{
         }else{
             Toast.makeText(context, "sin datos de vehiculos", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void manageNotConection() {
+        List<Integer> data =new ArrayList<>();
+        data.clear();
+        data.add(0);
+        //data.add(1);
+        presenter.setMenus(data);
     }
 }

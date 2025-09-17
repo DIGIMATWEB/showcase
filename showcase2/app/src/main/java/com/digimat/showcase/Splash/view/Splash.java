@@ -26,13 +26,14 @@ public class Splash extends AppCompatActivity implements viewSplash {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_activity);
         initView();
-        presenter.getSplashData();
+      //  presenter.getSplashData();
     }
 
     private void initView() {
         logo=findViewById(R.id.logo);
         splashbackground=findViewById(R.id.splashbackground);
-        presenter= new presenterSplashImpl(this,getApplicationContext());
+        initSplashScreenActivity();
+       // presenter= new presenterSplashImpl(this,getApplicationContext());
     }
 
     private void initSplashScreenActivity() {
@@ -65,6 +66,6 @@ public class Splash extends AppCompatActivity implements viewSplash {
                     .load(data.getBackgroundImage())
                     .into(logo);
         }
-        initSplashScreenActivity();
+       // initSplashScreenActivity();
     }
 }

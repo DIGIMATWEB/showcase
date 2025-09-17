@@ -47,6 +47,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
     private float a,b,c,d,e;     //guidelines value from mainActivity
     private float f1, f2, f3, f4, f5;//guidelines local values from fragment
     private Boolean hasHiddenmenus=false;
+    private ConstraintLayout menuConstrain;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,7 +69,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         f4=.8f;
         f5=1;
         //endregion
-
+        menuConstrain =view.findViewById(R.id.menuConstrain);
         //region icons menu
         iconMenu1=view.findViewById(R.id.iconMenu1);
         menu1txt=view.findViewById(R.id.menu1txt);
@@ -377,8 +378,8 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
             }
         }
     }
-    public void setViewIcons(int position, String obj_name, Drawable icono) {
-        switch (position) {
+    public void setViewIcons(int menuValue, String obj_name, Drawable icono) {
+        switch (menuValue) {
             case 0:/** aqui solo van las animaiones*/
                 iconMenu1.setImageDrawable(icono);
                 menu1txt.setText(obj_name);
@@ -402,104 +403,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
 
         }
     }
-/*
-    @Override
-    public void listItems2(List<MenuData> menudata) {
-        //   this.myemenuItems=menudata;
-        myemenuItems.clear();
-        for (int i = 0; i <menudata.size();i++)
-        {
-            if(menudata.get(i).isAccess_flag()==true)
-            {
-                myemenuItems.add(menudata.get(i));
-            }
-        }
-        Log.e("myemenuItemssize","Guardado list "+myemenuItems.size());
-        distributionConstrain(myemenuItems);
-        SharedPreferences preferences = getContext().getSharedPreferences(GeneralConstantsV2.CREDENTIALS_PREFERENCES, Context.MODE_PRIVATE);
-        String menu=preferences.getString(GeneralConstantsV2.MENU_DATA_SAVED, null);
-        String R1=preferences.getString(GeneralConstantsV2.MENU_DATA_SAVEDR1, null);
-        String R2=preferences.getString(GeneralConstantsV2.MENU_DATA_SAVEDR2, null);
-        //String Rf=
-        //recoge la variable menu de shared preferences
-        if(menu!=null) {
-            for (int i = 0; i < myemenuItems.size(); i++) {
-             //   Log.e("menuv3", "" + myemenuItems.get(i).getObj_name() + " " + myemenuItems.get(i).isAccess_flag() + "   " + myemenuItems.get(i).getCve_object());
-            }
-            //  Log.e("jsonMenu","Guardado "+menu);
-            List<MenuData> newmanuData = Arrays.asList(new GsonBuilder().create().fromJson(menu, MenuData[].class));//todo igual cuando no hay clase List<Object> newmanuData = Arrays.asList(new GsonBuilder().create().fromJson(menu, Object[].class));
-
-            Log.e("jsonMenu","Guardado list "+newmanuData);
-            //si el menu de shared es igual a la lista del endpoint
-            if(myemenuItems==newmanuData)
-            {
-                checkSizeAf(newmanuData);// haz la distriubucio de acuerdo a lo de shared
-            }else   // si no es igual haz la distribuvion respecto al endpoint y guarda ese valor en shared
-            {
-                if(myemenuItems.size()==newmanuData.size())//si el tamaño de ambos arrays es el mismo escribe el que se modifico R1 R2 esn shared
-                {
-                    if(R1!=null)
-                    {
-                        List<MenuData> menuR1 = Arrays.asList(new GsonBuilder().create().fromJson(R1, MenuData[].class));
-                        Log.e("jsonMenu","Guardado list "+menuR1);
-                        if(menuR1!=null)//si es diferente si r1 es diferente de null
-                        {
-                            if(R2!=null)
-                            {
-                                hasHiddenmenus=true;
-                            }
-                            distributionConstrain(menuR1);
-                            checkSizeAf(menuR1);
-
-
-                        }else {  //si viene en null la prioridad es lo que quedo en shared
-                            checkSizeAf(newmanuData);
-                        }
-                    }else
-                    {
-                        checkSizeAf(newmanuData);
-                    }
-                }else
-                {
-                    if(R1!=null) {
-                        List<MenuData> menuR1 = Arrays.asList(new GsonBuilder().create().fromJson(R1, MenuData[].class));
-                        Log.e("jsonMenu", "Guardado list " + menuR1);
-                        if(menuR1!=null)//si es diferente si r1 es diferente de null
-                        {
-                            checkSizeAf(menuR1);
-                        }else {//so viene en null ponde lo del endpoint
-                            SharedPreferences.Editor editor = preferences.edit();
-                            Gson gson = new Gson();
-                            String json = gson.toJson(myemenuItems);
-                            editor.putString(GeneralConstantsV2.MENU_DATA_SAVED, json);
-                            editor.commit();
-                            checkSizeAf(myemenuItems);
-                        }
-                    }else
-                    {
-                        SharedPreferences.Editor editor = preferences.edit();
-                        Gson gson = new Gson();
-                        String json = gson.toJson(myemenuItems);
-                        editor.putString(GeneralConstantsV2.MENU_DATA_SAVED, json);
-                        editor.commit();
-                        checkSizeAf(myemenuItems);
-                    }
-
-                }
-
-            }
-
-        }else
-        {///si el menu de shared preferences viene en null se guardan los itemes en shared
-            SharedPreferences.Editor editor=preferences.edit();
-            Gson gson = new Gson();
-            String json = gson.toJson(myemenuItems);
-            editor.putString(GeneralConstantsV2.MENU_DATA_SAVED, json);
-            editor.commit();
-            Log.e("jsonMenu","Nuevo    "+json);
-            checkSizeAf(myemenuItems);
-        }
-    }*/
 
     private void checkSizeAf(List<MenuData> newmanuData) {
 
@@ -524,7 +427,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
 
     public void distributionConstrain(List<Integer> myemenuItems)
     {
-        boolean hasprofile=false;
+        boolean hasprofile=true;
         if(myemenuItems.size()==0)//objectsize//llevaperfil
         {
             f1=0;
@@ -534,6 +437,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
             f5=1;
             constrainGuidelideParamsInit();
             setPerfil();
+
             //profileFragment();
         }else  if(myemenuItems.size()==1)//objectsize//llevaperfil
         {
@@ -557,6 +461,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 f3=1;
                 f4=1;
                 f5=1;
+
             }
 
             constrainGuidelideParamsInit();
@@ -567,6 +472,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
             }else
             {
                 setPerfil();
+                menuConstrain.setVisibility(View.GONE);
             }
         }
         else  if(myemenuItems.size()==2)//objectsize//llevaperfil

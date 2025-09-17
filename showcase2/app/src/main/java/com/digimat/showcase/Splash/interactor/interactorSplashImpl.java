@@ -36,7 +36,7 @@ public class interactorSplashImpl  implements  interactorSplash{
     public void requestSplash() {
         String token="af599b21642927b27963b1d66694896a";
         if (token != null) {
-            getSplash();
+         //   getSplash();
         }
     }
 

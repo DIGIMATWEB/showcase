@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,7 +45,11 @@ public class LoginViewImpl extends Fragment implements View.OnClickListener ,log
         {
             case R.id.buttonLogin:
                //presenter.requestLogin();
-                succesLogin();
+                if(editTextUsername.getText().toString().equals("Digimat")&&editTextPassword.getText().toString().equals("12345")) {
+                    succesLogin();
+                }else{
+                    Toast.makeText(getContext(), "Credenciales invalidas", Toast.LENGTH_SHORT).show();
+                }
                 break;
 
 

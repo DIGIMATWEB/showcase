@@ -3,6 +3,7 @@ package com.digimat.showcase.Menu.view;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -43,7 +44,7 @@ public class menuViewImpl extends AppCompatActivity {
         manager = getSupportFragmentManager();
         transaction = manager.beginTransaction();
         profileViewImplements profile = new profileViewImplements();
-        transaction.add(R.id.conteinerMainFragments, profile, profileViewImplements.TAG).commit();
+        transaction.replace(R.id.conteinerMainFragments, profile, profileViewImplements.TAG).commit();
     }
     private void showFragmentNavigationButtons() {
         manager = getSupportFragmentManager();
@@ -52,5 +53,17 @@ public class menuViewImpl extends AppCompatActivity {
         transaction.add(R.id.conteinerNavigationButtonsMenuV3, fragmentNavigationButtonsMenu, FragmentNavigationMenuV3.TAG).commit();
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            // Example: show confirmation instead of closing
+            new AlertDialog.Builder(this, R.style.CustomAlertDialogTheme)
+                    .setMessage("Quieres cerrar la aplicacion?")
+                    .setPositiveButton("Si", (dialog, which) -> super.onBackPressed())
+                    .setNegativeButton("No", null)
+                    .show();
+        }
+    }
 }

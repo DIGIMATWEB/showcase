@@ -11,7 +11,7 @@
         android:layout_height="100dp"
         android:layout_marginTop="80dp"
         android:contentDescription="test"
-        android:src="@drawable/shape_circle"
+        android:src="@drawable/ic_profile_default"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -20,7 +20,7 @@
         android:id="@+id/profile_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="name"
+        android:text="Digimat"
         android:textSize="24sp"
         app:layout_constraintTop_toBottomOf="@+id/profile_image"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,6 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="email"
+        android:visibility="gone"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@+id/profile_name"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,11 +43,11 @@
         android:id="@+id/edit_profile_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:text="Cerrar session"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/profile_email" />
+        app:layout_constraintTop_toBottomOf="@+id/profile_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
