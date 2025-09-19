@@ -1,6 +1,7 @@
 package com.digimat.showcase.Menu.view;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,12 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Guideline;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.digimat.showcase.Alerts.view.alertsUser;
 import com.digimat.showcase.Menu.models.MenuData;
 
 import java.util.ArrayList;
@@ -48,6 +51,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
     private float f1, f2, f3, f4, f5;//guidelines local values from fragment
     private Boolean hasHiddenmenus=false;
     private ConstraintLayout menuConstrain;
+    private layoutInteface menuActionsListener;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,7 +61,19 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         presenter.requestMenus();
         return view;
     }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof layoutInteface) {
+            menuActionsListener = (layoutInteface) context;
+        }
+    }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        menuActionsListener = null;
+    }
     private void checkShared() {
     }
 
@@ -82,7 +98,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         circleButtonefect2= view.findViewById(R.id.circleButtonefect2);
         iconMenu2.setOnClickListener(this);
 
-
         iconMenu3=view.findViewById(R.id.iconMenu3);
         menu3txt=view.findViewById(R.id.menu3txt);
         circleButtonefect3= view.findViewById(R.id.circleButtonefect3);
@@ -98,9 +113,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         circleButtonefect5= view.findViewById(R.id.circleButtonefect5);
         iconMenu5.setOnClickListener(this);
         //endregion
-
         //region guidelines
-
         guideline1 = view.findViewById(R.id.guidelinemenu1);
         guideline2 = view.findViewById(R.id.guidelinemenu2);
         guideline3 = view.findViewById(R.id.guidelinemenu3);
@@ -126,13 +139,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 R.anim.fade_in_out);
         zoomIconCircle5= AnimationUtils.loadAnimation(getContext(),
                 R.anim.fade_in_out);
-
-
         //endregion
-
-
-
-
         menuconfig();
        presenter= new presenterMenusImpl(this,getContext());
     }
@@ -150,11 +157,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         params3.guidePercent =f3;
         params4.guidePercent =f4;
         params5.guidePercent =f5;
-//      params1.guidePercent =menuViewImpl.a; // 45% // range: 0 <-> 1
-//      params2.guidePercent =menuViewImpl.b; // 45% // range: 0 <-> 1
-//      params3.guidePercent =menuViewImpl.c; // 45% // range: 0 <-> 1
-//      params4.guidePercent =menuViewImpl.d; // 45% // range: 0 <-> 1
-//            params5.guidePercent =menuViewImpl.e;
         guideline1.setLayoutParams(params1);
         guideline2.setLayoutParams(params2);
         guideline3.setLayoutParams(params3);
@@ -167,9 +169,10 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iconMenu1:/** aqui solo van las animaiones*/
+            Log.e("menuClicked","menu clicked "+1);
                 showProfile();
                 if(menu1txt.getVisibility()==View.VISIBLE){
-                    menu1txt.setVisibility(View.GONE);
+                   // menu1txt.setVisibility(View.GONE);
                     iconMenu1.startAnimation(zoomIcon2);
 
                 }else
@@ -178,11 +181,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                     circleButtonefect1.startAnimation(zoomIconCircle1);
                     menu1txt.setVisibility(View.VISIBLE);
                     iconMenu1.startAnimation(zoomIcon);
-
-                    menu2txt.setVisibility(View.GONE);
-                    menu3txt.setVisibility(View.GONE);
-                    menu4txt.setVisibility(View.GONE);
-                    menu5txt.setVisibility(View.GONE);
                     circleButtonefect2.setVisibility(View.GONE);
                     circleButtonefect3.setVisibility(View.GONE);
                     circleButtonefect4.setVisibility(View.GONE);
@@ -191,11 +189,15 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
 
                 }
                 Log.e("menu",""+menu1txt.getText());
+                if (menuActionsListener != null) {
+                    menuActionsListener.onHideMainMenu();
+                }
                 break;
             case R.id.iconMenu2:
+                Log.e("menuClicked","menu clicked "+2);
                 fragmentZones();
                 if(menu2txt.getVisibility()==View.VISIBLE){
-                    menu2txt.setVisibility(View.GONE);
+                   // menu2txt.setVisibility(View.GONE);
                     iconMenu2.startAnimation(zoomIcon2);
 
                 }else
@@ -204,11 +206,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                     circleButtonefect2.startAnimation(zoomIconCircle2);
                     menu2txt.setVisibility(View.VISIBLE);
                     iconMenu2.startAnimation(zoomIcon);
-
-                    menu1txt.setVisibility(View.GONE);
-                    menu3txt.setVisibility(View.GONE);
-                    menu4txt.setVisibility(View.GONE);
-                    menu5txt.setVisibility(View.GONE);
                     circleButtonefect1.setVisibility(View.GONE);
                     circleButtonefect3.setVisibility(View.GONE);
                     circleButtonefect4.setVisibility(View.GONE);
@@ -216,34 +213,37 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                     checkItem(menu2txt.getText().toString());
                 }
                 Log.e("menu",""+menu2txt.getText());
+                if (menuActionsListener != null) {
+                    menuActionsListener.onHideMainMenu();
+                }
                 break;
             case R.id.iconMenu3:
-                fragmentApps();
-                if(menu3txt.getVisibility()==View.VISIBLE){
-                    menu3txt.setVisibility(View.GONE);
+                Log.e("menuClicked","menu clicked "+3);
+                if (menu3txt.getVisibility() == View.VISIBLE) {
                     iconMenu3.startAnimation(zoomIcon2);
-
-                }else
-                {
+                } else {
                     circleButtonefect3.setVisibility(View.VISIBLE);
                     circleButtonefect3.startAnimation(zoomIconCircle3);
                     menu3txt.setVisibility(View.VISIBLE);
                     iconMenu3.startAnimation(zoomIcon);
-                    menu1txt.setVisibility(View.GONE);
-                    menu2txt.setVisibility(View.GONE);
-                    menu4txt.setVisibility(View.GONE);
-                    menu5txt.setVisibility(View.GONE);
                     circleButtonefect1.setVisibility(View.GONE);
                     circleButtonefect2.setVisibility(View.GONE);
                     circleButtonefect4.setVisibility(View.GONE);
                     circleButtonefect5.setVisibility(View.GONE);
-                    checkItem(menu3txt.getText().toString());
+
+
                 }
-                Log.e("menu",""+menu3txt.getText());
+                if (menuActionsListener != null) {
+                    menuActionsListener.onShowMainMenu();
+                }
+                if (menu3txt.getText().toString().equals("Alertas")) {
+                    fragmentALerts();
+                }
                 break;
             case R.id.iconMenu4:
+                Log.e("menuClicked","menu clicked "+4);
                 if(menu4txt.getVisibility()==View.VISIBLE){
-                    menu4txt.setVisibility(View.GONE);
+                   // menu4txt.setVisibility(View.GONE);
                     iconMenu4.startAnimation(zoomIcon2);
 
                 }else
@@ -252,10 +252,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                     circleButtonefect4.startAnimation(zoomIconCircle4);
                     menu4txt.setVisibility(View.VISIBLE);
                     iconMenu4.startAnimation(zoomIcon);
-                    menu1txt.setVisibility(View.GONE);
-                    menu2txt.setVisibility(View.GONE);
-                    menu3txt.setVisibility(View.GONE);
-                    menu5txt.setVisibility(View.GONE);
                     circleButtonefect1.setVisibility(View.GONE);
                     circleButtonefect2.setVisibility(View.GONE);
                     circleButtonefect3.setVisibility(View.GONE);
@@ -266,8 +262,9 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 Log.e("menu",""+menu4txt.getText());
                 break;
             case R.id.iconMenu5:
+                Log.e("menuClicked","menu clicked "+5);
                 if(menu5txt.getVisibility()==View.VISIBLE){
-                    menu5txt.setVisibility(View.GONE);
+                  //  menu5txt.setVisibility(View.GONE);
                     iconMenu5.startAnimation(zoomIcon2);
 
                 }else
@@ -276,10 +273,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                     circleButtonefect5.startAnimation(zoomIconCircle5);
                     menu5txt.setVisibility(View.VISIBLE);
                     iconMenu5.startAnimation(zoomIcon);
-                    menu1txt.setVisibility(View.GONE);
-                    menu2txt.setVisibility(View.GONE);
-                    menu3txt.setVisibility(View.GONE);
-                    menu4txt.setVisibility(View.GONE);
                     circleButtonefect1.setVisibility(View.GONE);
                     circleButtonefect2.setVisibility(View.GONE);
                     circleButtonefect3.setVisibility(View.GONE);
@@ -293,6 +286,8 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
 
     private void checkItem(String menu) {
         switch (menu) {
+            case "Alertas":
+            break;
             case "Unidades":
                 break;
             case "Rastreo":
@@ -331,22 +326,15 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
 
         }
     }
-
     public void menuconfig()
     {
-
     }
-
     @Override
     public void showError(String error) {
-
     }
-
     @Override
     public void closeAppSessionExpired() {
-
     }
-
     @Override
     public void listItems(List<Integer> items) {
         distributionConstrain( items);
@@ -354,7 +342,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
             setIconandName(menu);
         }
     }
-
     public void setIconandName(int clave)//, int position, List<MenuData> myemenuItemsf)
     {
         switch (clave){
@@ -381,16 +368,16 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
     public void setViewIcons(int menuValue, String obj_name, Drawable icono) {
         switch (menuValue) {
             case 0:/** aqui solo van las animaiones*/
-                iconMenu1.setImageDrawable(icono);
-                menu1txt.setText(obj_name);
+                iconMenu1.setImageDrawable(getResources().getDrawable(R.drawable.profile_map));
+                menu1txt.setText("perfil");
                 break;
             case 1:
                 iconMenu2.setImageDrawable(icono);
-                menu2txt.setText(obj_name);
+                menu2txt.setText("Administracion");
                 break;
             case 2:
                 iconMenu3.setImageDrawable(icono);
-                menu3txt.setText(obj_name);
+                menu3txt.setText("Alertas");
                 break;
             case 3:
                 iconMenu4.setImageDrawable(icono);
@@ -400,28 +387,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 iconMenu5.setImageDrawable(icono);
                 menu5txt.setText(obj_name);
                 break;
-
-        }
-    }
-
-    private void checkSizeAf(List<MenuData> newmanuData) {
-
-        Log.e("jsonMenu","Guardado list "+newmanuData.size());
-        if(newmanuData.size()!=myemenuItems.size())
-        {
-            for (int i = 0; i < newmanuData.size(); i++) {
-                if (i < 4) {
-//                    Log.e("jsonMenu", "Guardado list " + newmanuData.get(i).getObj_name() + "    clave " + newmanuData.get(i).getCve_object());
-//                    setIconandName(newmanuData.get(i).getCve_object(), i,newmanuData);
-                }
-            }
-        }else {
-            for (int i = 0; i < myemenuItems.size(); i++) {
-                if (i < 4) {
-//                    Log.e("jsonMenu", "Guardado list " + newmanuData.get(i).getObj_name() + "    clave " + newmanuData.get(i).getCve_object());
-//                    setIconandName(newmanuData.get(i).getCve_object(), i,myemenuItems);
-                }
-            }
         }
     }
 
@@ -443,10 +408,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         {
             for(int i=0;i<myemenuItems.size();i++)
             {
-            /*    if(myemenuItems.get(i).getCve_object()==1145)
-                {
-                    hasprofile=true;
-                }*/
             }
             if(hasprofile==false)
             {
@@ -479,10 +440,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         {
             for(int i=0;i<myemenuItems.size();i++)
             {
-            /*    if(myemenuItems.get(i).getCve_object()==1145)
-                {
-                    hasprofile=true;
-                }*/
             }
             if(hasprofile==false)
             {
@@ -502,7 +459,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
             constrainGuidelideParamsInit();
             if(hasHiddenmenus)
             {
-                setHamburger();
+                fragmentALerts();
                 hasHiddenmenus=false;
             }else
             {
@@ -514,14 +471,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
             int position=0;
             for(int i=0;i<myemenuItems.size();i++)
             {
-            /*    if(myemenuItems.get(i).getCve_object()==1145)
-                {
-                    hasprofile=true;
-                    if(i!=myemenuItems.size()-1)
-                    {
-                        position=i;
-                    }
-                }*/
             }
             if(hasprofile==false)
             {
@@ -559,15 +508,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 f3=0.75f;
                 f4=1f;
                 f5=1f;
-           /*     if(hasHiddenmenus)
-                {
-                    setHamburger();
-                    hasHiddenmenus=false;
-                }else
-                {
-                    setPerfil();
-                }*/
-
             }else {
                 f1 = 0.2f;
                 f2 = 0.4f;
@@ -590,8 +530,6 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
             setHamburger();
         }else  if(myemenuItems==null)//objectsize
         {
-
-
             f1=0;
             f2=0;
             f3=0;
@@ -602,114 +540,37 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
            // profileFragment();
         }
     }
-
-
     public void setHamburger()
     {
-    //    setViewIcons( 4,"Más",getResources().getDrawable(R.drawable.ic_mas));
     }
     public void setPerfil()
     {
-     //   setViewIcons( 4,"Perfil",getResources().getDrawable(R.drawable.profile_selector));
     }
-
-  /*  private void UnitsFragment() {
+    private void showProfile() {
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        UnitsViewImpl unidades = new UnitsViewImpl();//transaction.addToBackStack(UnitsViewImpl.TAG);
-        transaction.replace(R.id.conteinerMainFragments, unidades, UnitsViewImpl.TAG).commit();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        /**aqui se deben iluminar y desabilitar los botones para los menus para que puedan ser oprimidos solo en una ocacion*///iluminate3();
-   // }*/
-   /* private void TrackingFragment() {
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        TrackingMapFragment rastreo = new TrackingMapFragment();//transaction.addToBackStack(UnitsViewImpl.TAG);
-        transaction.replace(R.id.conteinerMainFragments, rastreo, TrackingMapFragment.TAG).commit();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);*/
-        /**aqui se deben iluminar y desabilitar los botones para los menus para que puedan ser oprimidos solo en una ocacion*///iluminate3();
-
-  //  }//
-    /*private void NotificationsFragment() {
-
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        NotificationsViewImpl notificaciones = new NotificationsViewImpl();//transaction.addToBackStack(UnitsViewImpl.TAG);
-        transaction.replace(R.id.conteinerMainFragments, notificaciones, NotificationsViewImpl.TAG).commit();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        /**aqui se deben iluminar y desabilitar los botones para los menus para que puedan ser oprimidos solo en una ocacion*///iluminate3();
-  //  }
-   /* private void ZonesFragment() {
-        // Toast.makeText(getContext(), "aqui va el fragment de zonas", Toast.LENGTH_SHORT).show();
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        zonesFragment zones = new zonesFragment();//transaction.addToBackStack(UnitsViewImpl.TAG);
-        transaction.replace(R.id.conteinerMainFragments, zones, zonesFragment.TAG).commit();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        /**aqui se deben iluminar y desabilitar los botones para los menus para que puedan ser oprimidos solo en una ocacion*///iluminate3();
-
-    //}
-
-
-
-  /*  private void MessageFragment() {
-
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        ContactViewImpl contacto = new ContactViewImpl();//transaction.addToBackStack(UnitsViewImpl.TAG);
-        transaction.replace(R.id.conteinerMainFragments, contacto, FragmentContactV2.TAG).commit();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        /**aqui se deben iluminar y desabilitar los botones para los menus para que puedan ser oprimidos solo en una ocacion*///iluminate3();
-
-  //  }
-
-
-  /*  private void profileFragment() {
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        ProfileViewImpl profile = new ProfileViewImpl();//transaction.addToBackStack(UnitsViewImpl.TAG);
-        transaction.replace(R.id.conteinerMainFragments, profile, ProfileViewImpl.TAG).commit();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        /**aqui se deben iluminar y desabilitar los botones para los menus para que puedan ser oprimidos solo en una ocacion*///iluminate3();
-        /**iLLuiminateProfile();
-         }*/
-    //}
-        private void showProfile() {
-            FragmentManager manager = getActivity().getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            profileViewImplements profile = new profileViewImplements();
-            transaction.replace(R.id.conteinerMainFragments, profile, profileViewImplements.TAG).commit();
-        }
-        private void fragmentZones() {
-            FragmentManager manager = getActivity().getSupportFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            Zonas zonesFragment = new Zonas();
-            transaction.replace(R.id.conteinerMainFragments, zonesFragment, Zonas.TAG).commit();
-        }
-    private void fragmentApps() {
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        appsViewImpl apps = new appsViewImpl();
-        transaction.replace(R.id.conteinerMainFragments, apps, appsViewImpl.TAG).commit();
+        profileViewImplements profile = new profileViewImplements();
+        transaction.replace(R.id.conteinerMainFragments, profile, profileViewImplements.TAG).commit();
     }
-   /* private void moreOptionsFragment() {
+    private void fragmentZones() {
         FragmentManager manager = getActivity().getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        MoreOptionsRvViewImpl moreOptions = new MoreOptionsRvViewImpl();//transaction.addToBackStack(UnitsViewImpl.TAG);
-        transaction.replace(R.id.conteinerMainFragments, moreOptions, MoreOptionsRvViewImpl.TAG).commit();
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        /**aqui se deben iluminar y desabilitar los botones para los menus para que puedan ser oprimidos solo en una ocacion*///iluminate3();
+        Zonas zonesFragment = new Zonas();
+        transaction.replace(R.id.conteinerMainFragments, zonesFragment, Zonas.TAG).commit();
+    }
+    private void fragmentALerts() {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
 
-   // }
+        // 🔹 Limpieza si ya existe
+        Fragment prev = manager.findFragmentByTag(alertsUser.TAG);
+        if (prev != null) {
+            transaction.remove(prev);
+        }
+
+        // 🔹 Agregar uno nuevo siempre
+        alertsUser apps = new alertsUser();
+        transaction.replace(R.id.conteinerMainFragments, apps, alertsUser.TAG);
+        transaction.commitAllowingStateLoss(); // 👈 asegura que se ejecute
+    }
 }
-//Unidades          true   1147
-//Rastreo           true   1146
-//Notificaciones    true   1148
-//Geozonas          true   1149
-//Checklist         true   2107
-//Perfil            true   1145
-//Contacto          true   1150
-//topDriver         true   2123
-//Scanner           true   2124
-//enProgreso        true   2125
-//completado O      true   2126

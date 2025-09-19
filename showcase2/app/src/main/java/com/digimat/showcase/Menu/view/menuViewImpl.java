@@ -1,10 +1,12 @@
 package com.digimat.showcase.Menu.view;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -13,7 +15,7 @@ import com.digimat.showcase.Zonas.view.Zonas;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.digimat.showcase.R;
-public class menuViewImpl extends AppCompatActivity {
+public class menuViewImpl extends AppCompatActivity implements layoutInteface{
 
     public static float a, b, c, d, e, f;
     public static boolean selectedVehicle = false;
@@ -21,6 +23,7 @@ public class menuViewImpl extends AppCompatActivity {
     private FragmentTransaction transaction;
     private BottomNavigationView mynewMenu;
     private BottomNavigationItemView mv;
+    private ConstraintLayout constrain_menu ;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +36,7 @@ public class menuViewImpl extends AppCompatActivity {
 
 
     private void initView() {
+        constrain_menu=findViewById(R.id.constrain_menu);
         //mynewMenu = findViewById(R.id.bottom_navigation);
         //mynewMenu.setOnNavigationItemSelectedListener(this);
 
@@ -64,6 +68,20 @@ public class menuViewImpl extends AppCompatActivity {
                     .setPositiveButton("Si", (dialog, which) -> super.onBackPressed())
                     .setNegativeButton("No", null)
                     .show();
+        }
+    }
+
+    @Override
+    public void onHideMainMenu() {
+        if (constrain_menu != null) {
+            constrain_menu.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onShowMainMenu() {
+        if (constrain_menu != null) {
+            constrain_menu.setVisibility(View.VISIBLE);
         }
     }
 }
