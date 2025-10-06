@@ -1,6 +1,8 @@
 package com.digimat.showcase.Login.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.digimat.showcase.GeneralUtils.GeneralConstantsV2;
 import com.digimat.showcase.Login.presenter.presensterLoginImpl;
 import com.digimat.showcase.Login.presenter.presenterLogin;
 import com.digimat.showcase.Menu.view.menuViewImpl;
@@ -46,6 +49,10 @@ public class LoginViewImpl extends Fragment implements View.OnClickListener ,log
             case R.id.buttonLogin:
                //presenter.requestLogin();
                 if(editTextUsername.getText().toString().equals("Digimat")&&editTextPassword.getText().toString().equals("12345")) {
+                    SharedPreferences prefs = getContext().getSharedPreferences(GeneralConstantsV2.CREDENTIALS_PREFERENCES, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString(GeneralConstantsV2.TOKEN_PREFERENCES, "1C2DS23SX322X2X32");
+                    editor.commit();
                     succesLogin();
                 }else{
                     Toast.makeText(getContext(), "Credenciales invalidas", Toast.LENGTH_SHORT).show();
