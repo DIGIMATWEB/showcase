@@ -380,8 +380,8 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 menu3txt.setText("Alertas");
                 break;
             case 3:
-                iconMenu4.setImageDrawable(icono);
-                menu4txt.setText(obj_name);
+                iconMenu4.setImageDrawable(getResources().getDrawable(R.drawable.community));
+                menu4txt.setText("Comunidad");
                 break;
             case 4:
                 iconMenu5.setImageDrawable(icono);
