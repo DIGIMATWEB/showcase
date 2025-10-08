@@ -35,6 +35,19 @@ public class adapterProfile extends RecyclerView.Adapter<adapterProfile.ViewHold
     public void onBindViewHolder(@NonNull adapterProfile.ViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         // Crear las listas dentro del método para que se genere una nueva para cada vista
         holder.iconProfile.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.profile_map));
+        if(position==0){
+            holder.textDescription.setText("Nombre");
+        }else if(position==1){
+            holder.textDescription.setText("Rol");
+        }else if(position==2){
+            holder.textDescription.setText("Comunidad");
+        }else if(position==3){
+            holder.textDescription.setText("Colonia");
+        }else if(position==4) {
+            holder.textDescription.setText("Transporte");
+        }else{
+            holder.textDescription.setText("Tramites");
+        }
     }
 
     @Override
