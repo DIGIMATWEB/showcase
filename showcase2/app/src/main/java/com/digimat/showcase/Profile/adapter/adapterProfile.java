@@ -36,14 +36,19 @@ public class adapterProfile extends RecyclerView.Adapter<adapterProfile.ViewHold
         // Crear las listas dentro del método para que se genere una nueva para cada vista
         holder.iconProfile.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.profile_map));
         if(position==0){
-            holder.textDescription.setText("Nombre");
+            holder.subtitle.setText("Nombre");
+            holder.textDescription.setText("Francisco Morales");
         }else if(position==1){
-            holder.textDescription.setText("Rol");
+            holder.subtitle.setText("Rol");
+            holder.textDescription.setText("Administrador");
         }else if(position==2){
-            holder.textDescription.setText("Comunidad");
+            holder.subtitle.setText("Comunidad");
+            holder.textDescription.setText("Tlayacapan");
         }else if(position==3){
-            holder.textDescription.setText("Colonia");
+            holder.subtitle.setText("Colonia");
+            holder.textDescription.setText("Centro");
         }else {
+            holder.subtitle.setText("");
             holder.textDescription.setText("Configuración");
         }
     }
@@ -54,13 +59,14 @@ public class adapterProfile extends RecyclerView.Adapter<adapterProfile.ViewHold
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView iconProfile;
-        TextView textDescription;
+        TextView textDescription,subtitle;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             iconProfile=itemView.findViewById(R.id.iconProfile);
             textDescription=itemView.findViewById(R.id.textDescription);
+            subtitle=itemView.findViewById(R.id. subtitle);
         }
     }
 }

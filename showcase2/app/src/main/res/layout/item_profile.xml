@@ -7,7 +7,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="65dp"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -16,11 +16,11 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="45dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="6dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,14 +33,30 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="MissingConstraints">
 
-                <ImageView
-                    android:id="@+id/iconProfile"
+                <androidx.cardview.widget.CardView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:elevation="0dp"
+                    app:cardBackgroundColor="#7AB3BDFF"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/iconProfile"
+                    app:layout_constraintEnd_toEndOf="@+id/iconProfile"
+                    app:layout_constraintStart_toStartOf="@+id/iconProfile"
+                    app:layout_constraintTop_toTopOf="@+id/iconProfile" />
+
+                <ImageView
+                    android:id="@+id/iconProfile"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:elevation="3dp"
+                    android:layout_marginStart="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
+                    android:id="@+id/subtitle"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="10dp"
@@ -52,7 +68,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/iconProfile"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="RtlCompat"/>
+                    tools:ignore="RtlCompat" />
 
                 <TextView
                     android:id="@+id/textDescription"

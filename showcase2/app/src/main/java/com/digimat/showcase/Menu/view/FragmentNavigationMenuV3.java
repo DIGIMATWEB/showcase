@@ -214,7 +214,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 }
                 Log.e("menu",""+menu2txt.getText());
                 if (menuActionsListener != null) {
-                    menuActionsListener.onHideMainMenu();
+                    menuActionsListener.onShowMainMenu();
                 }
                 break;
             case R.id.iconMenu3:
@@ -384,8 +384,8 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 menu4txt.setText("Comunidad");
                 break;
             case 4:
-                iconMenu5.setImageDrawable(icono);
-                menu5txt.setText(obj_name);
+                iconMenu5.setImageDrawable(getResources().getDrawable(R.drawable.drag));
+                menu5txt.setText("Mas");
                 break;
         }
     }
