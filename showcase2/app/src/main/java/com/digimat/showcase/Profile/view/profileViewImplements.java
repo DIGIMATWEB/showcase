@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +21,7 @@ import com.digimat.showcase.Zonas.view.Zonas;
 
 public class profileViewImplements extends Fragment implements View.OnClickListener {
     public static final String TAG = profileViewImplements.class.getSimpleName();
-    private Button logout;
+    private CardView logout;
     private  RecyclerView rv;
     private adapterProfile adapter;
     @Override

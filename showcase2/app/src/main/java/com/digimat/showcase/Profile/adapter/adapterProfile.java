@@ -43,16 +43,14 @@ public class adapterProfile extends RecyclerView.Adapter<adapterProfile.ViewHold
             holder.textDescription.setText("Comunidad");
         }else if(position==3){
             holder.textDescription.setText("Colonia");
-        }else if(position==4) {
-            holder.textDescription.setText("Transporte");
-        }else{
-            holder.textDescription.setText("Tramites");
+        }else {
+            holder.textDescription.setText("Configuración");
         }
     }
 
     @Override
     public int getItemCount() {
-        return 6;
+        return 5;
     }
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView iconProfile;
