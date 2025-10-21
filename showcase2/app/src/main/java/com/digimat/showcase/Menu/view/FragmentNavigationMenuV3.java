@@ -2,6 +2,7 @@ package com.digimat.showcase.Menu.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.digimat.showcase.Alerts.view.alertsUser;
+import com.digimat.showcase.Comunidad.fragmentComunidad;
 import com.digimat.showcase.Menu.models.MenuData;
 
 import java.util.ArrayList;
@@ -260,6 +262,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
 
                 }
                 Log.e("menu",""+menu4txt.getText());
+                fragmentComunidad();
                 break;
             case R.id.iconMenu5:
                 Log.e("menuClicked","menu clicked "+5);
@@ -283,6 +286,8 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 break;
         }
     }
+
+
 
     private void checkItem(String menu) {
         switch (menu) {
@@ -384,7 +389,12 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 menu4txt.setText("Comunidad");
                 break;
             case 4:
-                iconMenu5.setImageDrawable(getResources().getDrawable(R.drawable.drag));
+                Drawable icon = getResources().getDrawable(android.R.drawable.ic_menu_sort_by_size);
+                icon.setAutoMirrored(true); // Permite reflejo automático si el layout es RTL
+                icon.setTint(Color.GRAY);
+                iconMenu5.setScaleX(-1f);
+
+                iconMenu5.setImageDrawable(icon);
                 menu5txt.setText("Mas");
                 break;
         }
@@ -572,5 +582,11 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         alertsUser apps = new alertsUser();
         transaction.replace(R.id.conteinerMainFragments, apps, alertsUser.TAG);
         transaction.commitAllowingStateLoss(); // 👈 asegura que se ejecute
+    }
+    private void fragmentComunidad() {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        fragmentComunidad fComunidad = new fragmentComunidad();
+        transaction.replace(R.id.conteinerMainFragments, fComunidad, fragmentComunidad.TAG).commit();
     }
 }
