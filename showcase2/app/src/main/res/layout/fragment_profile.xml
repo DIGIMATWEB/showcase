@@ -145,7 +145,7 @@
         android:elevation="1dp"
         android:tooltipText="Cerrar session"
         android:visibility="visible"
-        app:cardBackgroundColor="#313887"
+        app:cardBackgroundColor="@color/cerrarSessionButton"
         app:cardCornerRadius="8dp"
         app:cardElevation="2dp"
         app:layout_constraintBottom_toBottomOf="parent"

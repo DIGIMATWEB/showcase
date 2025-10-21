@@ -23,7 +23,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.digimat.showcase.Alerts.view.alertsUser;
-import com.digimat.showcase.Comunidad.fragmentComunidad;
+import com.digimat.showcase.Comunidad.view.fragmentComunidad;
+import com.digimat.showcase.Mas.view.masFrament;
 import com.digimat.showcase.Menu.models.MenuData;
 
 import java.util.ArrayList;
@@ -34,7 +35,6 @@ import com.digimat.showcase.Menu.presenter.presenterMenusImpl;
 import com.digimat.showcase.Profile.view.profileViewImplements;
 import com.digimat.showcase.R;
 import com.digimat.showcase.Zonas.view.Zonas;
-import com.digimat.showcase.availableApps.view.appsViewImpl;
 
 public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickListener , menuView {
     public static final String TAG = FragmentNavigationMenuV3.class.getSimpleName();
@@ -283,6 +283,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                     checkItem(menu5txt.getText().toString());
                 }
                 Log.e("menu",""+menu5txt.getText());
+                MoreOptions();
                 break;
         }
     }
@@ -588,5 +589,11 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         FragmentTransaction transaction = manager.beginTransaction();
         fragmentComunidad fComunidad = new fragmentComunidad();
         transaction.replace(R.id.conteinerMainFragments, fComunidad, fragmentComunidad.TAG).commit();
+    }
+    private void MoreOptions(){
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        masFrament moreOptions = new masFrament();
+        transaction.replace(R.id.conteinerMainFragments, moreOptions, masFrament.TAG).commit();
     }
 }

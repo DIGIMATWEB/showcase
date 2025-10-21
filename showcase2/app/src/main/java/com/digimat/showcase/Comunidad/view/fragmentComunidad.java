@@ -1,4 +1,4 @@
-package com.digimat.showcase.Comunidad;
+package com.digimat.showcase.Comunidad.view;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,8 +13,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.digimat.showcase.Dialogs.dialogFragmentProgress;
 import com.digimat.showcase.R;
-import com.digimat.showcase.Zonas.view.Zonas;
-import com.digimat.showcase.Zonas.view.zonasView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
