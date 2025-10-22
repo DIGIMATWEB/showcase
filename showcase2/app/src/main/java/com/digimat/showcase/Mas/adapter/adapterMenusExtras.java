@@ -9,14 +9,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.digimat.showcase.Menu.models.SetMenu.modelMenu;
 import com.digimat.showcase.R;
+
+import java.util.List;
 
 public class adapterMenusExtras extends RecyclerView.Adapter<adapterMenusExtras.ViewHolder> {
 
     private Context context;
 
 
-    public adapterMenusExtras(Context context) {
+    public adapterMenusExtras(Context context, List<modelMenu> menusE) {
         this.context = context;
     }
 

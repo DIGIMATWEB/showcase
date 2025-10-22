@@ -1,16 +1,20 @@
 package com.digimat.showcase.GeneralUtils;
 
-public class GeneralConstantsV2 { public static final String SUCCESS = "SUCCESS";
+public class GeneralConstantsV2 {
+    public static final String CREDENTIALS_PREFERENCES = "CREDENTIALS_PREFERENCES";
+    public static final String TOKEN_PREFERENCES = "TOKEN_PREFERENCES";
+    public static final String MENUS_SAVED="M";
+    public static final String SUCCESS = "SUCCESS";
     public static final String FAILTURE = "FAILTURE";
 
     public static final String NO_IMAGE = "NO_IMAGE";
     public static final String EMAIL = "EMAIL";
     public static final String TOKEN = "TOKEN";
 
-    public static final String CREDENTIALS_PREFERENCES = "CREDENTIALS_PREFERENCES";
+
     public static final String USER_PREFERENCES = "USER_PREFERENCES";
     public static final String URL_USER_IMAGE_PREFERENCES = "URL_USER_IMAGE_PREFERENCES";
-    public static final String TOKEN_PREFERENCES = "TOKEN_PREFERENCES";
+
     public static final String EMAIL_PREFERENCES = "EMAIL_PREFERENCES";
     public static final String PASSWORD_PREFERENCES = "PASSWORD_PREFERENCES";
     public static final String EMPLOYEE_NAME_PREFERENCES = "EMPLOYEE_NAME_PREFERENCES";

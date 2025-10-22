@@ -2,6 +2,7 @@ package com.digimat.showcase.Menu.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -24,17 +25,21 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.digimat.showcase.Alerts.view.alertsUser;
 import com.digimat.showcase.Comunidad.view.fragmentComunidad;
+import com.digimat.showcase.GeneralUtils.GeneralConstantsV2;
 import com.digimat.showcase.Mas.view.masFrament;
 import com.digimat.showcase.Menu.models.MenuData;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.digimat.showcase.Menu.models.SetMenu.modelMenu;
 import com.digimat.showcase.Menu.presenter.presenterMenus;
 import com.digimat.showcase.Menu.presenter.presenterMenusImpl;
 import com.digimat.showcase.Profile.view.profileViewImplements;
 import com.digimat.showcase.R;
 import com.digimat.showcase.Zonas.view.Zonas;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickListener , menuView {
     public static final String TAG = FragmentNavigationMenuV3.class.getSimpleName();
@@ -54,6 +59,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
     private Boolean hasHiddenmenus=false;
     private ConstraintLayout menuConstrain;
     private layoutInteface menuActionsListener;
+    private List<modelMenu> menusValues=new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,6 +86,7 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
     }
 
     private void initView(View view) {
+        menusValues.clear();
         //region testguidelines
         f1=.2f;
         f2=.4f;
@@ -347,6 +354,12 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         for(int menu:items){
             setIconandName(menu);
         }
+        Gson gson=new Gson();
+        String json= gson.toJson(menusValues);
+        SharedPreferences prefs = getContext().getSharedPreferences(GeneralConstantsV2.CREDENTIALS_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(GeneralConstantsV2.MENUS_SAVED, json);
+        editor.commit();
     }
     public void setIconandName(int clave)//, int position, List<MenuData> myemenuItemsf)
     {
@@ -376,18 +389,22 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
             case 0:/** aqui solo van las animaiones*/
                 iconMenu1.setImageDrawable(getResources().getDrawable(R.drawable.profile_map));
                 menu1txt.setText("perfil");
+                setUpMenus(0,"perfil","profile_map");
                 break;
             case 1:
                 iconMenu2.setImageDrawable(getResources().getDrawable(R.drawable.admin_account));
                 menu2txt.setText("Administracion");
+                setUpMenus(1, "Administracion","admin_account");
                 break;
             case 2:
                 iconMenu3.setImageDrawable(getResources().getDrawable(R.drawable.alerts_ico));
                 menu3txt.setText("Alertas");
+                setUpMenus(2, "Alertas","alerts_ico");
                 break;
             case 3:
                 iconMenu4.setImageDrawable(getResources().getDrawable(R.drawable.community));
                 menu4txt.setText("Comunidad");
+                setUpMenus(3, "Comunidad","community");
                 break;
             case 4:
                 Drawable icon = getResources().getDrawable(android.R.drawable.ic_menu_sort_by_size);
@@ -397,8 +414,14 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
 
                 iconMenu5.setImageDrawable(icon);
                 menu5txt.setText("Mas");
+                setUpMenus(4, "Mas","ic_menu_sort_by_size");
                 break;
         }
+    }
+
+    private void setUpMenus(int position, String perfil, String drawable) {
+        menusValues.add(new modelMenu(position,perfil,drawable));
+
     }
 
     public void distributionConstrain(List<Integer> myemenuItems)
