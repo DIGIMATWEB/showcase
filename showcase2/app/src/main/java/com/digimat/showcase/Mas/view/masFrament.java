@@ -33,7 +33,7 @@ public class masFrament  extends Fragment implements   View.OnClickListener{
     private adapterMenus adapter;
     private adapterMenusExtras adapterExtras;
     private adapterInfo adaptrInfo;
-    private TextView txtHeader, descriptionText;
+    private TextView txtHeader, descriptionText,textView14;
     private ScrollView scrollView;
     private List<modelMenu> menusP=new ArrayList<>();
     private List<modelMenu> menusE=new ArrayList<>();
@@ -49,7 +49,7 @@ public class masFrament  extends Fragment implements   View.OnClickListener{
         rvMenus=view.findViewById(R.id.rvMenus);
         masOpciones=view.findViewById(R.id.masOpciones);
         Informacion=view.findViewById(R.id.Informacion);
-
+        textView14 =view.findViewById(R.id.textView14);
         txtHeader = view.findViewById(R.id.txtHeader); // Header que quieres mostrar
         descriptionText = view.findViewById(R.id.descriptionText); // TextView que quieres ocultar
         scrollView = view.findViewById(R.id.scrollViewMasOpciones); // ScrollView padre
@@ -78,6 +78,8 @@ public class masFrament  extends Fragment implements   View.OnClickListener{
                 if (allMenus.size() > 6) {
                     menusE.clear();
                     menusE.addAll(allMenus.subList(6, allMenus.size()));
+                }else{
+                    textView14.setVisibility(View.GONE);
                 }
             }
         }

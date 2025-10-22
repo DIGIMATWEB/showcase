@@ -29,6 +29,7 @@ import com.digimat.showcase.GeneralUtils.GeneralConstantsV2;
 import com.digimat.showcase.Mas.view.masFrament;
 import com.digimat.showcase.Menu.models.MenuData;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ import com.digimat.showcase.Profile.view.profileViewImplements;
 import com.digimat.showcase.R;
 import com.digimat.showcase.Zonas.view.Zonas;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickListener , menuView {
     public static final String TAG = FragmentNavigationMenuV3.class.getSimpleName();
@@ -66,9 +67,35 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
         View view = inflater.inflate(R.layout.dinamic_menu_v3, container, false);
         checkShared();
         initView(view);
-        presenter.requestMenus();
+        SharedPreferences preferences = getContext().getSharedPreferences(GeneralConstantsV2.CREDENTIALS_PREFERENCES, Context.MODE_PRIVATE);
+        String menusJson = preferences.getString(GeneralConstantsV2.MENUS_SAVED, null);
+
+        if (menusJson != null) {
+            checkMenuValues(menusJson);
+        }else {
+
+            presenter.requestMenus();
+        }
         return view;
     }
+
+    private void checkMenuValues(String menusJson) {
+
+        if (menusJson != null) {
+            Gson gson = new Gson();
+            Type listType = new TypeToken<List<modelMenu>>() {
+            }.getType();
+
+            List<modelMenu> allMenus = gson.fromJson(menusJson, listType);
+
+            if (allMenus != null && !allMenus.isEmpty()) {
+                for(modelMenu menu:allMenus){
+                    setIconandName(menu.getPosition());
+                }
+            }
+        }
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -416,6 +443,26 @@ public class FragmentNavigationMenuV3  extends Fragment implements View.OnClickL
                 menu5txt.setText("Mas");
                 setUpMenus(4, "Mas","ic_menu_sort_by_size");
                 break;
+            case 5://este es de chocolate xD
+                setUpMenus(5, "Cinco","ic_menu_sort_by_size");
+                break;
+            case 6:
+                //getResources().getDrawable(android.R.drawable.ic_menu_send);
+                setUpMenus(6, "Notificaciones","ic_menu_send");
+                break;
+            case 7:
+                setUpMenus(7, "Eventos","ic_menu_send");
+                break;
+            case 8:
+                setUpMenus(8, "Turismo","ic_menu_send");
+                break;
+            case 9:
+                setUpMenus(9, "9","ic_menu_sort_by_size");
+                break;
+            case 10:
+                setUpMenus(10, "10","ic_menu_sort_by_size");
+                break;
+
         }
     }
 

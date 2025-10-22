@@ -1,6 +1,8 @@
 package com.digimat.showcase.Profile.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.digimat.showcase.Alerts.adapter.adapterAlertList;
+import com.digimat.showcase.GeneralUtils.GeneralConstantsV2;
 import com.digimat.showcase.Login.view.LoginContainerActivity;
 import com.digimat.showcase.Menu.view.menuViewImpl;
 import com.digimat.showcase.Profile.adapter.adapterProfile;
@@ -48,10 +51,13 @@ public class profileViewImplements extends Fragment implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.edit_profile_button:
+                SharedPreferences preferences = getContext().getSharedPreferences(GeneralConstantsV2.CREDENTIALS_PREFERENCES, Context.MODE_PRIVATE);
+                preferences.edit().clear().commit();
                 Intent intent = new Intent(getContext(), LoginContainerActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_CLEAR_TOP);//
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+
                 break;
         }
 
