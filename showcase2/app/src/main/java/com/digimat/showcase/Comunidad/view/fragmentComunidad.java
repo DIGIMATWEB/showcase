@@ -68,6 +68,7 @@ public class fragmentComunidad extends Fragment implements OnMapReadyCallback,  
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setTrafficEnabled(true);
         mMap.clear();
         // mMap.setTrafficEnabled(true);
 
