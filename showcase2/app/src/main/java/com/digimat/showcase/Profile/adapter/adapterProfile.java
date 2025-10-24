@@ -39,9 +39,11 @@ public class adapterProfile extends RecyclerView.Adapter<adapterProfile.ViewHold
             holder.subtitle.setText("Nombre");
             holder.textDescription.setText("Francisco Morales");
         }else if(position==1){
+            holder.iconProfile.setImageDrawable( context.getResources().getDrawable(R.drawable.admin_account));
             holder.subtitle.setText("Rol");
             holder.textDescription.setText("Administrador");
         }else if(position==2){
+            holder.iconProfile.setImageDrawable( context.getResources().getDrawable(R.drawable.community));
             holder.subtitle.setText("Comunidad");
             holder.textDescription.setText("Tlayacapan");
         }else if(position==3){
