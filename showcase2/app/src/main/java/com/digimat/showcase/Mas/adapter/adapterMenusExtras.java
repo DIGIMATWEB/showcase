@@ -47,9 +47,9 @@ public class adapterMenusExtras extends RecyclerView.Adapter<adapterMenusExtras.
 //        } else {
             // Si no encuentra el ícono, muestra uno por defecto
         if(position==0) {
-            holder.imageMenu.setImageResource(android.R.drawable.ic_menu_send);
+            holder.imageMenu.setImageResource(R.drawable.sendnotification);
         }else if(position==1){
-            holder.imageMenu.setImageResource(android.R.drawable.ic_menu_today);
+            holder.imageMenu.setImageResource(R.drawable.events);
         }else if(position==2){
             holder.imageMenu.setImageResource(android.R.drawable.ic_menu_myplaces);
         }else if(position==3){

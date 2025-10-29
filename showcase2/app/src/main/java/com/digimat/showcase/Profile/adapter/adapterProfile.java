@@ -47,6 +47,9 @@ public class adapterProfile extends RecyclerView.Adapter<adapterProfile.ViewHold
             holder.subtitle.setText("Comunidad");
             holder.textDescription.setText("Tlayacapan");
         }else if(position==3){
+            holder.iconProfile.setScaleX(.8f);
+            holder.iconProfile.setScaleY(.8f);
+            holder.iconProfile.setImageDrawable( context.getResources().getDrawable(R.drawable.colinystreet));
             holder.subtitle.setText("Colonia");
             holder.textDescription.setText("Centro");
         }else {
