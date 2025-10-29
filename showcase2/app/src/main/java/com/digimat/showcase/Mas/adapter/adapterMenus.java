@@ -1,6 +1,5 @@
 package com.digimat.showcase.Mas.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -12,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+import com.digimat.showcase.Mas.view.masFrament;
 import com.digimat.showcase.Menu.models.SetMenu.modelMenu;
 import com.digimat.showcase.R;
 
@@ -22,11 +21,12 @@ public class adapterMenus  extends RecyclerView.Adapter<adapterMenus.ViewHolder>
 
 private Context context;
 private List<modelMenu> menusP;
+    private masFrament mview;
 
-
-public adapterMenus(Context context, List<modelMenu> menusP) {
+public adapterMenus(masFrament mview, Context context, List<modelMenu> menusP) {
     this.context = context;
     this.menusP=menusP;
+    this.mview=mview;
 }
 
 @NonNull

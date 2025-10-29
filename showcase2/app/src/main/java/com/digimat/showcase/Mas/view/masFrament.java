@@ -10,6 +10,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,7 +21,9 @@ import com.digimat.showcase.Mas.adapter.adapterInfo;
 import com.digimat.showcase.Mas.adapter.adapterMenus;
 import com.digimat.showcase.Mas.adapter.adapterMenusExtras;
 import com.digimat.showcase.Menu.models.SetMenu.modelMenu;
+import com.digimat.showcase.Menu.view.FragmentNavigationMenuV3;
 import com.digimat.showcase.R;
+import com.digimat.showcase.Tutorial.view.Tutorial;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -37,6 +41,9 @@ public class masFrament  extends Fragment implements   View.OnClickListener{
     private ScrollView scrollView;
     private List<modelMenu> menusP=new ArrayList<>();
     private List<modelMenu> menusE=new ArrayList<>();
+    private FragmentManager manager;
+    private FragmentTransaction transaction;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -108,7 +115,7 @@ public class masFrament  extends Fragment implements   View.OnClickListener{
             }
         };
         rvMenus.setLayoutManager(layoutManager);
-        adapter = new adapterMenus(getContext(),menusP);
+        adapter = new adapterMenus(this,getContext(),menusP);
         rvMenus.setAdapter(adapter);
     }
     private void fillAdapterMas() {
@@ -119,7 +126,7 @@ public class masFrament  extends Fragment implements   View.OnClickListener{
             }
         };
         masOpciones.setLayoutManager(layoutManager);
-        adapterExtras = new adapterMenusExtras(getContext(),menusE);
+        adapterExtras = new adapterMenusExtras(this,getContext(),menusE);
         masOpciones.setAdapter(adapterExtras);
     }
     private void fillInformacion() {
@@ -130,11 +137,22 @@ public class masFrament  extends Fragment implements   View.OnClickListener{
             }
         };
         Informacion.setLayoutManager(layoutManager);
-        adaptrInfo = new adapterInfo(getContext());
+        adaptrInfo = new adapterInfo(this,getContext());
         Informacion.setAdapter(adaptrInfo);
     }
     @Override
     public void onClick(View view) {
 
+    }
+
+    public void moveFragment(int position, String nameFragment) {
+        if(nameFragment.equals("Tutorial")){
+            manager = getActivity().getSupportFragmentManager();
+            transaction = manager.beginTransaction();
+            Tutorial tutorialFragment = new Tutorial();
+            transaction.add(R.id.conteinerMainFragments, tutorialFragment, FragmentNavigationMenuV3.TAG).commit();
+        }else{
+
+        }
     }
 }

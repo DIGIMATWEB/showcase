@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.digimat.showcase.Mas.view.masFrament;
 import com.digimat.showcase.Menu.models.SetMenu.modelMenu;
 import com.digimat.showcase.R;
 
@@ -21,10 +22,11 @@ public class adapterMenusExtras extends RecyclerView.Adapter<adapterMenusExtras.
 
     private Context context;
     private List<modelMenu> menusE;
-
-    public adapterMenusExtras(Context context, List<modelMenu> menusE) {
+    private masFrament mview;
+    public adapterMenusExtras(masFrament mview, Context context, List<modelMenu> menusE) {
         this.context = context;
         this.menusE = menusE;
+        this.mview=mview;
     }
 
     @NonNull
@@ -51,7 +53,7 @@ public class adapterMenusExtras extends RecyclerView.Adapter<adapterMenusExtras.
         }else if(position==1){
             holder.imageMenu.setImageResource(R.drawable.events);
         }else if(position==2){
-            holder.imageMenu.setImageResource(android.R.drawable.ic_menu_myplaces);
+            holder.imageMenu.setImageResource(R.drawable.tourista);
         }else if(position==3){
             holder.imageMenu.setImageResource(android.R.drawable.ic_menu_myplaces);
         }
