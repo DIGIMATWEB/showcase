@@ -12,16 +12,19 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.digimat.showcase.R;
+import com.digimat.showcase.Tutorial.view.Tutorial;
 
 public class adapterDots extends RecyclerView.Adapter<adapterDots.ViewHolder> {
 
     private Context context;
     private Integer postionDot;
+    private Tutorial mview;
 
 
-    public adapterDots(Integer postionDot, Context context) {
+    public adapterDots(Tutorial mview, Integer postionDot, Context context) {
         this.context = context;
         this.postionDot=postionDot;
+        this.mview=mview;
     }
 
     @NonNull
@@ -48,6 +51,8 @@ public class adapterDots extends RecyclerView.Adapter<adapterDots.ViewHolder> {
         // Optional: change color too if you want
         int color = (position == postionDot) ? Color.BLACK : Color.parseColor("#C8C8C8");
         ((CardView) holder.dot).setCardBackgroundColor(color);
+        mview.configPosition(postionDot);
+
     }
     @Override
     public int getItemCount() {

@@ -28,13 +28,13 @@ public class Tutorial extends Fragment implements View.OnClickListener {
     private RecyclerView imgvStep;
     private adapterDots adapter;
     private Integer positionDot = 0;
-    private TextView btnSkip, btnNext;
+    private TextView btnSkip, btnNext,titleDesc,descText;
     private boolean isFirstLoad = true; // 👈 Added flag
 
     private int[] tutorialImages = {
-            R.drawable.tutorial_a,
-            R.drawable.tutorial_b,
-            R.drawable.tutorial_c
+            R.drawable.tutorial_a,//perfil
+            R.drawable.tutorial_b,//alertas
+            R.drawable.tutorial_c//Comunidad
     };
 
     @Override
@@ -54,6 +54,9 @@ public class Tutorial extends Fragment implements View.OnClickListener {
         btnSkip.setOnClickListener(this);
         btnNext.setOnClickListener(this);
 
+        titleDesc= view.findViewById(R.id.titleDesc);
+        descText= view.findViewById(R.id.descText);
+
         fillSizeDots();
 
         // First image only: set without animation
@@ -65,7 +68,7 @@ public class Tutorial extends Fragment implements View.OnClickListener {
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         imgvStep.setLayoutManager(layoutManager);
-        adapter = new adapterDots(positionDot, getContext());
+        adapter = new adapterDots(this,positionDot, getContext());
         imgvStep.setAdapter(adapter);
     }
 
@@ -98,7 +101,44 @@ public class Tutorial extends Fragment implements View.OnClickListener {
             public void onAnimationRepeat(Animation animation) { }
         });
     }
+    public void configPosition(Integer current) {
+        switch (current) {
+            case 0:
+                titleDesc.setText("Perfil");
+                descText.setText("Configura tus datos e informacion de la comunidad a la que perteneces, verifica tu condeo de alertas registradas reportes y seguimiento de tickets");
+                break;
 
+            case 1:
+                titleDesc.setText("Alertas");
+                descText.setText("Revisa las alertas que tiene tu comunidad, registrospor fechas y por tipo de alertas asi como detalles de la resolucion de las mismas");
+                break;
+
+            case 2:
+                titleDesc.setText("Comunidad");
+                descText.setText("Observa el mapa de tu comunidad en tiempo real, asi como algunos servicios periodicos como recoleccion de descechos , tráfico etc... ");
+                break;
+
+            default:
+                titleDesc.setText("");
+                descText.setText("");
+                break;
+        }
+    }
+    private void goToNextFragment() {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+
+        // Aplica las animaciones personalizadas
+//        transaction.setCustomAnimations(
+//                R.anim.fade_in_out,   // animación de entrada si se usa "back stack"
+//                R.anim.fade_out   // animación de salida si se usa "back stack"
+//        );
+
+        masFrament moreOptions = new masFrament();
+        transaction.replace(R.id.conteinerMainFragments, moreOptions, masFrament.TAG);
+        transaction.addToBackStack(null); // opcional si quieres volver atrás
+        transaction.commit();
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -126,10 +166,6 @@ public class Tutorial extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void goToNextFragment() {
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        masFrament moreOptions = new masFrament();
-        transaction.replace(R.id.conteinerMainFragments, moreOptions, masFrament.TAG).commit();
-    }
+
+
 }
