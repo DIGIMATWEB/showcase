@@ -19,8 +19,9 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/imgvStep"
-        android:layout_width="0dp"
-        android:layout_height="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+
         android:src="@drawable/dots_step_1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,14 +47,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="right"
-        android:paddingRight="30dp"
-        android:text="Continuar"
-        android:paddingBottom="3dp"
         android:paddingTop="3dp"
+        android:paddingRight="30dp"
+        android:paddingBottom="3dp"
+        android:text="Continuar"
         android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/imgvStep"
-        app:layout_constraintEnd_toEndOf="@+id/imgvStep"
-        app:layout_constraintStart_toStartOf="@+id/guideline70" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline70"
+        app:layout_constraintTop_toTopOf="@+id/txt_btn_skip" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline70"
