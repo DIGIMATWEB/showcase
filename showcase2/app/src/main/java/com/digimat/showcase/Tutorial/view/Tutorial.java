@@ -29,8 +29,8 @@ public class Tutorial extends Fragment implements View.OnClickListener {
     private adapterDots adapter;
     private Integer positionDot = 0;
     private TextView btnSkip, btnNext;
+    private boolean isFirstLoad = true; // 👈 Added flag
 
-    // Optional: list of drawable images to simulate pages
     private int[] tutorialImages = {
             R.drawable.tutorial_a,
             R.drawable.tutorial_b,
@@ -55,7 +55,10 @@ public class Tutorial extends Fragment implements View.OnClickListener {
         btnNext.setOnClickListener(this);
 
         fillSizeDots();
-        updateImage(true);
+
+        // First image only: set without animation
+        imgTutorial.setImageResource(tutorialImages[0]);
+        isFirstLoad = false; // 👈 after first load, animations are allowed
     }
 
     private void fillSizeDots() {
@@ -67,6 +70,12 @@ public class Tutorial extends Fragment implements View.OnClickListener {
     }
 
     private void updateImage(boolean toRight) {
+        // 👇 Only skip animation during the very first initialization
+        if (isFirstLoad) {
+            imgTutorial.setImageResource(tutorialImages[positionDot]);
+            return;
+        }
+
         int enterAnim = toRight ? R.anim.slide_in_right : R.anim.slide_in_left;
         int exitAnim = toRight ? R.anim.slide_out_left : R.anim.slide_out_right;
 
@@ -98,15 +107,9 @@ public class Tutorial extends Fragment implements View.OnClickListener {
                     positionDot++;
                     adapter.notifyNext(positionDot);
                     updateImage(true); // 👉 animate to the right
-
-                    if (positionDot > 0) {
-                        btnSkip.setText("Anterior");
-                    }
+                    if (positionDot > 0) btnSkip.setText("Anterior");
                 } else {
-                    FragmentManager manager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    masFrament moreOptions = new masFrament();
-                    transaction.replace(R.id.conteinerMainFragments, moreOptions, masFrament.TAG).commit();
+                    goToNextFragment();
                 }
                 break;
 
@@ -115,18 +118,18 @@ public class Tutorial extends Fragment implements View.OnClickListener {
                     positionDot--;
                     adapter.notifyNext(positionDot);
                     updateImage(false); // 👈 animate to the left
-
-                    if (positionDot == 0) {
-                        btnSkip.setText("Omitir");
-                    }
+                    if (positionDot == 0) btnSkip.setText("Omitir");
                 } else {
-                    FragmentManager manager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    masFrament moreOptions = new masFrament();
-                    transaction.replace(R.id.conteinerMainFragments, moreOptions, masFrament.TAG).commit();
+                    goToNextFragment();
                 }
                 break;
         }
     }
 
+    private void goToNextFragment() {
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        masFrament moreOptions = new masFrament();
+        transaction.replace(R.id.conteinerMainFragments, moreOptions, masFrament.TAG).commit();
+    }
 }
