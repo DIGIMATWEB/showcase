@@ -51,7 +51,7 @@ public class adapterDots extends RecyclerView.Adapter<adapterDots.ViewHolder> {
     }
     @Override
     public int getItemCount() {
-        return 5    ;
+        return 3    ;
     }
 
     public void notifyNext(Integer postionDot) {

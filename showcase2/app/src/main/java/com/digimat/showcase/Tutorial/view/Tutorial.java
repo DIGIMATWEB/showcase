@@ -1,15 +1,15 @@
 package com.digimat.showcase.Tutorial.view;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -18,24 +18,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.digimat.showcase.Mas.view.masFrament;
-import com.digimat.showcase.Menu.view.layoutInteface;
-import com.digimat.showcase.Profile.adapter.adapterProfile;
 import com.digimat.showcase.R;
-import com.digimat.showcase.Tutorial.adapter.AdapterHelpV2;
 import com.digimat.showcase.Tutorial.adapter.adapterDots;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Tutorial extends Fragment implements View.OnClickListener {
     public static final String TAG = Tutorial.class.getSimpleName();
-    private ViewPager viewPager;
-    private List<Fragment> fragmentList;
-    private AdapterHelpV2 adapterViewPager;
+
+    private ImageView imgTutorial;
     private RecyclerView imgvStep;
-    private int positionCurrentItem = 0;
     private adapterDots adapter;
-    private Integer postionDot=0;
+    private Integer positionDot = 0;
+    private TextView btnSkip, btnNext;
+
+    // Optional: list of drawable images to simulate pages
+    private int[] tutorialImages = {
+            R.drawable.tutorial_a,
+            R.drawable.tutorial_b,
+            R.drawable.tutorial_c
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,77 +46,87 @@ public class Tutorial extends Fragment implements View.OnClickListener {
     }
 
     private void initView(View view) {
-        viewPager = view.findViewById(R.id.view_pager_loginhelp);
+        imgTutorial = view.findViewById(R.id.img_tutorial);
         imgvStep = view.findViewById(R.id.imgvStep);
-
-
-        TextView btnSkip = view.findViewById(R.id.txt_btn_skip);
-        TextView btnNext = view.findViewById(R.id.txt_btn_next);
+        btnSkip = view.findViewById(R.id.txt_btn_skip);
+        btnNext = view.findViewById(R.id.txt_btn_next);
 
         btnSkip.setOnClickListener(this);
         btnNext.setOnClickListener(this);
 
-        fragmentList = new ArrayList<>();
-
-        adapterViewPager = new AdapterHelpV2(getChildFragmentManager(), fragmentList);
-        viewPager.setAdapter(adapterViewPager);
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                positionCurrentItem = position;
-                if (position == 0) {
-                  //  imgvStep.setImageResource(R.drawable.dots_step_1);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
         fillSizeDots();
-
+        updateImage(true);
     }
 
     private void fillSizeDots() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         imgvStep.setLayoutManager(layoutManager);
-        adapter=new adapterDots(postionDot,getContext());
+        adapter = new adapterDots(positionDot, getContext());
         imgvStep.setAdapter(adapter);
+    }
+
+    private void updateImage(boolean toRight) {
+        int enterAnim = toRight ? R.anim.slide_in_right : R.anim.slide_in_left;
+        int exitAnim = toRight ? R.anim.slide_out_left : R.anim.slide_out_right;
+
+        Animation outAnim = AnimationUtils.loadAnimation(getContext(), exitAnim);
+        Animation inAnim = AnimationUtils.loadAnimation(getContext(), enterAnim);
+
+        imgTutorial.startAnimation(outAnim);
+
+        outAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) { }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                imgTutorial.setImageResource(tutorialImages[positionDot]);
+                imgTutorial.startAnimation(inAnim);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) { }
+        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txt_btn_next:
-                if (postionDot< adapter.getItemCount()-1 ) {
-                    postionDot=postionDot+1;
-                    adapter.notifyNext(postionDot);
-                } else {
-                    Toast.makeText(getContext(), "Limite superior excedido", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.txt_btn_skip:
-                if(postionDot!=0){
-                    if(postionDot>0){
-                        postionDot=postionDot-1;
-                        adapter.notifyNext(postionDot);
-                    }else{
-                        Toast.makeText(getContext(), "Limite inferior excedido", Toast.LENGTH_SHORT).show();
+                if (positionDot < adapter.getItemCount() - 1) {
+                    positionDot++;
+                    adapter.notifyNext(positionDot);
+                    updateImage(true); // 👉 animate to the right
+
+                    if (positionDot > 0) {
+                        btnSkip.setText("Anterior");
                     }
-                }else{
+                } else {
                     FragmentManager manager = getActivity().getSupportFragmentManager();
                     FragmentTransaction transaction = manager.beginTransaction();
                     masFrament moreOptions = new masFrament();
                     transaction.replace(R.id.conteinerMainFragments, moreOptions, masFrament.TAG).commit();
                 }
+                break;
 
+            case R.id.txt_btn_skip:
+                if (positionDot > 0) {
+                    positionDot--;
+                    adapter.notifyNext(positionDot);
+                    updateImage(false); // 👈 animate to the left
+
+                    if (positionDot == 0) {
+                        btnSkip.setText("Omitir");
+                    }
+                } else {
+                    FragmentManager manager = getActivity().getSupportFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    masFrament moreOptions = new masFrament();
+                    transaction.replace(R.id.conteinerMainFragments, moreOptions, masFrament.TAG).commit();
+                }
                 break;
         }
     }
+
 }
