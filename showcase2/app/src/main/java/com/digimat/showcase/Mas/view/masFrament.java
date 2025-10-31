@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.digimat.showcase.BuildConfig;
 import com.digimat.showcase.Comunidad.view.fragmentComunidad;
 import com.digimat.showcase.GeneralUtils.GeneralConstantsV2;
 import com.digimat.showcase.Mas.adapter.adapterInfo;
@@ -37,7 +38,7 @@ public class masFrament  extends Fragment implements   View.OnClickListener{
     private adapterMenus adapter;
     private adapterMenusExtras adapterExtras;
     private adapterInfo adaptrInfo;
-    private TextView txtHeader, descriptionText,textView14;
+    private TextView txtHeader, descriptionText,textView14,versionCode;
     private ScrollView scrollView;
     private List<modelMenu> menusP=new ArrayList<>();
     private List<modelMenu> menusE=new ArrayList<>();
@@ -57,6 +58,7 @@ public class masFrament  extends Fragment implements   View.OnClickListener{
         masOpciones=view.findViewById(R.id.masOpciones);
         Informacion=view.findViewById(R.id.Informacion);
         textView14 =view.findViewById(R.id.textView14);
+        versionCode=view.findViewById(R.id.versionCode);
         txtHeader = view.findViewById(R.id.txtHeader); // Header que quieres mostrar
         descriptionText = view.findViewById(R.id.descriptionText); // TextView que quieres ocultar
         scrollView = view.findViewById(R.id.scrollViewMasOpciones); // ScrollView padre
@@ -65,6 +67,11 @@ public class masFrament  extends Fragment implements   View.OnClickListener{
         fillAdapterMas();
         fillInformacion();
         setupScrollListener();
+        setUpVersion();
+    }
+
+    private void setUpVersion() {
+        versionCode.setText("V " + BuildConfig.VERSION_NAME);
     }
 
     private void checkUpJson() {
