@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.digimat.showcase.Mas.view.masFrament;
@@ -61,6 +62,12 @@ public class adapterMenusExtras extends RecyclerView.Adapter<adapterMenusExtras.
 
         holder.nameMenu.setText(item.getPerfil());
         holder.imageGoMenu.setVisibility(View.GONE);
+        holder.constrainmore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mview.moveFragment(position,holder.nameMenu.getText().toString());
+            }
+        });
     }
 
     @Override
@@ -71,12 +78,14 @@ public class adapterMenusExtras extends RecyclerView.Adapter<adapterMenusExtras.
 
         private ImageView imageMenu,imageGoMenu;
         private TextView nameMenu;
+        private ConstraintLayout constrainmore;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageMenu=itemView.findViewById(R.id.imageMenu);
             nameMenu=itemView.findViewById(R.id.nameMenu);
             imageGoMenu=itemView.findViewById(R.id. imageGoMenu);
+            constrainmore = itemView.findViewById(R.id.constrainmore);
         }
     }
 }

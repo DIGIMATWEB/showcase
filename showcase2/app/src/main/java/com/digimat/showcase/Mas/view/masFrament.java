@@ -1,13 +1,16 @@
 package com.digimat.showcase.Mas.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -15,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.digimat.showcase.Alerts.view.alertsUser;
 import com.digimat.showcase.BuildConfig;
 import com.digimat.showcase.Comunidad.view.fragmentComunidad;
 import com.digimat.showcase.GeneralUtils.GeneralConstantsV2;
@@ -23,8 +27,10 @@ import com.digimat.showcase.Mas.adapter.adapterMenus;
 import com.digimat.showcase.Mas.adapter.adapterMenusExtras;
 import com.digimat.showcase.Menu.models.SetMenu.modelMenu;
 import com.digimat.showcase.Menu.view.FragmentNavigationMenuV3;
+import com.digimat.showcase.Profile.view.profileViewImplements;
 import com.digimat.showcase.R;
 import com.digimat.showcase.Tutorial.view.Tutorial;
+import com.digimat.showcase.Zonas.view.Zonas;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -158,6 +164,49 @@ public class masFrament  extends Fragment implements   View.OnClickListener{
             transaction = manager.beginTransaction();
             Tutorial tutorialFragment = new Tutorial();
             transaction.add(R.id.conteinerMainFragments, tutorialFragment, FragmentNavigationMenuV3.TAG).commit();
+        } else if (nameFragment.equals("Politica")) {
+            // Abre navegador con la URL
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://digimatweb.github.io/politica/"));
+            startActivity(intent);
+        }else if (nameFragment.equals("Notificaciones")) {
+            Toast.makeText(getContext(), "Modulo en desarrollo", Toast.LENGTH_SHORT).show();
+        }else if (nameFragment.equals("Eventos")) {
+            Toast.makeText(getContext(), "Modulo en desarrollo", Toast.LENGTH_SHORT).show();
+        }else if (nameFragment.equals("Turismo")) {
+            Toast.makeText(getContext(), "Modulo en desarrollo", Toast.LENGTH_SHORT).show();
+        }
+        else if (nameFragment.equals("perfil")) {
+            manager = getActivity().getSupportFragmentManager();
+            transaction = manager.beginTransaction();
+            profileViewImplements profile = new profileViewImplements();
+            transaction.replace(R.id.conteinerMainFragments, profile, profileViewImplements.TAG).commit();
+        }
+        else if (nameFragment.equals("Administracion")) {
+            manager = getActivity().getSupportFragmentManager();
+            transaction = manager.beginTransaction();
+            Zonas zonesFragment = new Zonas();
+            transaction.replace(R.id.conteinerMainFragments, zonesFragment, Zonas.TAG).commit();
+        }
+        else if (nameFragment.equals("Alertas")) {
+             manager = getActivity().getSupportFragmentManager();
+             transaction = manager.beginTransaction();
+
+            // 🔹 Limpieza si ya existe
+            Fragment prev = manager.findFragmentByTag(alertsUser.TAG);
+            if (prev != null) {
+                transaction.remove(prev);
+            }
+
+            // 🔹 Agregar uno nuevo siempre
+            alertsUser apps = new alertsUser();
+            transaction.replace(R.id.conteinerMainFragments, apps, alertsUser.TAG);
+            transaction.commitAllowingStateLoss();
+        }
+        else if (nameFragment.equals("Comunidad")) {
+            manager = getActivity().getSupportFragmentManager();
+            transaction = manager.beginTransaction();
+            fragmentComunidad fComunidad = new fragmentComunidad();
+            transaction.replace(R.id.conteinerMainFragments, fComunidad, fragmentComunidad.TAG).commit();
         }else{
 
         }
