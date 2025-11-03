@@ -28,15 +28,15 @@ public class interactorLoginImpl implements interactorLogin {
     }
 
     @Override
-    public void requesLogin() {
-        requestLogin request = new requestLogin("inghfrancisco.morales@gmail.com","12345");
+    public void requesLogin(String user, String pass) {
+        requestLogin request = new requestLogin(user,pass);
         Call<responseLogin> call= service.getAvaileble(request);
         call.enqueue(new Callback<responseLogin>() {
             @Override
             public void onResponse(Call<responseLogin> call, Response<responseLogin> response) {
                 if(response.code()==200){
-                    if(response.body().getResconseCode()==200){
-                        presenter.succesLogin();
+                    if(response.body().getResconseCode()==105){
+                        presenter.succesLogin(response.body().getData());
                     }else{
                         Toast.makeText(context, "Tu usuario no se encuentra activo", Toast.LENGTH_LONG).show();
                     }

@@ -3,7 +3,7 @@ package com.digimat.showcase.Login.model;
 import com.google.gson.annotations.SerializedName;
 
 public class responseLogin {
-    @SerializedName("resconseCode")
+    @SerializedName("responseCode")
     private Integer resconseCode;
     @SerializedName("message")
     private String message;

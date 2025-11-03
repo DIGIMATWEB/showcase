@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.digimat.showcase.Login.interactor.interactorLogin;
 import com.digimat.showcase.Login.interactor.interactorLoginImpl;
+import com.digimat.showcase.Login.model.dataLogin;
 import com.digimat.showcase.Login.view.loginView;
 
 public class presensterLoginImpl implements presenterLogin {
@@ -17,16 +18,16 @@ public class presensterLoginImpl implements presenterLogin {
 
     }
     @Override
-    public void requestLogin() {
+    public void requestLogin(String user, String pass) {
         if(view!=null){
-            interactor.requesLogin();
+            interactor.requesLogin(user,pass);
         }
     }
 
     @Override
-    public void succesLogin() {
+    public void succesLogin(dataLogin data) {
         if(view!=null){
-            view.succesLogin();
+            view.succesLogin(data);
         }
     }
 }

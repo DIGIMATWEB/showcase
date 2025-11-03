@@ -1,7 +1,9 @@
 package com.digimat.showcase.Login.presenter;
 
-public interface presenterLogin {
-    void requestLogin();
+import com.digimat.showcase.Login.model.dataLogin;
 
-    void succesLogin();
+public interface presenterLogin {
+    void requestLogin(String string, String s);
+
+    void succesLogin(dataLogin data);
 }
